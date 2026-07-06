@@ -9,8 +9,9 @@
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #ffe5ec, #ffc2d1);
-            color: #4a4a4a;
+            /* iPhone 15 Su Yeşili Soft Geçiş */
+            background: linear-gradient(135deg, #e9f3f0, #dbebe5);
+            color: #2f4842;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -18,46 +19,121 @@
             text-align: center;
         }
         .container {
-            background: rgba(255, 255, 255, 0.85);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.65);
+            padding: 40px 30px;
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(47, 72, 66, 0.05);
             max-width: 500px;
-            width: 90%;
-            backdrop-filter: blur(10px);
+            width: 85%;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
         h1 {
-            font-size: 2.5rem;
-            color: #fb6f92;
-            margin-bottom: 10px;
+            font-size: 2.2rem;
+            color: #2f4842;
+            margin-bottom: 5px;
+            font-weight: 400;
+            letter-spacing: 1px;
         }
-        p {
-            font-size: 1.2rem;
-            line-height: 1.6;
+        .subtitle {
+            font-size: 1rem;
+            color: #618279;
+            margin-bottom: 30px;
         }
-        .heart {
-            color: #ff477e;
-            font-size: 3rem;
-            animation: heartbeat 1.2s infinite;
-            margin: 20px 0;
+        /* Sayaç Alanı */
+        .counter-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 25px 0;
         }
-        @keyframes heartbeat {
-            0% { transform: scale(1); }
-            20% { transform: scale(1.1); }
-            40% { transform: scale(1); }
-            60% { transform: scale(1.15); }
-            80% { transform: scale(1); }
-            100% { transform: scale(1); }
+        .counter-box {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px 5px;
+            border-radius: 14px;
+            border: 1px solid #dbebe5;
+        }
+        .counter-num {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #3b5c54;
+        }
+        .counter-label {
+            font-size: 0.75rem;
+            color: #799c92;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 5px;
+        }
+        .leaf {
+            color: #a1cfc2;
+            font-size: 1.8rem;
+            margin: 15px 0;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Nehir & Deniz</h1>
-        <div class="heart">❤️</div>
-        <p>Bizim için dijital bir alan, paylaştığımız en güzel anıların evi...</p>
+        <h1>nehir & deniz</h1>
+        <div class="subtitle">Zamanın su gibi aktığı yer...</div>
+        
+        <div class="leaf">🍃</div>
+        
+        <!-- Canlı Sayaç -->
+        <div class="counter-grid">
+            <div class="counter-box">
+                <div class="counter-num" id="days">00</div>
+                <div class="counter-label">Gün</div>
+            </div>
+            <div class="counter-box">
+                <div class="counter-num" id="hours">00</div>
+                <div class="counter-label">Saat</div>
+            </div>
+            <div class="counter-box">
+                <div class="counter-num" id="minutes">00</div>
+                <div class="counter-label">Dk</div>
+            </div>
+            <div class="counter-box">
+                <div class="counter-num" id="seconds">00</div>
+                <div class="counter-label">Sn</div>
+            </div>
         </div>
+
+        <p style="font-size: 1rem; color: #4e6e65; line-height: 1.6; margin-top: 25px;">
+            Paylaştığımız her anın, kurduğumuz her hayalin dijital evi.
+        </p>
+    </div>
+
+    <script>
+        // TARİH AYARI: Yıl, Ay (0-11 arası! Ocak=0, Temmuz=6), Gün, Saat, Dakika
+        // Örnek: 15 Temmuz 2024 saat 20:30 için -> new Date(2024, 6, 15, 20, 30)
+        const startDate = new Date(2024, 6, 15, 20, 30); 
+
+        function updateCounter() {
+            const now = new Date();
+            const difference = now - startDate;
+
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = days < 10 ? '0' + days : days;
+            document.getElementById('hours').innerText = hours < 10 ? '0' + hours : hours;
+            document.getElementById('minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
+            document.getElementById('seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
+        }
+
+        setInterval(updateCounter, 1000);
+        updateCounter();
+    </script>
 
 </body>
 </html>
