@@ -1,0 +1,21 @@
+{
+  "name": "Nehir & Deniz",
+  "short_name": "Nehir&Deniz",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#e9f3f0",
+  "theme_color": "#2f4842",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=192&auto=format&fit=crop",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=512&auto=format&fit=crop",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
