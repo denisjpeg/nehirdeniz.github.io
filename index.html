@@ -357,16 +357,18 @@
         </section>
     </div>
 
-    <script>
+  <script>
         // 🛰️ SUPABASE CONFIG
         const SUPABASE_URL = "https://jsixbeuphtcnfvwespqv.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzaXhiZXVwaHRjbmZ2d2VzcHF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNTM5NzcsImV4cCI6MjA5MDcyOTk3N30.3t8IWZf7rtBRxKyxBfH7VOUBxU5eEYyaygUXR8DmGKc"; 
         
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // 📱 iPHONE KİLİT EKRANI MOTORU
-        const CORRECT_PIN = "145323";
+        // 📱 iPHONE KİLİT EKRANI & KULLANICI MOTORU (GÜNCELLENDİ)
+        const PIN_NEHIR = "145323"; // Nehir'in şifresi
+        const PIN_DENIZ = "160507"; // Deniz'in şifresi
         let enteredPin = "";
+        let currentUser = ""; // "deniz" veya "nehir"
 
         function updateLockScreenTime() {
             const now = new Date();
@@ -396,11 +398,14 @@
 
         function checkPin() {
             const container = document.getElementById('dotsContainer');
-            if (enteredPin === CORRECT_PIN) {
-                document.getElementById('lock-screen').style.transform = "translateY(-100vh)";
-                setTimeout(() => {
-                    document.getElementById('lock-screen').style.display = "none";
-                }, 600);
+            if (enteredPin === PIN_DENIZ) {
+                currentUser = "deniz";
+                setupUserInterface();
+                unlockInterface();
+            } else if (enteredPin === PIN_NEHIR) {
+                currentUser = "nehir";
+                setupUserInterface();
+                unlockInterface();
             } else {
                 container.classList.add('shake', 'error');
                 setTimeout(() => {
@@ -408,6 +413,23 @@
                     enteredPin = "";
                     updateDots();
                 }, 400);
+            }
+        }
+
+        function unlockInterface() {
+            document.getElementById('lock-screen').style.transform = "translateY(-100vh)";
+            setTimeout(() => {
+                document.getElementById('lock-screen').style.display = "none";
+            }, 600);
+        }
+
+        // Kimin girdiğine göre buton adını değiştiren fonksiyon
+        function setupUserInterface() {
+            const btn = document.getElementById('pokeBtn');
+            if (currentUser === "deniz") {
+                btn.innerText = "Nehir'i Dürt ⚡";
+            } else if (currentUser === "nehir") {
+                btn.innerText = "Deniz'i Dürt ⚡";
             }
         }
 
@@ -423,20 +445,35 @@
         setInterval(updateCounter, 1000);
         updateCounter();
 
-        // 2. Telegram Anlık Dürtme API Entegrasyonu
+        // 2. Telegram Karşılıklı Dürtme API Entegrasyonu
         const TELEGRAM_BOT_TOKEN = "8910495698:AAEuXQ2xrWhE8P-iXEoDta49_B2karFnb2Y";
-        const TELEGRAM_CHAT_ID = "5379303106";
+        const CHAT_ID_DENIZ = "5379303106"; 
+        const CHAT_ID_NEHIR = "7231702723"; // Nehir'in chat id bilgisini buraya gir
 
-        function pokeDeniz() {
+        function handlePokeSystem() {
             const statusDiv = document.getElementById('pokeStatus');
             statusDiv.innerText = "Dürtülüyor... ⚡";
             statusDiv.style.color = "var(--text-muted)";
-            const message = "❤️ Nehir şu an siteye girdi ve seni dürttü! ✨";
-            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(message)}`;
+            
+            let targetChatId = "";
+            let message = "";
+            let successText = "";
+
+            if (currentUser === "deniz") {
+                targetChatId = CHAT_ID_NEHIR;
+                message = "❤️ Deniz şu an siteye girdi ve seni dürttü! ✨";
+                successText = "Nehir dürdüldü! Telefonu şu an titriyor 🥰";
+            } else {
+                targetChatId = CHAT_ID_DENIZ;
+                message = "❤️ Nehir şu an siteye girdi ve seni dürttü! ✨";
+                successText = "Deniz dürdüldü! Telefonu şu an titriyor 🥰";
+            }
+
+            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${targetChatId}&text=${encodeURIComponent(message)}`;
             const img = new Image();
             img.src = url;
             img.onload = img.onerror = function() {
-                statusDiv.innerText = "Deniz dürtüldü! Telefonu şu an titriyor 🥰";
+                statusDiv.innerText = successText;
                 statusDiv.style.color = "#4caf50";
             };
         }
@@ -452,7 +489,7 @@
         function loadQuizQuestion() {
             const quizBox = document.getElementById('quizBox');
             if(currentQuizIndex >= quizData.length) {
-                quizBox.innerHTML = `<h3 style="color: #4caf50; font-size: 1.5rem; margin-bottom: 10px;">🎉 Tebrikler Nehir!</h3><p style="font-size:1.1rem;">Bizi mükemmel tanıyorsun! Ortak Uyum Skorunuz: %100 ❤️</p>`;
+                quizBox.innerHTML = `<h3 style="color: #4caf50; font-size: 1.5rem; margin-bottom: 10px;">🎉 Tebrikler!</h3><p style="font-size:1.1rem;">Bizi mükemmel tanıyorsunuz! Ortak Uyum Skorunuz: %100 ❤️</p>`;
                 confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
                 return;
             }
