@@ -10,30 +10,22 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- 📦 Supabase Resmi CDN Kütüphanesi -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <!-- 🌐 SİTE SİMGESİ (FAVICON) -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>❤️</text></svg>">
 
-    <!-- 🏷️ ARAMA MOTORU & SOSYAL MEDYA ÖNİZLEME (SNIPPET META AYARLARI) -->
+    <!-- 🏷️ SNIPPET META AYARLARI -->
     <meta name="description" content="26 Mart'tan beri atan tek bir kalp.">
-    
-    <!-- 🔍 GOOGLE SEARCH CONSOLE DOĞRULAMA ETİKETİ -->
     <meta name="google-site-verification" content="NDh1vXDMuYwS7UB20LG1satVMxsrg-WmluEl6qTHtSM" />
     
-    <!-- Open Graph / Facebook / Instagram / WhatsApp Önizlemeleri -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://nehirdeniz.com/">
     <meta property="og:title" content="Nehir & Deniz">
     <meta property="og:description" content="26 Mart'tan beri atan tek bir kalp.">
     <meta property="og:image" content="https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=600&auto=format&fit=crop">
 
-    <!-- Twitter / X Önizlemeleri -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://nehirdeniz.com/">
-    <meta property="twitter:title" content="Nehir & Deniz">
-    <meta property="twitter:description" content="26 Mart'tan beri atan tek bir kalp.">
-    <meta property="twitter:image" content="https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=600&auto=format&fit=crop">
-    
     <style>
         :root {
             --bg-color: #e9f3f0;
@@ -53,7 +45,6 @@
             overflow-x: hidden;
         }
 
-        /* 📱 REALISTIC iPHONE LOCK SCREEN OVERLAY */
         #lock-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100vh;
@@ -75,14 +66,12 @@
         .passcode-container { display: flex; flex-direction: column; align-items: center; margin-bottom: 40px; width: 100%; max-width: 280px; }
         .passcode-label { font-size: 1rem; font-weight: 400; margin-bottom: 20px; letter-spacing: 0.5px; opacity: 0.9; }
         
-        /* Şifre Noktaları */
         .dots-container { display: flex; gap: 15px; margin-bottom: 40px; }
         .dot { width: 12px; height: 12px; border: 1.5px solid white; border-radius: 50%; transition: background-color 0.15s ease; }
         .dot.active { background-color: white; }
         .dots-container.shake { animation: shake 0.4s ease-in-out; }
         .dots-container.error .dot { border-color: #ff5252; background-color: #ff5252; }
 
-        /* Tuş Takımı */
         .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px 25px; width: 100%; justify-items: center; }
         .key {
             width: 70px; height: 70px;
@@ -107,7 +96,6 @@
             40%, 80% { transform: translateX(10px); }
         }
 
-        /* ANA SİTE İÇERİĞİ */
         #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 1; pointer-events: none; }
         .main-wrapper { position: relative; z-index: 2; width: 100%; display: flex; flex-direction: column; align-items: center; }
         
@@ -130,13 +118,11 @@
         h1 { font-size: 3rem; font-weight: 300; letter-spacing: 3px; margin-bottom: 10px; text-align: center; }
         .subtitle { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 40px; text-align: center; }
 
-        /* Sayaç */
         .counter-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 30px 0; }
         .counter-item { background: rgba(255, 255, 255, 0.8); padding: 20px 10px; border-radius: 20px; text-align: center; border: 1px solid rgba(219, 235, 229, 0.5); }
         .counter-value { font-size: 1.8rem; font-weight: 500; }
         .counter-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; margin-top: 5px; }
 
-        /* Dürtme Alanı */
         .poke-container { text-align: center; margin: 20px 0; }
         .btn-poke {
             background-color: var(--poke-pink);
@@ -154,35 +140,29 @@
         .btn-poke:active { transform: scale(0.95); }
         .poke-status { font-size: 0.9rem; margin-top: 12px; color: var(--text-muted); min-height: 20px; }
 
-        /* 3D Kart Yapısı */
         .cards-container { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; width: 100%; perspective: 1000px; margin-top: 20px; }
         .tilt-card { width: 220px; height: 320px; background: white; border-radius: 20px; padding: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.06); transform-style: preserve-3d; transition: transform 0.1s ease, box-shadow 0.3s ease; cursor: pointer; }
         .tilt-card:hover { box-shadow: 0 25px 45px rgba(47, 72, 66, 0.12); }
         .tilt-card img { width: 100%; height: 80%; object-fit: cover; border-radius: 14px; transform: translateZ(20px); }
         .tilt-card .card-text { text-align: center; margin-top: 15px; font-size: 0.95rem; font-weight: 500; color: var(--dark-green); transform: translateZ(15px); }
 
-        /* Genel Elemanlar */
         .btn-general { background-color: var(--dark-green); color: white; padding: 12px 24px; border-radius: 15px; border: none; cursor: pointer; font-size: 1rem; transition: all 0.2s ease; }
         .btn-general:hover { background-color: #1f302c; transform: scale(1.02); }
         .input-general { padding: 12px 15px; border-radius: 12px; border: 1px solid var(--accent-green); outline: none; background: white; color: var(--dark-green); }
 
-        /* Not Duvarı */
         .notes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-top: 20px; width: 100%; }
         .post-it { background: #fffdf0; padding: 15px; border-radius: 15px; box-shadow: 3px 5px 15px rgba(0,0,0,0.03); border-left: 5px solid var(--accent-green); font-size: 0.9rem; line-height: 1.4; color: #445c56; position: relative; word-wrap: break-word; }
         .post-it-date { font-size: 0.75rem; color: var(--text-muted); margin-top: 10px; display: block; text-align: right; }
 
-        /* Quiz */
         .quiz-box { text-align: center; padding: 10px 0; }
         .quiz-question { font-size: 1.2rem; margin-bottom: 20px; font-weight: 400; }
         .quiz-options { display: flex; flex-direction: column; gap: 10px; max-width: 400px; margin: 0 auto; }
         .btn-option { background: white; border: 1px solid var(--main-green); padding: 12px; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; color: var(--dark-green); font-size: 0.95rem; text-align: left; padding-left: 20px; }
         .btn-option:hover { background: var(--main-green); transform: translateX(5px); }
 
-        /* Sinema */
         .cinema-box { text-align: center; padding: 15px; }
         .movie-display { font-size: 1.4rem; font-weight: 500; margin: 25px 0; min-height: 40px; color: var(--dark-green); transition: all 0.3s ease; }
 
-        /* Gridler */
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
         .stat-box { background: white; padding: 25px; border-radius: 20px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.02); border: 1px solid rgba(219, 235, 229, 0.4); }
         .stat-num { font-size: 2.5rem; font-weight: 600; color: var(--dark-green); margin-bottom: 10px; }
@@ -265,6 +245,7 @@
             <h2 class="section-title">Anı Albümümüz ✨📸</h2>
             <div class="glass-card">
                 <div class="cards-container" id="photoGallery">
+                    <!-- Başlangıç default fotoğrafları -->
                     <div class="tilt-card" onmousemove="tilt(event, this)" onmouseleave="resetTilt(this)">
                         <img src="img/foto1.jpeg" alt="Anı 1">
                         <div class="card-text">Bizim Hikayemiz ✨</div>
@@ -282,7 +263,7 @@
                 <div class="upload-area" style="margin-top: 30px; text-align: center;">
                     <input type="file" id="nehirUpload" accept="image/*" style="display: none;" onchange="handleNehirPhoto(event)">
                     <button class="btn-general" onclick="document.getElementById('nehirUpload').click()">📸 Yeni Bir Anı Ekle</button>
-                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">Nehir veya sen buraya tıklayarak yeni fotoğraflar ekleyebilir ve altına kendi yazınızı yazabilirsiniz!</p>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">Nehir veya sen buraya tıklayarak buluta yeni fotoğraflar ekleyebilirsiniz!</p>
                 </div>
             </div>
         </section>
@@ -355,6 +336,12 @@
     </div>
 
     <script>
+        // 🛰️ SUPABASE CONFIG (PANELDEKİ BİLGİLERİNİ BURAYA YAPIŞTIR)
+        const SUPABASE_URL = "https://jsixbeuphtcnfvwespqv.supabase.co"; // Az önce bulduğumuz adres kalabilir
+        const SUPABASE_ANON_KEY = "AYARLAR_BÖLÜMÜNDEN_ALDIĞIN_ANON_KEYI_BURAYA_YAPIŞTIR";
+        
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         // 📱 iPHONE KİLİT EKRANI MOTORU
         const CORRECT_PIN = "145323";
         let enteredPin = "";
@@ -477,28 +464,23 @@
         }
         function resetTilt(card) { card.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`; }
 
-        // 5. Fotoğraf Yükleme Altyapısı (Hatalardan Arındırılmış Pürüzsüz Sürüm)
-        function loadNehirPhotos() {
-            const storedPhotos = JSON.parse(localStorage.getItem('nehirPhotos')) || [];
-            storedPhotos.forEach(p => {
-                // Eğer p sadece string ise veya text alanı boşsa fallback mekanizması
-                const imgSrc = p.src ? p.src : p;
-                const imgText = (p.text && p.text !== "undefined") ? p.text : "Bizim Anımız 🤍";
-                appendPhotoToGallery(imgSrc, imgText);
-            });
+        // 🛰️ 5. BULUT ALBUMLER MOTORU (SUPABASE SENKRONİZASYONLU)
+        async function loadNehirPhotos() {
+            const { data, error } = await supabase.from('nehir_photos').select('*').order('id', { ascending: true });
+            if (data) {
+                data.forEach(p => appendPhotoToGallery(p.src, p.text));
+            }
         }
-        function handleNehirPhoto(event) {
+        async function handleNehirPhoto(event) {
             const file = event.target.files[0]; if (!file) return;
-            
             const userText = prompt("Bu harika anının altına ne yazalım sevgilim? ✨", "Yeni Anımız 🤍");
             const finalCardText = (userText && userText.trim() !== "") ? userText : "Yeni Anımız 🤍";
             
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = async function(e) {
                 const base64 = e.target.result;
-                const stored = JSON.parse(localStorage.getItem('nehirPhotos')) || [];
-                stored.push({ src: base64, text: finalCardText });
-                localStorage.setItem('nehirPhotos', JSON.stringify(stored));
+                // Buluta Ekle
+                await supabase.from('nehir_photos').insert([{ src: base64, text: finalCardText }]);
                 appendPhotoToGallery(base64, finalCardText);
             };
             reader.readAsDataURL(file);
@@ -512,31 +494,37 @@
         }
         loadNehirPhotos();
 
-        function loadTimeCapsuleNotes() {
-            const notes = JSON.parse(localStorage.getItem('capsuleNotes')) || [
-                { text: "Buraya birbirimiz için gelecekten notlar bırakabiliriz sevgilim! 💫", date: "Nihai Kurulum" }
-            ];
+        // 🛰️ 6. BULUT ZAMAN KAPSÜLÜ NOT MOTORU
+        async function loadTimeCapsuleNotes() {
+            const { data, error } = await supabase.from('nehir_notes').select('*').order('id', { ascending: true });
             const wall = document.getElementById('notesWall');
             wall.innerHTML = "";
-            notes.forEach(n => {
+            
+            // İlk açılışta veritabanı boşsa varsayılan notu ekle
+            if (!data || data.length === 0) {
+                wall.innerHTML = `<div class="post-it">Buraya birbirimiz için gelecekten notlar bırakabiliriz sevgilim! 💫<span class="post-it-date">Nihai Kurulum</span></div>`;
+                return;
+            }
+            data.forEach(n => {
                 const div = document.createElement('div');
                 div.className = "post-it";
                 div.innerHTML = `${n.text}<span class="post-it-date">${n.date}</span>`;
                 wall.appendChild(div);
             });
         }
-        function addTimeCapsuleNote() {
+        async function addTimeCapsuleNote() {
             const input = document.getElementById('noteInput');
             if(!input.value.trim()) return;
-            const notes = JSON.parse(localStorage.getItem('capsuleNotes')) || [];
-            const newNote = { text: input.value, date: new Date().toLocaleDateString('tr-TR') };
-            notes.push(newNote);
-            localStorage.setItem('capsuleNotes', JSON.stringify(notes));
+            const noteText = input.value;
+            const noteDate = new Date().toLocaleDateString('tr-TR');
+            
+            await supabase.from('nehir_notes').insert([{ text: noteText, date: noteDate }]);
             input.value = "";
             loadTimeCapsuleNotes();
         }
         loadTimeCapsuleNotes();
 
+        // 7. Harita Arama Motoru
         function searchLocation() {
             const query = document.getElementById('mapSearchInput').value; if(!query) return;
             document.getElementById('dynamicMapFrame').src = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
@@ -567,14 +555,42 @@
             }, 300);
         }
 
-        const stats = { coffee: parseInt(localStorage.getItem('coffeeCount')) || 0, beer: parseInt(localStorage.getItem('beerCount')) || 0, dream: parseInt(localStorage.getItem('dreamCount')) || 0 };
-        document.getElementById('coffeeCount').innerText = stats.coffee; document.getElementById('beerCount').innerText = stats.beer; document.getElementById('dreamCount').innerText = stats.dream;
-        function incrementStat(type) { 
-            stats[type]++; localStorage.setItem(type + 'Count', stats[type]); document.getElementById(type + 'Count').innerText = stats[type];
-            loveChart.data.datasets[0].data = [100, 95, 100, 70 + (stats.coffee * 0.5) > 100 ? 100 : 70 + (stats.coffee * 0.5), 60 + (stats.beer * 0.8) > 100 ? 100 : 60 + (stats.beer * 0.8)];
+        // 🛰️ 9. BULUT İLİŞKİ SAYAÇ LOGLARI MOTORU
+        let localStats = { coffee: 0, beer: 0, dream: 0 };
+
+        async function syncStatsWithSupabase() {
+            const { data, error } = await supabase.from('nehir_stats').select('*').eq('id', 'main_stats').single();
+            if (data) {
+                localStats.coffee = data.coffee;
+                localStats.beer = data.beer;
+                localStats.dream = data.dream;
+                
+                document.getElementById('coffeeCount').innerText = localStats.coffee;
+                document.getElementById('beerCount').innerText = localStats.beer;
+                document.getElementById('dreamCount').innerText = localStats.dream;
+                
+                updateChart();
+            }
+        }
+        async function incrementStat(type) { 
+            localStats[type]++;
+            document.getElementById(type + 'Count').innerText = localStats[type];
+            
+            // Buluttaki veriyi güncelle
+            await supabase.from('nehir_stats').update({ [type]: localStats[type] }).eq('id', 'main_stats');
+            updateChart();
+        }
+        function updateChart() {
+            loveChart.data.datasets[0].data = [
+                100, 95, 100, 
+                70 + (localStats.coffee * 0.5) > 100 ? 100 : 70 + (localStats.coffee * 0.5), 
+                60 + (localStats.beer * 0.8) > 100 ? 100 : 60 + (localStats.beer * 0.8)
+            ];
             loveChart.update();
         }
-        const loveChart = new Chart(document.getElementById('loveChart').getContext('2d'), { type: 'radar', data: { labels: ['Uyum', 'Eğlence', 'Güven', 'Kahve Rutini ☕', 'Bira Keyfi 🍺'], datasets: [{ label: 'Anlık Analiz', data: [100, 95, 100, 70 + (stats.coffee * 0.5), 60 + (stats.beer * 0.8)], backgroundColor: 'rgba(161, 207, 194, 0.4)', borderColor: 'rgba(47, 72, 66, 1)', borderWidth: 1.5 }] }, options: { scales: { r: { max: 100, min: 0, ticks: { display: false } } } } });
+        const loveChart = new Chart(document.getElementById('loveChart').getContext('2d'), { type: 'radar', data: { labels: ['Uyum', 'Eğlence', 'Güven', 'Kahve Rutini ☕', 'Bira Keyfi 🍺'], datasets: [{ label: 'Anlık Analiz', data: [100, 95, 100, 70, 60], backgroundColor: 'rgba(161, 207, 194, 0.4)', borderColor: 'rgba(47, 72, 66, 1)', borderWidth: 1.5 }] }, options: { scales: { r: { max: 100, min: 0, ticks: { display: false } } } } });
+        
+        syncStatsWithSupabase();
 
         particlesJS("particles-js", { "particles": { "number": { "value": 50 }, "color": { "value": "#a1cfc2" }, "shape": { "type": "circle" }, "opacity": { "value": 0.3, "random": true }, "size": { "value": 3, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#a1cfc2", "opacity": 0.15, "width": 1 }, "move": { "enable": true, "speed": 1 } } });
     </script>
