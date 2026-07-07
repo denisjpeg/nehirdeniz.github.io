@@ -1,23 +1,29 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+    <!-- Harici Premium Kütüphaneler -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
+    <!-- 🌐 SİTE SİMGESİ (FAVICON) - Sekmede Tatlı Bir Kalp Emojisi Görünecek -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>❤️</text></svg>">
 
+    <!-- 🏷️ ARAMA MOTORU & SOSYAL MEDYA ÖNİZLEME (SNIPPET META AYARLARI) -->
     <meta name="description" content="26 Mart'tan beri atan tek bir kalp.">
     
-    <meta name="google-site-verification" content="NDh1vXDMuYwS7UB20LG1satVMxsrg-WmluEl6qTHtSM" />
+    <!-- 🔍 GOOGLE SEARCH CONSOLE DOĞRULAMA ETİKETİ -->
+   <meta name="google-site-verification" content="NDh1vXDMuYwS7UB20LG1satVMxsrg-WmluEl6qTHtSM" />
     
+    <!-- Open Graph / Facebook / Instagram / WhatsApp Önizlemeleri -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://nehirdeniz.com/">
     <meta property="og:title" content="Nehir & Deniz">
     <meta property="og:description" content="26 Mart'tan beri atan tek bir kalp.">
     <meta property="og:image" content="https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=600&auto=format&fit=crop">
 
+    <!-- Twitter / X Önizlemeleri -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://nehirdeniz.com/">
     <meta property="twitter:title" content="Nehir & Deniz">
@@ -280,7 +286,7 @@
                 <div class="upload-area" style="margin-top: 30px; text-align: center;">
                     <input type="file" id="nehirUpload" accept="image/*" style="display: none;" onchange="handleNehirPhoto(event)">
                     <button class="btn-general" onclick="document.getElementById('nehirUpload').click()">📸 Yeni Bir Anı Ekle</button>
-                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">Nehir veya sen buraya tıklayarak yeni fotoğraflar ekleyebilirsiniz!</p>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">Nehir veya sen buraya tıklayarak yeni fotoğraflar ekleyebilir ve altına kendi yazınızı yazabilirsiniz!</p>
                 </div>
             </div>
         </section>
@@ -300,8 +306,14 @@
             <h2 class="section-title">Şarkılarımız & Bugün Buradayız 🎵📍</h2>
             <div class="media-grid">
                 <div class="glass-card media-card">
-                    <h3 style="font-weight:300; margin-bottom:15px; letter-spacing:1px;">Çalma Listemiz</h3>
-                    <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1EJJsLfpnO0biA?utm_source=generator&theme=0" width="100%" height="100%" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                    <h3 style="font-weight:300; margin-bottom:10px; letter-spacing:1px;">Çalma Listemiz</h3>
+                    <div class="search-container" style="margin-bottom: 15px;">
+                        <input type="text" class="input-general" id="spotifyLinkInput" placeholder="Spotify Blend veya Liste Linki yapıştırın..." style="flex: 1; font-size: 0.85rem;" value="https://open.spotify.com/playlist/37i9dQZF1EJJsLfpnO0biA">
+                        <button class="btn-general" style="padding: 0 15px; font-size: 0.85rem; border-radius: 12px;" onclick="updateSpotifyEmbed()">Yenile</button>
+                    </div>
+                    <div style="flex: 1; min-height: 320px; border-radius: 12px; overflow: hidden;">
+                        <iframe id="spotifyFrame" style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1EJJsLfpnO0biA?utm_source=generator&theme=0" width="100%" height="100%" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                    </div>
                 </div>
                 <div class="glass-card media-card">
                     <h3 style="font-weight:300; margin-bottom:15px; letter-spacing:1px;">Bugün Neredeyiz?</h3>
@@ -361,7 +373,6 @@
         const CORRECT_PIN = "145323";
         let enteredPin = "";
 
-        // Dinamik Saat ve Tarih Ayarı
         function updateLockScreenTime() {
             const now = new Date();
             const options = { weekday: 'long', month: 'long', day: 'numeric' };
@@ -375,7 +386,6 @@
             if (enteredPin.length >= 6) return;
             enteredPin += num;
             updateDots();
-
             if (enteredPin.length === 6) {
                 setTimeout(checkPin, 200);
             }
@@ -389,16 +399,15 @@
             });
         }
 
+        /* Entegrasyon doğrulaması */
         function checkPin() {
             const container = document.getElementById('dotsContainer');
             if (enteredPin === CORRECT_PIN) {
-                // Şifre Doğruyse Ekranı Kaydırarak Kapat
                 document.getElementById('lock-screen').style.transform = "translateY(-100vh)";
                 setTimeout(() => {
                     document.getElementById('lock-screen').style.display = "none";
                 }, 600);
             } else {
-                // Şifre Yanlışsa Sallama Efekti Ver ve Sıfırla
                 container.classList.add('shake', 'error');
                 setTimeout(() => {
                     container.classList.remove('shake', 'error');
@@ -428,10 +437,8 @@
             const statusDiv = document.getElementById('pokeStatus');
             statusDiv.innerText = "Dürtülüyor... ⚡";
             statusDiv.style.color = "var(--text-muted)";
-
             const message = "❤️ Nehir şu an siteye girdi ve seni dürttü! ✨";
             const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(message)}`;
-
             const img = new Image();
             img.src = url;
             img.onload = img.onerror = function() {
@@ -486,27 +493,33 @@
         }
         function resetTilt(card) { card.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`; }
 
-        // 5. Fotoğraf Yükleme Altyapısı
+        // 5. Fotoğraf Yükleme Altyapısı (Kendi Metnini Yazma Özellikli)
         function loadNehirPhotos() {
             const storedPhotos = JSON.parse(localStorage.getItem('nehirPhotos')) || [];
-            storedPhotos.forEach(p => appendPhotoToGallery(p));
+            storedPhotos.forEach(p => appendPhotoToGallery(p.src, p.text));
         }
         function handleNehirPhoto(event) {
             const file = event.target.files[0]; if (!file) return;
+            
+            // Kullanıcıdan alt metni manuel alma
+            const userText = prompt("Bu harika anının altına ne yazalım sevgilim? ✨", "Yeni Anımız 🤍");
+            if (userText === null) return; // İptal edilirse yükleme yapma
+            
             const reader = new FileReader();
             reader.onload = function(e) {
                 const base64 = e.target.result;
                 const stored = JSON.parse(localStorage.getItem('nehirPhotos')) || [];
-                stored.push(base64); localStorage.setItem('nehirPhotos', JSON.stringify(stored));
-                appendPhotoToGallery(base64);
+                stored.push({ src: base64, text: userText }); 
+                localStorage.setItem('nehirPhotos', JSON.stringify(stored));
+                appendPhotoToGallery(base64, userText);
             };
             reader.readAsDataURL(file);
         }
-        function appendPhotoToGallery(src) {
+        function appendPhotoToGallery(src, text) {
             const gallery = document.getElementById('photoGallery');
             const card = document.createElement('div'); card.className = 'tilt-card';
             card.setAttribute('onmousemove', 'tilt(event, this)'); card.setAttribute('onmouseleave', 'resetTilt(this)');
-            card.innerHTML = `<img src="${src}"><div class="card-text">Yeni Anımız 🤍</div>`;
+            card.innerHTML = `<img src="${src}"><div class="card-text">${text}</div>`;
             gallery.appendChild(card);
         }
         loadNehirPhotos();
@@ -537,7 +550,23 @@
         }
         loadTimeCapsuleNotes();
 
-        // 7. Harita Arama Motoru
+        // 7. Spotify Linkini Dinamik Embed'e Çevirme Motoru
+        function updateSpotifyEmbed() {
+            let link = document.getElementById('spotifyLinkInput').value.trim();
+            if(!link) return;
+            if(link.includes("spotify.com")) {
+                let embedUrl = link.replace("spotify.com/", "spotify.com/embed/");
+                if(!embedUrl.includes("?")) embedUrl += "?utm_source=generator&theme=0";
+                document.getElementById('spotifyFrame').src = embedUrl;
+                localStorage.setItem('savedSpotifyLink', link);
+            }
+        }
+        if(localStorage.getItem('savedSpotifyLink')) {
+            document.getElementById('spotifyLinkInput').value = localStorage.getItem('savedSpotifyLink');
+            updateSpotifyEmbed();
+        }
+
+        // 8. Harita Arama Motoru
         function searchLocation() {
             const query = document.getElementById('mapSearchInput').value; if(!query) return;
             document.getElementById('dynamicMapFrame').src = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
@@ -546,12 +575,12 @@
             const lq = query.toLowerCase();
             if(lq.includes("bira") || lq.includes("pub") || lq.includes("kadıköy") || lq.includes("beşiktaş")) recs = ["Butik Bira ve Pub Alanları 🍺", "Canlı Müzik & Rock Sahneleri 🎸", "Açık Hava Teras Mekanları 🌆"];
             else if(lq.includes("kahve") || lq.includes("moda") || lq.includes("cafe")) recs = ["Nitelikli Espresso ve Tatlı Evleri 🍰", "Kitap & Çalışma Kafeleri 📚", "Deniz Manzaralı Kahve Noktaları 🌊"];
-            else if(lq.includes("adana")) recs = ["Geleneksel Kebap ve Lezzet Durakları 🥩", "Ziyapaşa Bulvarı Cadde Kafeleri 2☕", "Menderes Bulvarı Günbatımı Seyri 🌅"];
+            else if(lq.includes("adana")) recs = ["Geleneksel Kebap ve Lezzet Durakları 🥩", "Ziyapaşa Bulvarı Cadde Kafeleri ☕", "Menderes Bulvarı Günbatımı Seyri 🌅"];
             recs.forEach(v => { const li = document.createElement('li'); li.className = 'venue-item'; li.innerText = v; list.appendChild(li); });
         }
         searchLocation();
 
-        // 8. Sinema Modu (Öneri Motoru)
+        // 9. Sinema Modu (Öneri Motoru)
         const movieList = [
             "Chained Together Canlı Yayını Açıp İzleyelim! 🎮",
             "Sakin Bir Akustik Rock Belgeseli Açalım 🎸",
@@ -569,7 +598,7 @@
             }, 300);
         }
 
-        // 9. Log Sayıcıları & Grafik
+        // 10. Log Sayıcıları & Grafik
         const stats = { coffee: parseInt(localStorage.getItem('coffeeCount')) || 0, beer: parseInt(localStorage.getItem('beerCount')) || 0, dream: parseInt(localStorage.getItem('dreamCount')) || 0 };
         document.getElementById('coffeeCount').innerText = stats.coffee; document.getElementById('beerCount').innerText = stats.beer; document.getElementById('dreamCount').innerText = stats.dream;
         function incrementStat(type) {
@@ -579,7 +608,7 @@
         }
         const loveChart = new Chart(document.getElementById('loveChart').getContext('2d'), { type: 'radar', data: { labels: ['Uyum', 'Eğlence', 'Güven', 'Kahve Rutini ☕', 'Bira Keyfi 🍺'], datasets: [{ label: 'Anlık Analiz', data: [100, 95, 100, 70 + (stats.coffee * 0.5), 60 + (stats.beer * 0.8)], backgroundColor: 'rgba(161, 207, 194, 0.4)', borderColor: 'rgba(47, 72, 66, 1)', borderWidth: 1.5 }] }, options: { scales: { r: { max: 100, min: 0, ticks: { display: false } } } } });
 
-        // 10. Parçacıklar
+        // 11. Parçacıklar
         particlesJS("particles-js", { "particles": { "number": { "value": 50 }, "color": { "value": "#a1cfc2" }, "shape": { "type": "circle" }, "opacity": { "value": 0.3, "random": true }, "size": { "value": 3, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#a1cfc2", "opacity": 0.15, "width": 1 }, "move": { "enable": true, "speed": 1 } } });
     </script>
 </body>
