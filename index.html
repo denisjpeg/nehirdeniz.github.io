@@ -346,11 +346,11 @@
             </div>
         </section>
     </div>
-
-    <script>
-        // 🛰️ SUPABASE CONFIG (ÇAKIŞMASIZ KALICI BAĞLANTI)
+<script>
+        // 🛰️ SUPABASE CONFIG
         const SUPABASE_URL = "https://jsixbeuphtcnfvwespqv.supabase.co";
-        const SUPABASE_ANON_KEY = "BURAYA_KENDİ_ANON_KEYİNİ_YAPIŞTIR";
+        // ⚠️ AŞAĞIDAKİ ALANA SUPABASE'DEN ALDIĞIN UZUN ANON KEY'İ EKSİKSİZCE YAPIŞTIR:
+        const SUPABASE_ANON_KEY = "BURAYA_SUPABASE_ANON_KEYINI_YAPIŞTIR"; 
         
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -479,13 +479,14 @@
         // 🛰️ 5. BULUT ALBUMLER MOTORU
         async function loadNehirPhotos() {
             const { data, error } = await supabaseClient.from('nehir_photos').select('*').order('id', { ascending: true });
+            const gallery = document.getElementById('photoGallery');
+            const dynamicCards = gallery.querySelectorAll('.dynamic-photo');
+            dynamicCards.forEach(c => c.remove());
+
             if (data) {
-                data.forEach(p => {
-                    const imgSrc = p.src ? p.src : p;
-                    const imgText = (p.text && p.text !== "undefined") ? p.text : "Bizim Anımız 🤍";
-                    appendPhotoToGallery(imgSrc, imgText);
-                });
+                data.forEach(p => appendPhotoToGallery(p.src, p.text, true));
             }
+            if (error) console.error("Fotoğraf Yükleme Hatası:", error.message);
         }
         async function handleNehirPhoto(event) {
             const file = event.target.files[0]; if (!file) return;
@@ -495,14 +496,19 @@
             const reader = new FileReader();
             reader.onload = async function(e) {
                 const base64 = e.target.result;
-                await supabaseClient.from('nehir_photos').insert([{ src: base64, text: finalCardText }]);
-                appendPhotoToGallery(base64, finalCardText);
+                const { error } = await supabaseClient.from('nehir_photos').insert([{ src: base64, text: finalCardText }]);
+                if(error) {
+                    alert("Supabase Hatası (Fotoğraf): " + error.message);
+                } else {
+                    loadNehirPhotos();
+                }
             };
             reader.readAsDataURL(file);
         }
-        function appendPhotoToGallery(src, text) {
+        function appendPhotoToGallery(src, text, isDynamic = false) {
             const gallery = document.getElementById('photoGallery');
-            const card = document.createElement('div'); card.className = 'tilt-card';
+            const card = document.createElement('div'); 
+            card.className = isDynamic ? 'tilt-card dynamic-photo' : 'tilt-card';
             card.setAttribute('onmousemove', 'tilt(event, this)'); card.setAttribute('onmouseleave', 'resetTilt(this)');
             card.innerHTML = `<img src="${src}"><div class="card-text">${text}</div>`;
             gallery.appendChild(card);
@@ -515,6 +521,12 @@
             const wall = document.getElementById('notesWall');
             wall.innerHTML = "";
             
+            if (error) {
+                console.error("Not Okuma Hatası:", error.message);
+                wall.innerHTML = `<div class="post-it" style="border-left-color: red;">Bağlantı Hatası: ${error.message}</div>`;
+                return;
+            }
+
             if (!data || data.length === 0) {
                 wall.innerHTML = `<div class="post-it">Buraya birbirimiz için gelecekten notlar bırakabiliriz sevgilim! 💫<span class="post-it-date">Nihai Kurulum</span></div>`;
                 return;
@@ -532,9 +544,13 @@
             const noteText = input.value;
             const noteDate = new Date().toLocaleDateString('tr-TR');
             
-            await supabaseClient.from('nehir_notes').insert([{ text: noteText, date: noteDate }]);
-            input.value = "";
-            loadTimeCapsuleNotes();
+            const { error } = await supabaseClient.from('nehir_notes').insert([{ text: noteText, date: noteDate }]);
+            if(error) {
+                alert("Supabase Hatası (Not Ekleme): " + error.message);
+            } else {
+                input.value = "";
+                loadTimeCapsuleNotes();
+            }
         }
         loadTimeCapsuleNotes();
 
@@ -585,12 +601,14 @@
                 
                 updateChart();
             }
+            if (error) console.error("Sayaç Eşitleme Hatası:", error.message);
         }
         async function incrementStat(type) { 
             localStats[type]++;
             document.getElementById(type + 'Count').innerText = localStats[type];
             
-            await supabaseClient.from('nehir_stats').update({ [type]: localStats[type] }).eq('id', 'main_stats');
+            const { error } = await supabaseClient.from('nehir_stats').update({ [type]: localStats[type] }).eq('id', 'main_stats');
+            if(error) alert("Supabase Hatası (Sayaç): " + error.message);
             updateChart();
         }
         function updateChart() {
@@ -604,6 +622,16 @@
         const loveChart = new Chart(document.getElementById('loveChart').getContext('2d'), { type: 'radar', data: { labels: ['Uyum', 'Eğlence', 'Güven', 'Kahve Rutini ☕', 'Bira Keyfi 🍺'], datasets: [{ label: 'Anlık Analiz', data: [100, 95, 100, 70, 60], backgroundColor: 'rgba(161, 207, 194, 0.4)', borderColor: 'rgba(47, 72, 66, 1)', borderWidth: 1.5 }] }, options: { scales: { r: { max: 100, min: 0, ticks: { display: false } } } } });
         
         syncStatsWithSupabase();
+
+        // 🔄 REALTIME CANLI DİNLEYİCİ
+        supabaseClient
+            .channel('schema-db-changes')
+            .on('postgres_changes', { event: '*', filter: 'schema=public' }, () => {
+                loadTimeCapsuleNotes();
+                loadNehirPhotos();
+                syncStatsWithSupabase();
+            })
+            .subscribe();
 
         particlesJS("particles-js", { "particles": { "number": { "value": 50 }, "color": { "value": "#a1cfc2" }, "shape": { "type": "circle" }, "opacity": { "value": 0.3, "random": true }, "size": { "value": 3, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#a1cfc2", "opacity": 0.15, "width": 1 }, "move": { "enable": true, "speed": 1 } } });
     </script>
