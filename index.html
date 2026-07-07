@@ -18,7 +18,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
+     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>❤️</text></svg>">
     <meta name="description" content="26 Mart'tan beri atan tek bir kalp.">
     <meta name="google-site-verification" content="NDh1vXDMuYwS7UB20LG1satVMxsrg-WmluEl6qTHtSM" />
@@ -32,7 +32,6 @@
             --text-muted: #618279;
             --poke-pink: #f3a3b3;
             --purple-accent: #b39ddb;
-            --whatsapp-green: #25d366;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -64,7 +63,7 @@
 
         .passcode-container { display: flex; flex-direction: column; align-items: center; margin-bottom: 40px; width: 100%; max-width: 280px; }
         .passcode-label { font-size: 1rem; font-weight: 400; margin-bottom: 20px; letter-spacing: 0.5px; opacity: 0.9; }
-        
+         
         .dots-container { display: flex; gap: 15px; margin-bottom: 40px; }
         .dot { width: 12px; height: 12px; border: 1.5px solid white; border-radius: 50%; transition: background-color 0.15s ease; }
         .dot.active { background-color: white; }
@@ -97,9 +96,9 @@
 
         #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 1; pointer-events: none; }
         .main-wrapper { position: relative; z-index: 2; width: 100%; display: flex; flex-direction: column; align-items: center; }
-        
+         
         section { min-height: 100vh; width: 100%; display: flex; justify-content: center; align-items: center; padding: 60px 20px; flex-direction: column; position: relative; }
-        
+         
         .glass-card {
             background: rgba(255, 255, 255, 0.45);
             backdrop-filter: blur(20px);
@@ -136,26 +135,7 @@
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .btn-poke:hover { transform: scale(1.08) translateY(-3px); box-shadow: 0 15px 30px rgba(243, 163, 179, 0.6); }
-        
-        /* 📞 WHATSAPP GÖRÜNTÜLÜ ARAMA BUTON STİLİ */
-        .btn-call {
-            background-color: var(--whatsapp-green);
-            color: white;
-            font-size: 1.1rem;
-            font-weight: 600;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);
-            transition: all 0.3s ease;
-        }
-        .btn-call:hover { transform: scale(1.05); box-shadow: 0 15px 30px rgba(37, 211, 102, 0.5); }
-        
+         
         .poke-status { font-size: 0.9rem; color: var(--text-muted); min-height: 20px; }
 
         .cards-container { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; width: 100%; perspective: 1000px; margin-top: 20px; }
@@ -232,7 +212,7 @@
             <div class="glass-card hero-card">
                 <h1>nehir & deniz</h1>
                 <div class="subtitle">26 Mart'tan beri atan tek bir kalp.</div>
-                
+                 
                 <div class="counter-container">
                     <div class="counter-item"><div class="counter-value" id="days">00</div><div class="counter-label">Gün</div></div>
                     <div class="counter-item"><div class="counter-value" id="hours">00</div><div class="counter-label">Saat</div></div>
@@ -241,14 +221,8 @@
                 </div>
 
                 <div class="poke-container">
-                    <button class="btn-poke" onclick="pokeDeniz()">Deniz'i Dürt ⚡</button>
-                    
-                    <!-- 📞 CANLI WHATSAPP GÖRÜNTÜLÜ ARAMA PROTOKOLÜ -->
-                   <!-- 📞 GÜVENLİ VE RESMİ WHATSAPP GÖRÜNTÜLÜ ARAMA KÖPRÜSÜ -->
-                    <a href="https://api.whatsapp.com/v1/call?number=905452660337&video=1" class="btn-call">
-                        🟢 Deniz'i Görüntülü Ara
-                    </a>
-                    
+                    <!-- ⚡ ID TANIMLAMASI VE TETİKLEME DÜZELTİLDİ -->
+                    <button class="btn-poke" id="pokeBtn" onclick="handlePokeSystem()">Yükleniyor... ⚡</button>
                     <div class="poke-status" id="pokeStatus"></div>
                 </div>
             </div>
@@ -281,7 +255,7 @@
                         <div class="card-text">Her An Birlikte 💫</div>
                     </div>
                 </div>
-                
+                 
                 <div class="upload-area" style="margin-top: 30px; text-align: center;">
                     <input type="file" id="nehirUpload" accept="image/*" style="display: none;" onchange="handleNehirPhoto(event)">
                     <button class="btn-general" onclick="document.getElementById('nehirUpload').click()">📸 Yeni Bir Anı Ekle</button>
@@ -357,14 +331,14 @@
         </section>
     </div>
 
-  <script>
+    <script>
         // 🛰️ SUPABASE CONFIG
         const SUPABASE_URL = "https://jsixbeuphtcnfvwespqv.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzaXhiZXVwaHRjbmZ2d2VzcHF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNTM5NzcsImV4cCI6MjA5MDcyOTk3N30.3t8IWZf7rtBRxKyxBfH7VOUBxU5eEYyaygUXR8DmGKc"; 
         
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // 📱 iPHONE KİLİT EKRANI & KULLANICI MOTORU (GÜNCELLENDİ)
+        // 📱 iPHONE KİLİT EKRANI & KULLANICI MOTORU (DÜZELTİLDİ)
         const PIN_NEHIR = "145323"; // Nehir'in şifresi
         const PIN_DENIZ = "160507"; // Deniz'in şifresi
         let enteredPin = "";
@@ -426,10 +400,12 @@
         // Kimin girdiğine göre buton adını değiştiren fonksiyon
         function setupUserInterface() {
             const btn = document.getElementById('pokeBtn');
-            if (currentUser === "deniz") {
-                btn.innerText = "Nehir'i Dürt ⚡";
-            } else if (currentUser === "nehir") {
-                btn.innerText = "Deniz'i Dürt ⚡";
+            if (btn) {
+                if (currentUser === "deniz") {
+                    btn.innerText = "Nehir'i Dürt ⚡";
+                } else if (currentUser === "nehir") {
+                    btn.innerText = "Deniz'i Dürt ⚡";
+                }
             }
         }
 
@@ -448,7 +424,7 @@
         // 2. Telegram Karşılıklı Dürtme API Entegrasyonu
         const TELEGRAM_BOT_TOKEN = "8910495698:AAEuXQ2xrWhE8P-iXEoDta49_B2karFnb2Y";
         const CHAT_ID_DENIZ = "5379303106"; 
-        const CHAT_ID_NEHIR = "7231702723"; // Nehir'in chat id bilgisini buraya gir
+        const CHAT_ID_NEHIR = "7231702723"; // Nehir'in chat id'si
 
         function handlePokeSystem() {
             const statusDiv = document.getElementById('pokeStatus');
@@ -527,6 +503,7 @@
         async function loadNehirPhotos() {
             const { data, error } = await supabaseClient.from('nehir_photos').select('*').order('id', { ascending: true });
             const gallery = document.getElementById('photoGallery');
+            if (!gallery) return;
             const dynamicCards = gallery.querySelectorAll('.dynamic-photo');
             dynamicCards.forEach(c => c.remove());
 
@@ -549,6 +526,7 @@
         }
         function appendPhotoToGallery(src, text, isDynamic = false) {
             const gallery = document.getElementById('photoGallery');
+            if (!gallery) return;
             const card = document.createElement('div'); 
             card.className = isDynamic ? 'tilt-card dynamic-photo' : 'tilt-card';
             card.setAttribute('onmousemove', 'tilt(event, this)'); card.setAttribute('onmouseleave', 'resetTilt(this)');
@@ -561,6 +539,7 @@
         async function loadTimeCapsuleNotes() {
             const { data, error } = await supabaseClient.from('nehir_notes').select('*').order('id', { ascending: true });
             const wall = document.getElementById('notesWall');
+            if (!wall) return;
             wall.innerHTML = "";
             
             if (!data || data.length === 0) {
@@ -592,7 +571,8 @@
         function searchLocation() {
             const query = document.getElementById('mapSearchInput').value; if(!query) return;
             document.getElementById('dynamicMapFrame').src = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
-            const list = document.getElementById('dynamicVenueList'); list.innerHTML = "";
+            const list = document.getElementById('dynamicVenueList'); if(!list) return;
+            list.innerHTML = "";
             let recs = ["En Sevilen Üçüncü Nesil Kahveciler ☕", "Tarihi ve Otantik Yürüyüş Yolları 🗺️", "Sakin ve Akustik Dinlenme Noktaları 🎵"];
             const lq = query.toLowerCase();
             if(lq.includes("bira") || lq.includes("pub") || lq.includes("kadıköy") || lq.includes("beşiktaş")) recs = ["Butik Bira ve Pub Alanları 🍺", "Canlı Müzik & Rock Sahneleri 🎸", "Açık Hava Teras Mekanları 🌆"];
@@ -612,6 +592,7 @@
         ];
         function suggestMovie() {
             const display = document.getElementById('movieDisplay');
+            if (!display) return;
             display.style.opacity = 0;
             setTimeout(() => {
                 display.innerText = movieList[Math.floor(Math.random() * movieList.length)];
