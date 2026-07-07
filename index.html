@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nehir & Deniz</title>
 
+    <!-- 📱 PWA VE APPLE MOBİL UYGULAMA AYARLARI -->
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Nehir & Deniz">
     <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=512&auto=format&fit=crop">
 
+    <!-- Harici Premium Kütüphaneler -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -223,13 +225,14 @@
                     <div class="poke-status" id="pokeStatus"></div>
                 </div>
 
+                <!-- 🦭 BEYAZ YAVRU FOK EVCİL HAYVAN SİSTEMİ -->
                 <div class="glass-card" style="margin-top: 30px; text-align: center;">
                     <h3 style="font-weight: 300; margin-bottom: 10px; letter-spacing: 1px;">Bizim Yavru Fokumuz 🦭❤️</h3>
                     <div style="font-size: 1rem; color: var(--text-muted); margin-bottom: 15px;">
                         🔥 Günlük Serimiz: <span id="petStreak" style="font-weight: 600; color: var(--dark-green);">0</span> Gün | Toplam Besleme: <span id="petFeed">0</span>
                     </div>
                     
-                    <div style="width: 150px; height: 150px; margin: 0 auto; border-radius: 50%; overflow: hidden; border: 3px solid var(--accent-green); box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: transform 0.2s ease;" id="petAvatarContainer" onclick="interactWithPet()">
+                    <div style="width: 150px; height: 150px; margin: 0 auto; border-radius: 50%; overflow: hidden; border: 3px solid var(--accent-green); box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: transform 0.2s ease; cursor: pointer;" id="petAvatarContainer" onclick="interactWithPet()">
                         <img id="petImage" src="https://images.unsplash.com/photo-1590418606746-018840f9cd0f?q=80&w=300&auto=format&fit=crop" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
                     
@@ -612,7 +615,7 @@
             }, 300);
         }
 
-        // 🛰️ 9. BULUT İLİŞKİ SAYAÇ LOGLARI MOTORU
+        // 🛰️ 8. BULUT İLİŞKİ SAYAÇ LOGLARI MOTORU
         let localStats = { coffee: 0, beer: 0, dream: 0 };
 
         async function syncStatsWithSupabase() {
@@ -645,7 +648,7 @@
         
         syncStatsWithSupabase();
 
-        // 🦭 BEYAZ YAVRU FOK VE STREAK MOTORU (BAĞIMSIZLAŞTIRILDI VE DÜZELTİLDİ)
+        // 🦭 9. BEYAZ YAVRU FOK VE STREAK MOTORU
         let petStats = { streak: 0, totalFeed: 0, lastVisit: "" };
 
         const petStages = {
@@ -714,17 +717,48 @@
             document.getElementById('petFeed').innerText = petStats.totalFeed;
             document.getElementById('petSpeech').innerText = "Ham ham! Balık çok lezzetliydi sevgilim! 🐟 Çook teşekkürler! 🥰";
             
-            confetti({ particleCount: 30, spread: 30, origin: { y: 0.8 } });
+            // 💖 ÖZELLEŞTİRİLMİŞ AŞK KALPLERİ EFEKTİ
+            const defaults = { spread: 360, ticks: 50, gravity: 0, decay: 0.94, startVelocity: 30, colors: ['#f3a3b3', '#ff4d6d', '#ff758f'] };
+            confetti({ ...defaults, particleCount: 40, scalar: 1.2, shapes: ['heart'] });
+            confetti({ ...defaults, particleCount: 20, scalar: 0.75 });
 
+            // 🔊 TATLI YAVRU FOK SESİ SENTEZLEYİCİ (Vıyk! / Viyvv!)
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = 'triangle'; 
+                osc.frequency.setValueAtTime(450, audioCtx.currentTime); 
+                osc.frequency.exponentialRampToValueAtTime(750, audioCtx.currentTime + 0.15); 
+                osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.3); 
+                
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            } catch(e) {
+                console.log("Ses motoru başlatılamadı:", e);
+            }
+
+            // Zıplama efekti
             const container = document.getElementById('petAvatarContainer');
-            container.style.transform = "scale(1.15) translateY(-10px)";
-            setTimeout(() => { container.style.transform = "scale(1)"; }, 200);
+            if (container) {
+                container.style.transform = "scale(1.15) translateY(-10px)";
+                setTimeout(() => { container.style.transform = "scale(1)"; }, 200);
+            }
 
+            // Supabase'e yaz
             await supabaseClient.from('nehir_pet').update({ total_feed_count: petStats.totalFeed }).eq('id', 'baby_seal');
         }
 
         function interactWithPet() {
             const container = document.getElementById('petAvatarContainer');
+            if (!container) return;
             container.style.transform = "scale(1.1)";
             setTimeout(() => { container.style.transform = "scale(1)"; }, 150);
             
