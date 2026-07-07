@@ -4,136 +4,266 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nehir & Deniz</title>
+    <!-- Harici Kütüphaneler (Premium Animasyonlar İçin) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
     <style>
-        body {
+        :root {
+            --bg-color: #e9f3f0;
+            --main-green: #dbebe5;
+            --dark-green: #2f4842;
+            --accent-green: #a1cfc2;
+            --text-muted: #618279;
+        }
+
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* iPhone 15 Su Yeşili Soft Geçiş */
-            background: linear-gradient(135deg, #e9f3f0, #dbebe5);
-            color: #2f4842;
+        }
+
+        body {
+            font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--dark-green);
+            overflow-x: hidden;
+        }
+
+        /* Arka Plan Efekti */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .main-wrapper {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Hero Bölümü */
+        section {
+            min-height: 100vh;
+            width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.45);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 30px;
+            padding: 60px 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 50px rgba(47, 72, 66, 0.04);
             text-align: center;
         }
-        .container {
-            background: rgba(255, 255, 255, 0.65);
-            padding: 40px 30px;
-            border-radius: 24px;
-            box-shadow: 0 10px 40px rgba(47, 72, 66, 0.05);
-            max-width: 500px;
-            width: 85%;
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-        }
+
         h1 {
-            font-size: 2.2rem;
-            color: #2f4842;
-            margin-bottom: 5px;
-            font-weight: 400;
-            letter-spacing: 1px;
+            font-size: 2.8rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            opacity: 0;
+            transform: translateY(30px);
         }
+
         .subtitle {
-            font-size: 1rem;
-            color: #618279;
-            margin-bottom: 30px;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            opacity: 0;
+            transform: translateY(30px);
         }
-        /* Sayaç Alanı */
-        .counter-grid {
+
+        /* İnteraktif Sayaç */
+        .counter-container {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin: 25px 0;
+            gap: 15px;
+            margin: 30px 0;
+            opacity: 0;
+            transform: scale(0.9);
         }
-        .counter-box {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 15px 5px;
-            border-radius: 14px;
-            border: 1px solid #dbebe5;
+
+        .counter-item {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(219, 235, 229, 0.5);
+            padding: 20px 10px;
+            border-radius: 20px;
+            transition: transform 0.3s ease;
         }
-        .counter-num {
-            font-size: 1.6rem;
-            font-weight: 600;
-            color: #3b5c54;
+
+        .counter-item:hover {
+            transform: translateY(-5px);
         }
-        .counter-label {
-            font-size: 0.75rem;
-            color: #799c92;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 5px;
-        }
-        .leaf {
-            color: #a1cfc2;
+
+        .counter-value {
             font-size: 1.8rem;
-            margin: 15px 0;
-            animation: float 3s ease-in-out infinite;
+            font-weight: 500;
+            color: var(--dark-green);
         }
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-8px); }
-            100% { transform: translateY(0px); }
+
+        .counter-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-top: 5px;
+            letter-spacing: 1px;
+        }
+
+        /* Polaroid Galeri Bölümü */
+        .gallery-container {
+            display: flex;
+            flex-direction: column;
+            gap: 50px;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .polaroid {
+            background: white;
+            padding: 15px 15px 35px 15px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            border-radius: 4px;
+            transform: rotate(-3deg);
+            width: 280px;
+            transition: all 0.5s ease;
+            cursor: pointer;
+        }
+
+        .polaroid:nth-child(even) {
+            transform: rotate(4deg);
+        }
+
+        .polaroid img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 2px;
+        }
+
+        .polaroid .caption {
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 1rem;
+            color: #4a4a4a;
+            font-weight: bold;
+        }
+
+        .polaroid:hover {
+            transform: scale(1.05) rotate(0deg) !important;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+            z-index: 10;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>nehir & deniz</h1>
-        <div class="subtitle">Zamanın su gibi aktığı yer...</div>
-        
-        <div class="leaf">🍃</div>
-        
-        <!-- Canlı Sayaç -->
-        <div class="counter-grid">
-            <div class="counter-box">
-                <div class="counter-num" id="days">00</div>
-                <div class="counter-label">Gün</div>
-            </div>
-            <div class="counter-box">
-                <div class="counter-num" id="hours">00</div>
-                <div class="counter-label">Saat</div>
-            </div>
-            <div class="counter-box">
-                <div class="counter-num" id="minutes">00</div>
-                <div class="counter-label">Dk</div>
-            </div>
-            <div class="counter-box">
-                <div class="counter-num" id="seconds">00</div>
-                <div class="counter-label">Sn</div>
-            </div>
-        </div>
+    <!-- Arka planda uçuşan noktacıklar -->
+    <div id="particles-js"></div>
 
-        <p style="font-size: 1rem; color: #4e6e65; line-height: 1.6; margin-top: 25px;">
-            Paylaştığımız her anın, kurduğumuz her hayalin dijital evi.
-        </p>
+    <div class="main-wrapper">
+        <!-- ANA EKRAN -->
+        <section id="hero">
+            <div class="glass-card">
+                <h1 id="main-title">nehir & deniz</h1>
+                <div class="subtitle" id="main-sub">birlikte geçen her saniyenin anısına.</div>
+                
+                <div class="counter-container" id="counter">
+                    <div class="counter-item">
+                        <div class="counter-value" id="days">00</div>
+                        <div class="counter-label">Gün</div>
+                    </div>
+                    <div class="counter-item">
+                        <div class="counter-value" id="hours">00</div>
+                        <div class="counter-label">Saat</div>
+                    </div>
+                    <div class="counter-item">
+                        <div class="counter-value" id="minutes">00</div>
+                        <div class="counter-label">Dk</div>
+                    </div>
+                    <div class="counter-item">
+                        <div class="counter-value" id="seconds">00</div>
+                        <div class="counter-label">Sn</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ANILAR BÖLÜMÜ -->
+        <section id="gallery" style="min-height: auto; padding-bottom: 100px;">
+            <div class="gallery-container">
+                <h2 style="font-weight: 300; margin-bottom: 30px; letter-spacing: 2px;">Anılarımız</h2>
+                
+                <!-- Fotoğrafları buraya ekleyeceksin (img/ klasörüne atıp yollarını yazabilirsin) -->
+                <div class="polaroid-wrapper">
+                    <div class="polaroid">
+                        <img src="https://via.placeholder.com/400x500" alt="İlk Gün">
+                        <div class="caption">İlk Kahvemiz. ☕</div>
+                    </div>
+                </div>
+                
+            </div>
+        </section>
     </div>
 
     <script>
-        // TARİH AYARI: Yıl, Ay (0-11 arası! Ocak=0, Temmuz=6), Gün, Saat, Dakika
-        // Örnek: 15 Temmuz 2024 saat 20:30 için -> new Date(2024, 6, 15, 20, 30)
-        const startDate = new Date(2024, 6, 15, 20, 30); 
+        // 1. GSAP ile Yüklenme Animasyonları (Giriş Efektleri)
+        window.addEventListener('DOMContentLoaded', () => {
+            gsap.to("#main-title", { opacity: 1, y: 0, duration: 1.2, ease: "power4.out" });
+            gsap.to("#main-sub", { opacity: 1, y: 0, duration: 1.2, delay: 0.3, ease: "power4.out" });
+            gsap.to("#counter", { opacity: 1, scale: 1, duration: 1, delay: 0.6, ease: "back.out(1.7)" });
+        });
+
+        // 2. Canlı Sayaç Scripti (Tarihinizi buraya gir)
+        const startDate = new Date(2025, 0, 1, 0, 0); // Yıl, Ay(Ocak=0), Gün, Saat, Dk
 
         function updateCounter() {
-            const now = new Date();
-            const difference = now - startDate;
-
-            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-
-            document.getElementById('days').innerText = days < 10 ? '0' + days : days;
-            document.getElementById('hours').innerText = hours < 10 ? '0' + hours : hours;
-            document.getElementById('minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
-            document.getElementById('seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
+            const difference = new Date() - startDate;
+            document.getElementById('days').innerText = String(Math.floor(difference / 86400000)).padStart(2, '0');
+            document.getElementById('hours').innerText = String(Math.floor((difference % 86400000) / 3600000)).padStart(2, '0');
+            document.getElementById('minutes').innerText = String(Math.floor((difference % 3600000) / 60000)).padStart(2, '0');
+            document.getElementById('seconds').innerText = String(Math.floor((difference % 60000) / 1000)).padStart(2, '0');
         }
-
         setInterval(updateCounter, 1000);
         updateCounter();
-    </script>
 
+        // 3. Particles.js - Su Yeşili İnteraktif Noktalar Ayarı
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#a1cfc2" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.4, "random": true },
+                "size": { "value": 4, "random": true },
+                "line_linked": { "enable": true, "distance": 150, "color": "#a1cfc2", "opacity": 0.2, "width": 1 },
+                "move": { "enable": true, "speed": 1.5, "direction": "none", "random": true, "straight": false, "out_mode": "out" }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": false } },
+                "modes": { "grab": { "distance": 180, "line_linked": { "opacity": 0.45 } } }
+            },
+            "retina_detect": true
+        });
+    </script>
 </body>
 </html>
