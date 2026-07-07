@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nehir & Deniz</title>
 
+    <!-- 📱 PWA VE APPLE MOBİL UYGULAMA AYARLARI -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Nehir & Deniz">
+    <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=512&auto=format&fit=crop">
+
+    <!-- Harici Premium Kütüphaneler -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -12,23 +20,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>❤️</text></svg>">
-
     <meta name="description" content="26 Mart'tan beri atan tek bir kalp.">
-    
     <meta name="google-site-verification" content="NDh1vXDMuYwS7UB20LG1satVMxsrg-WmluEl6qTHtSM" />
-    
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://nehirdeniz.com/">
-    <meta property="og:title" content="Nehir & Deniz">
-    <meta property="og:description" content="26 Mart'tan beri atan tek bir kalp.">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=600&auto=format&fit=crop">
 
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://nehirdeniz.com/">
-    <meta property="twitter:title" content="Nehir & Deniz">
-    <meta property="twitter:description" content="26 Mart'tan beri atan tek bir kalp.">
-    <meta property="twitter:image" content="https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=600&auto=format&fit=crop">
-    
     <style>
         :root {
             --bg-color: #e9f3f0;
@@ -38,6 +32,7 @@
             --text-muted: #618279;
             --poke-pink: #f3a3b3;
             --purple-accent: #b39ddb;
+            --whatsapp-green: #25d366;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -70,14 +65,12 @@
         .passcode-container { display: flex; flex-direction: column; align-items: center; margin-bottom: 40px; width: 100%; max-width: 280px; }
         .passcode-label { font-size: 1rem; font-weight: 400; margin-bottom: 20px; letter-spacing: 0.5px; opacity: 0.9; }
         
-        /* Şifre Noktaları */
         .dots-container { display: flex; gap: 15px; margin-bottom: 40px; }
         .dot { width: 12px; height: 12px; border: 1.5px solid white; border-radius: 50%; transition: background-color 0.15s ease; }
         .dot.active { background-color: white; }
         .dots-container.shake { animation: shake 0.4s ease-in-out; }
         .dots-container.error .dot { border-color: #ff5252; background-color: #ff5252; }
 
-        /* Tuş Takımı */
         .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px 25px; width: 100%; justify-items: center; }
         .key {
             width: 70px; height: 70px;
@@ -102,7 +95,6 @@
             40%, 80% { transform: translateX(10px); }
         }
 
-        /* ANA SİTE İÇERİĞİ */
         #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 1; pointer-events: none; }
         .main-wrapper { position: relative; z-index: 2; width: 100%; display: flex; flex-direction: column; align-items: center; }
         
@@ -125,14 +117,12 @@
         h1 { font-size: 3rem; font-weight: 300; letter-spacing: 3px; margin-bottom: 10px; text-align: center; }
         .subtitle { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 40px; text-align: center; }
 
-        /* Sayaç */
         .counter-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 30px 0; }
         .counter-item { background: rgba(255, 255, 255, 0.8); padding: 20px 10px; border-radius: 20px; text-align: center; border: 1px solid rgba(219, 235, 229, 0.5); }
         .counter-value { font-size: 1.8rem; font-weight: 500; }
         .counter-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; margin-top: 5px; }
 
-        /* Dürtme Alanı */
-        .poke-container { text-align: center; margin: 20px 0; }
+        .poke-container { text-align: center; margin: 20px 0; display: flex; flex-direction: column; align-items: center; gap: 15px; }
         .btn-poke {
             background-color: var(--poke-pink);
             color: white;
@@ -146,38 +136,51 @@
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .btn-poke:hover { transform: scale(1.08) translateY(-3px); box-shadow: 0 15px 30px rgba(243, 163, 179, 0.6); }
-        .btn-poke:active { transform: scale(0.95); }
-        .poke-status { font-size: 0.9rem; margin-top: 12px; color: var(--text-muted); min-height: 20px; }
+        
+        /* 📞 WHATSAPP GÖRÜNTÜLÜ ARAMA BUTON STİLİ */
+        .btn-call {
+            background-color: var(--whatsapp-green);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);
+            transition: all 0.3s ease;
+        }
+        .btn-call:hover { transform: scale(1.05); box-shadow: 0 15px 30px rgba(37, 211, 102, 0.5); }
+        
+        .poke-status { font-size: 0.9rem; color: var(--text-muted); min-height: 20px; }
 
-        /* 3D Kart Yapısı */
         .cards-container { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; width: 100%; perspective: 1000px; margin-top: 20px; }
         .tilt-card { width: 220px; height: 320px; background: white; border-radius: 20px; padding: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.06); transform-style: preserve-3d; transition: transform 0.1s ease, box-shadow 0.3s ease; cursor: pointer; }
         .tilt-card:hover { box-shadow: 0 25px 45px rgba(47, 72, 66, 0.12); }
         .tilt-card img { width: 100%; height: 80%; object-fit: cover; border-radius: 14px; transform: translateZ(20px); }
         .tilt-card .card-text { text-align: center; margin-top: 15px; font-size: 0.95rem; font-weight: 500; color: var(--dark-green); transform: translateZ(15px); }
 
-        /* Genel Elemanlar */
         .btn-general { background-color: var(--dark-green); color: white; padding: 12px 24px; border-radius: 15px; border: none; cursor: pointer; font-size: 1rem; transition: all 0.2s ease; }
         .btn-general:hover { background-color: #1f302c; transform: scale(1.02); }
         .input-general { padding: 12px 15px; border-radius: 12px; border: 1px solid var(--accent-green); outline: none; background: white; color: var(--dark-green); }
 
-        /* Not Duvarı */
         .notes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; margin-top: 20px; width: 100%; }
         .post-it { background: #fffdf0; padding: 15px; border-radius: 15px; box-shadow: 3px 5px 15px rgba(0,0,0,0.03); border-left: 5px solid var(--accent-green); font-size: 0.9rem; line-height: 1.4; color: #445c56; position: relative; word-wrap: break-word; }
         .post-it-date { font-size: 0.75rem; color: var(--text-muted); margin-top: 10px; display: block; text-align: right; }
 
-        /* Quiz */
         .quiz-box { text-align: center; padding: 10px 0; }
         .quiz-question { font-size: 1.2rem; margin-bottom: 20px; font-weight: 400; }
         .quiz-options { display: flex; flex-direction: column; gap: 10px; max-width: 400px; margin: 0 auto; }
         .btn-option { background: white; border: 1px solid var(--main-green); padding: 12px; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; color: var(--dark-green); font-size: 0.95rem; text-align: left; padding-left: 20px; }
         .btn-option:hover { background: var(--main-green); transform: translateX(5px); }
 
-        /* Sinema */
         .cinema-box { text-align: center; padding: 15px; }
         .movie-display { font-size: 1.4rem; font-weight: 500; margin: 25px 0; min-height: 40px; color: var(--dark-green); transition: all 0.3s ease; }
 
-        /* Gridler */
         .media-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; width: 100%; max-width: 900px; }
         .media-card { padding: 20px; min-height: 400px; display: flex; flex-direction: column; }
         .search-container { display: flex; gap: 10px; margin-bottom: 15px; }
@@ -239,6 +242,12 @@
 
                 <div class="poke-container">
                     <button class="btn-poke" onclick="pokeDeniz()">Deniz'i Dürt ⚡</button>
+                    
+                    <!-- 📞 CANLI WHATSAPP GÖRÜNTÜLÜ ARAMA PROTOKOLÜ -->
+                    <a href="whatsapp://call?number=905452660337&video=1" class="btn-call">
+                        🟢 Deniz'i Görüntülü Ara
+                    </a>
+                    
                     <div class="poke-status" id="pokeStatus"></div>
                 </div>
             </div>
@@ -275,7 +284,7 @@
                 <div class="upload-area" style="margin-top: 30px; text-align: center;">
                     <input type="file" id="nehirUpload" accept="image/*" style="display: none;" onchange="handleNehirPhoto(event)">
                     <button class="btn-general" onclick="document.getElementById('nehirUpload').click()">📸 Yeni Bir Anı Ekle</button>
-                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">Nehir veya sen buraya tıklayarak buluta yeni fotoğraflar ekleyebilir ve altına kendi yazınızı yazabilirsiniz!</p>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">Nehir veya sen buraya tıklayarak buluta yeni fotoğraflar ekleyebilirsiniz!</p>
                 </div>
             </div>
         </section>
@@ -346,10 +355,10 @@
             </div>
         </section>
     </div>
-<script>
+
+    <script>
         // 🛰️ SUPABASE CONFIG
         const SUPABASE_URL = "https://jsixbeuphtcnfvwespqv.supabase.co";
-        // ⚠️ AŞAĞIDAKİ ALANA SUPABASE'DEN ALDIĞIN UZUN ANON KEY'İ EKSİKSİZCE YAPIŞTIR:
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzaXhiZXVwaHRjbmZ2d2VzcHF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNTM5NzcsImV4cCI6MjA5MDcyOTk3N30.3t8IWZf7rtBRxKyxBfH7VOUBxU5eEYyaygUXR8DmGKc"; 
         
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -486,7 +495,6 @@
             if (data) {
                 data.forEach(p => appendPhotoToGallery(p.src, p.text, true));
             }
-            if (error) console.error("Fotoğraf Yükleme Hatası:", error.message);
         }
         async function handleNehirPhoto(event) {
             const file = event.target.files[0]; if (!file) return;
@@ -497,11 +505,7 @@
             reader.onload = async function(e) {
                 const base64 = e.target.result;
                 const { error } = await supabaseClient.from('nehir_photos').insert([{ src: base64, text: finalCardText }]);
-                if(error) {
-                    alert("Supabase Hatası (Fotoğraf): " + error.message);
-                } else {
-                    loadNehirPhotos();
-                }
+                if(!error) loadNehirPhotos();
             };
             reader.readAsDataURL(file);
         }
@@ -521,12 +525,6 @@
             const wall = document.getElementById('notesWall');
             wall.innerHTML = "";
             
-            if (error) {
-                console.error("Not Okuma Hatası:", error.message);
-                wall.innerHTML = `<div class="post-it" style="border-left-color: red;">Bağlantı Hatası: ${error.message}</div>`;
-                return;
-            }
-
             if (!data || data.length === 0) {
                 wall.innerHTML = `<div class="post-it">Buraya birbirimiz için gelecekten notlar bırakabiliriz sevgilim! 💫<span class="post-it-date">Nihai Kurulum</span></div>`;
                 return;
@@ -545,9 +543,7 @@
             const noteDate = new Date().toLocaleDateString('tr-TR');
             
             const { error } = await supabaseClient.from('nehir_notes').insert([{ text: noteText, date: noteDate }]);
-            if(error) {
-                alert("Supabase Hatası (Not Ekleme): " + error.message);
-            } else {
+            if(!error) {
                 input.value = "";
                 loadTimeCapsuleNotes();
             }
@@ -594,21 +590,16 @@
                 localStats.coffee = data.coffee;
                 localStats.beer = data.beer;
                 localStats.dream = data.dream;
-                
                 document.getElementById('coffeeCount').innerText = localStats.coffee;
                 document.getElementById('beerCount').innerText = localStats.beer;
                 document.getElementById('dreamCount').innerText = localStats.dream;
-                
                 updateChart();
             }
-            if (error) console.error("Sayaç Eşitleme Hatası:", error.message);
         }
         async function incrementStat(type) { 
             localStats[type]++;
             document.getElementById(type + 'Count').innerText = localStats[type];
-            
-            const { error } = await supabaseClient.from('nehir_stats').update({ [type]: localStats[type] }).eq('id', 'main_stats');
-            if(error) alert("Supabase Hatası (Sayaç): " + error.message);
+            await supabaseClient.from('nehir_stats').update({ [type]: localStats[type] }).eq('id', 'main_stats');
             updateChart();
         }
         function updateChart() {
@@ -632,6 +623,11 @@
                 syncStatsWithSupabase();
             })
             .subscribe();
+
+        // ⚙️ PWA SERVICE WORKER KONTROLÜ
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then(() => console.log('PWA Aktif!'));
+        }
 
         particlesJS("particles-js", { "particles": { "number": { "value": 50 }, "color": { "value": "#a1cfc2" }, "shape": { "type": "circle" }, "opacity": { "value": 0.3, "random": true }, "size": { "value": 3, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#a1cfc2", "opacity": 0.15, "width": 1 }, "move": { "enable": true, "speed": 1 } } });
     </script>
