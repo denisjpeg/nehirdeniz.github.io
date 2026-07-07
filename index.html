@@ -1,37 +1,32 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <!-- Harici Premium Kütüphaneler -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nehir & Deniz</title>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
-    <!-- 🌐 SİTE SİMGESİ (FAVICON) - Sekmede Tatlı Bir Kalp Emojisi Görünecek -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>❤️</text></svg>">
 
-    <!-- 🏷️ ARAMA MOTORU & SOSYAL MEDYA ÖNİZLEME (SNIPPET META AYARLARI) -->
     <meta name="description" content="26 Mart'tan beri atan tek bir kalp.">
     
-    <!-- 🔍 GOOGLE SEARCH CONSOLE DOĞRULAMA ETİKETİ -->
-   <meta name="google-site-verification" content="NDh1vXDMuYwS7UB20LG1satVMxsrg-WmluEl6qTHtSM" />
+    <meta name="google-site-verification" content="NDh1vXDMuYwS7UB20LG1satVMxsrg-WmluEl6qTHtSM" />
     
-    <!-- Open Graph / Facebook / Instagram / WhatsApp Önizlemeleri -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://nehirdeniz.com/">
     <meta property="og:title" content="Nehir & Deniz">
     <meta property="og:description" content="26 Mart'tan beri atan tek bir kalp.">
     <meta property="og:image" content="https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=600&auto=format&fit=crop">
 
-    <!-- Twitter / X Önizlemeleri -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://nehirdeniz.com/">
     <meta property="twitter:title" content="Nehir & Deniz">
     <meta property="twitter:description" content="26 Mart'tan beri atan tek bir kalp.">
     <meta property="twitter:image" content="https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=600&auto=format&fit=crop">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nehir & Deniz</title>
     
     <style>
         :root {
@@ -207,12 +202,7 @@
         <div class="passcode-container">
             <div class="passcode-label">Şifreyi Girin</div>
             <div class="dots-container" id="dotsContainer">
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
-                <div class="dot"></div>
+                <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
             </div>
 
             <div class="keypad">
@@ -311,6 +301,13 @@
                         <input type="text" class="input-general" id="spotifyLinkInput" placeholder="Spotify Blend veya Liste Linki yapıştırın..." style="flex: 1; font-size: 0.85rem;" value="https://open.spotify.com/playlist/37i9dQZF1EJJsLfpnO0biA">
                         <button class="btn-general" style="padding: 0 15px; font-size: 0.85rem; border-radius: 12px;" onclick="updateSpotifyEmbed()">Yenile</button>
                     </div>
+                    
+                    <div style="text-align: center; margin-bottom: 15px;">
+                        <a id="spotifyAppLink" href="spotify:playlist:37i9dQZF1EJJsLfpnO0biA" class="btn-general" style="display: inline-block; background-color: #1ed760; color: white; font-size: 0.85rem; padding: 8px 15px; text-decoration: none; border-radius: 12px; font-weight: 500;">
+                            🟢 Mobilde Uygulamada Aç
+                        </a>
+                    </div>
+
                     <div style="flex: 1; min-height: 320px; border-radius: 12px; overflow: hidden;">
                         <iframe id="spotifyFrame" style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1EJJsLfpnO0biA?utm_source=generator&theme=0" width="100%" height="100%" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
                     </div>
@@ -399,7 +396,6 @@
             });
         }
 
-        /* Entegrasyon doğrulaması */
         function checkPin() {
             const container = document.getElementById('dotsContainer');
             if (enteredPin === CORRECT_PIN) {
@@ -484,7 +480,6 @@
         }
         loadQuizQuestion();
 
-        // 4. 3D Kart Tilt Efekti
         function tilt(e, card) {
             const cardRect = card.getBoundingClientRect();
             const angleX = -((e.clientY - cardRect.top) - (cardRect.height / 2)) / 10;
@@ -493,23 +488,19 @@
         }
         function resetTilt(card) { card.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`; }
 
-        // 5. Fotoğraf Yükleme Altyapısı (Kendi Metnini Yazma Özellikli)
         function loadNehirPhotos() {
             const storedPhotos = JSON.parse(localStorage.getItem('nehirPhotos')) || [];
             storedPhotos.forEach(p => appendPhotoToGallery(p.src, p.text));
         }
         function handleNehirPhoto(event) {
             const file = event.target.files[0]; if (!file) return;
-            
-            // Kullanıcıdan alt metni manuel alma
             const userText = prompt("Bu harika anının altına ne yazalım sevgilim? ✨", "Yeni Anımız 🤍");
-            if (userText === null) return; // İptal edilirse yükleme yapma
-            
+            if (userText === null) return;
             const reader = new FileReader();
             reader.onload = function(e) {
                 const base64 = e.target.result;
                 const stored = JSON.parse(localStorage.getItem('nehirPhotos')) || [];
-                stored.push({ src: base64, text: userText }); 
+                stored.push({ src: base64, text: userText });
                 localStorage.setItem('nehirPhotos', JSON.stringify(stored));
                 appendPhotoToGallery(base64, userText);
             };
@@ -524,7 +515,6 @@
         }
         loadNehirPhotos();
 
-        // 6. Zaman Kapsülü Not Sistemi
         function loadTimeCapsuleNotes() {
             const notes = JSON.parse(localStorage.getItem('capsuleNotes')) || [
                 { text: "Buraya birbirimiz için gelecekten notlar bırakabiliriz sevgilim! 💫", date: "Nihai Kurulum" }
@@ -550,14 +540,19 @@
         }
         loadTimeCapsuleNotes();
 
-        // 7. Spotify Linkini Dinamik Embed'e Çevirme Motoru
+        // 7. Spotify Linkini Dinamik Embed'e ve Mobil Deeplink'e Çevirme Motoru
         function updateSpotifyEmbed() {
             let link = document.getElementById('spotifyLinkInput').value.trim();
             if(!link) return;
             if(link.includes("spotify.com")) {
-                let embedUrl = link.replace("spotify.com/", "spotify.com/embed/");
+                let embedUrl = link.replace("spotify.com", "spotify.com/embed");
                 if(!embedUrl.includes("?")) embedUrl += "?utm_source=generator&theme=0";
                 document.getElementById('spotifyFrame').src = embedUrl;
+                
+                let playlistId = link.split("/playlist/")[1]?.split("?")[0];
+                if(playlistId) {
+                    document.getElementById('spotifyAppLink').href = `spotify:playlist:${playlistId}`;
+                }
                 localStorage.setItem('savedSpotifyLink', link);
             }
         }
@@ -566,7 +561,6 @@
             updateSpotifyEmbed();
         }
 
-        // 8. Harita Arama Motoru
         function searchLocation() {
             const query = document.getElementById('mapSearchInput').value; if(!query) return;
             document.getElementById('dynamicMapFrame').src = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
@@ -580,7 +574,6 @@
         }
         searchLocation();
 
-        // 9. Sinema Modu (Öneri Motoru)
         const movieList = [
             "Chained Together Canlı Yayını Açıp İzleyelim! 🎮",
             "Sakin Bir Akustik Rock Belgeseli Açalım 🎸",
@@ -598,17 +591,15 @@
             }, 300);
         }
 
-        // 10. Log Sayıcıları & Grafik
         const stats = { coffee: parseInt(localStorage.getItem('coffeeCount')) || 0, beer: parseInt(localStorage.getItem('beerCount')) || 0, dream: parseInt(localStorage.getItem('dreamCount')) || 0 };
         document.getElementById('coffeeCount').innerText = stats.coffee; document.getElementById('beerCount').innerText = stats.beer; document.getElementById('dreamCount').innerText = stats.dream;
-        function incrementStat(type) {
+        function incrementStat(type) { 
             stats[type]++; localStorage.setItem(type + 'Count', stats[type]); document.getElementById(type + 'Count').innerText = stats[type];
             loveChart.data.datasets[0].data = [100, 95, 100, 70 + (stats.coffee * 0.5) > 100 ? 100 : 70 + (stats.coffee * 0.5), 60 + (stats.beer * 0.8) > 100 ? 100 : 60 + (stats.beer * 0.8)];
             loveChart.update();
         }
         const loveChart = new Chart(document.getElementById('loveChart').getContext('2d'), { type: 'radar', data: { labels: ['Uyum', 'Eğlence', 'Güven', 'Kahve Rutini ☕', 'Bira Keyfi 🍺'], datasets: [{ label: 'Anlık Analiz', data: [100, 95, 100, 70 + (stats.coffee * 0.5), 60 + (stats.beer * 0.8)], backgroundColor: 'rgba(161, 207, 194, 0.4)', borderColor: 'rgba(47, 72, 66, 1)', borderWidth: 1.5 }] }, options: { scales: { r: { max: 100, min: 0, ticks: { display: false } } } } });
 
-        // 11. Parçacıklar
         particlesJS("particles-js", { "particles": { "number": { "value": 50 }, "color": { "value": "#a1cfc2" }, "shape": { "type": "circle" }, "opacity": { "value": 0.3, "random": true }, "size": { "value": 3, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#a1cfc2", "opacity": 0.15, "width": 1 }, "move": { "enable": true, "speed": 1 } } });
     </script>
 </body>
