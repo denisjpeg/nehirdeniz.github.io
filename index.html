@@ -5,14 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nehir & Deniz</title>
 
-    <!-- 📱 PWA VE APPLE MOBİL UYGULAMA AYARLARI -->
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Nehir & Deniz">
     <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=512&auto=format&fit=crop">
 
-    <!-- Harici Premium Kütüphaneler -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -260,20 +258,16 @@
                     <div class="poke-status" id="pokeStatus"></div>
                 </div>
 
-                <!-- 🦭 BEYAZ YAVRU FOK PREMIUM SİSTEMİ -->
                 <div class="glass-card" style="margin-top: 30px; text-align: center;">
                     <h3 style="font-weight: 300; margin-bottom: 10px; letter-spacing: 1px;">Bizim Yavru Fokumuz 🦭❤️</h3>
                     <div style="font-size: 1rem; color: var(--text-muted); margin-bottom: 15px;">
                         🔥 Günlük Serimiz: <span id="petStreak" style="font-weight: 600; color: var(--dark-green);">0</span> Gün | Toplam Besleme: <span id="petFeed">0</span> Balık 🐟
                     </div>
                     
-                    <!-- Fokun Görsel Alanı ve Katmanları -->
                     <div style="width: 160px; height: 150px; margin: 0 auto; position: relative;" id="petAvatarContainer" onclick="interactWithPet()">
-                        <!-- Arka Plan Yuvarlağı -->
                         <div style="position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 3px solid var(--accent-green); box-shadow: 0 10px 20px rgba(0,0,0,0.05); overflow:hidden;">
                             <img id="petImage" src="https://images.unsplash.com/photo-1590418606746-018840f9cd0f?q=80&w=300&auto=format&fit=crop" style="width: 100%; height: 100%; object-fit: cover;">
                         </div>
-                        <!-- Süs Katmanları (Aksesuarlar SVG/PNG olarak yerleştirilir) -->
                         <div id="layerHat" class="pet-layer" style="font-size: 2.2rem; top: -15px; left: 0; text-align: center; line-height: 150px; z-index: 12;"></div>
                         <div id="layerGlasses" class="pet-layer" style="font-size: 2rem; top: 5px; left: 0; text-align: center; line-height: 150px; z-index: 13;"></div>
                         <div id="layerAccessory" class="pet-layer" style="font-size: 2.2rem; bottom: -5px; right: -10px; position: absolute; text-align: right; width: 100%; height: 100%; line-height: 220px; z-index: 11;"></div>
@@ -283,7 +277,6 @@
                     
                     <button class="btn-general" style="margin-top: 15px; background-color: var(--accent-green); color: var(--dark-green); font-weight: 600;" onclick="feedPet()">🦭 Balık Ver (Besle)</button>
 
-                    <!-- 🛍️ PREMİUM BOUTIQUE MAĞAZA ALANI -->
                     <div style="margin-top: 30px; text-align: left; border-top: 1px dashed rgba(47, 72, 66, 0.2); padding-top: 20px;">
                         <h4 style="font-weight: 400; text-align: center; font-size: 1rem; letter-spacing: 0.5px;">🦭 Fofu Boutique & Gardırop 🛍️</h4>
                         
@@ -714,7 +707,7 @@
             adult: "https://images.unsplash.com/photo-1529963183134-61a90db47eaf?q=80&w=300&auto=format&fit=crop"  
         };
 
-        // 🏪 ZENGİN GABDIROP ÖĞELERİ VERİ SETİ (EMOJİ KATMANLI)
+        // 🏪 ZENGİN GARDROP ÖĞELERİ VERİ SETİ (EMOJİ KATMANLI)
         const boutiqueInventory = {
             hat: [
                 { id: 'none', name: 'Çıplak Kafa', icon: '❌', cost: 0 },
@@ -756,20 +749,35 @@
         }
 
         function checkStreakLogic() {
-            const todayStr = new Date().toLocaleDateString('en-CA'); 
-            if (petStats.lastVisit === todayStr) return;
+            // 🌍 Saat dilimi farklarını sıfırlayan kesin UTC YYYY-MM-DD formatı (DÜZELTİLDİ)
+            const todayStr = new Date().toISOString().split('T')[0]; 
+            
+            if (petStats.lastVisit === todayStr) {
+                // Bugün zaten giriş yapılmış, seriyi bozma veya artırma
+                return;
+            }
 
+            // Dünün tarihini bulalım
             const yesterday = new Date();
             yesterday.setDate(yesterday.getDate() - 1);
-            const yesterdayStr = yesterday.toLocaleDateString('en-CA');
+            const yesterdayStr = yesterday.toISOString().split('T')[0];
 
             if (petStats.lastVisit === yesterdayStr) {
+                // Dün girilmiş, bugün ilk defa giriliyor! Seri 1 artar.
                 petStats.streak++;
             } else {
-                petStats.streak = 1; 
+                // Arada gün kaçırılmış veya tablo yeni kurulmuş. 
+                // Eğer seri şu an 1 ise ve ilk kurulumsa seriyi doğrudan 2'ye çekebiliriz.
+                if (petStats.streak <= 1) {
+                    petStats.streak = 2; // Bugün ikiniz de girdiğiniz için 2'ye zorlayalım
+                } else {
+                    petStats.streak = 1; // İleride gün kaçırırsanız 1'e düşsün
+                }
             }
 
             petStats.lastVisit = todayStr;
+            
+            // Veritabanını yeni kesin tarih formatıyla güncelle
             supabaseClient.from('nehir_pet').update({ 
                 streak_count: petStats.streak, 
                 last_visit_date: todayStr 
@@ -842,7 +850,7 @@
             }
 
             await supabaseClient.from('nehir_pet').update({ total_feed_count: petStats.totalFeed }).eq('id', 'baby_seal');
-            renderShopItems(); // Puan güncellendiği için kilit durumunu tazele
+            renderShopItems(); 
         }
 
         function interactWithPet() {
@@ -909,7 +917,6 @@
             updatePetUI();
             renderShopItems();
 
-            // Buluttaki ortak fok gardırobunu anlık güncelle
             const dbColumn = category === 'hat' ? 'equipped_hat' : category === 'glasses' ? 'equipped_glasses' : 'equipped_accessory';
             await supabaseClient.from('nehir_pet').update({ [dbColumn]: itemId }).eq('id', 'baby_seal');
         }
