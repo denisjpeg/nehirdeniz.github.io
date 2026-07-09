@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nehir & Deniz</title>
 
+    <!-- 📱 PWA VE APPLE MOBİL UYGULAMA AYARLARI -->
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Nehir & Deniz">
     <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=512&auto=format&fit=crop">
 
+    <!-- Harici Premium Kütüphaneler -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -136,40 +138,98 @@
          
         .poke-status { font-size: 0.9rem; color: var(--text-muted); min-height: 20px; }
 
-        /* 🦭 DİNAMİK FOK VE AKSESUAR KATMANLARI CSS */
+        /* 🦭 FOK VE AKSESUAR KATMANLARI CSS */
         #petAvatarContainer {
             position: relative;
             width: 150px; height: 150px;
             margin: 0 auto;
+            cursor: pointer;
+        }
+        .pet-avatar-wrapper {
+            width: 100%; height: 100%;
             border-radius: 50%;
             border: 3px solid var(--accent-green);
             box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-            transition: transform 0.2s ease;
-            cursor: pointer;
-        }
-        .pet-layer {
+            overflow: hidden;
             position: absolute;
             top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            object-fit: contain;
-            z-index: 10;
+            z-index: 1;
         }
-        #petImage { border-radius: 50%; object-fit: cover; z-index: 1; pointer-events: auto;}
+        #petImage { width: 100%; height: 100%; object-fit: cover; }
+        
+        .pet-layer {
+            position: absolute;
+            width: 100%; height: 100%;
+            top: 0; left: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            user-select: none;
+        }
+        #layerHat { font-size: 3rem; margin-top: -85px; z-index: 5; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.1)); }
+        #layerGlasses { font-size: 2.5rem; margin-top: -25px; z-index: 6; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15)); }
+        #layerAccessory { font-size: 3.2rem; margin-top: 55px; margin-left: 75px; z-index: 4; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.15)); }
 
-        /* 🛍️ MAĞAZA SEKMELERİ VE URBAN SÜS MOTORU CSS */
         .shop-tab-container { display: flex; justify-content: center; gap: 10px; margin-top: 20px; border-bottom: 1px solid var(--main-green); padding-bottom: 10px; }
         .shop-tab { background: none; border: none; padding: 8px 16px; font-size: 0.9rem; cursor: pointer; color: var(--text-muted); border-radius: 10px; transition: all 0.2s; }
         .shop-tab.active { background: var(--dark-green); color: white; font-weight: 500; }
         
-        .shop-items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; margin-top: 15px; max-height: 220px; overflow-y: auto; padding: 5px; }
-        .shop-item-card { background: white; border: 1px solid rgba(219, 235, 229, 0.6); padding: 12px 8px; border-radius: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.01); transition: all 0.2s; cursor: pointer; position: relative;}
+        .shop-items-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); 
+            gap: 12px; 
+            margin-top: 15px; 
+            max-height: 200px; 
+            overflow-y: auto; 
+            overflow-x: hidden;
+            padding: 8px; 
+        }
+        .shop-items-grid::-webkit-scrollbar { width: 6px; }
+        .shop-items-grid::-webkit-scrollbar-thumb { background: var(--accent-green); border-radius: 10px; }
+        
+        .shop-item-card { background: white; border: 1px solid rgba(219, 235, 229, 0.6); padding: 12px 6px; border-radius: 15px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.01); transition: all 0.2s; cursor: pointer; }
         .shop-item-card:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(47, 72, 66, 0.06); }
         .shop-item-card.equipped { border: 2px solid #4caf50; background: #f0fdf4; }
         .shop-item-icon { font-size: 1.8rem; margin-bottom: 5px; display: block; }
-        .shop-item-name { font-size: 0.8rem; font-weight: 600; display: block; color: var(--dark-green); }
+        .shop-item-name { font-size: 0.8rem; font-weight: 600; display: block; color: var(--dark-green); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .shop-item-cost { font-size: 0.75rem; color: #e91e63; font-weight: 700; margin-top: 4px; display: block; }
         .shop-item-cost.unlocked { color: #4caf50; }
+
+        /* 🎮 FOFU ATARİ SALONU MODAL CSS */
+        .arcade-modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100vh;
+            background: rgba(47, 72, 66, 0.95);
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            z-index: 10000;
+            display: none;
+            align-items: center; justify-content: center;
+            padding: 20px; color: white;
+        }
+        .arcade-container {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 30px; width: 100%; max-width: 600px;
+            padding: 30px; position: relative; max-height: 90vh; overflow-y: auto;
+        }
+        .arcade-leaderboard {
+            background: rgba(0,0,0,0.2); border-radius: 20px;
+            padding: 15px; margin-bottom: 25px; text-align: center;
+            border-left: 5px solid var(--poke-pink);
+        }
+        .arcade-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        @media(max-width: 480px) { .arcade-grid { grid-template-columns: 1fr; } }
+        .arcade-game-card {
+            background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
+            padding: 20px; border-radius: 20px; text-align: center; transition: all 0.2s; cursor: pointer;
+        }
+        .arcade-game-card:hover { background: rgba(255,255,255,0.15); transform: scale(1.02); }
+        
+        #gameCanvasArea {
+            width: 100%; height: 300px; background: #1a2a26; border-radius: 20px;
+            margin-top: 15px; position: relative; overflow: hidden; display: none;
+        }
 
         .cards-container { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; width: 100%; perspective: 1000px; margin-top: 20px; }
         .tilt-card { width: 220px; height: 320px; background: white; border-radius: 20px; padding: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.06); transform-style: preserve-3d; transition: transform 0.1s ease, box-shadow 0.3s ease; cursor: pointer; }
@@ -186,7 +246,7 @@
         .post-it-date { font-size: 0.75rem; color: var(--text-muted); margin-top: 10px; display: block; text-align: right; }
 
         .quiz-box { text-align: center; padding: 10px 0; }
-        .quiz-question { font-size: 1.2rem; margin-bottom: 20px; font-weight: 400; }
+        .quiz-question { font-size: 1.2rem; margin-bottom: 20px; font-weight: 400; padding: 0 10px; }
         .quiz-options { display: flex; flex-direction: column; gap: 10px; max-width: 400px; margin: 0 auto; }
         .btn-option { background: white; border: 1px solid var(--main-green); padding: 12px; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; color: var(--dark-green); font-size: 0.95rem; text-align: left; padding-left: 20px; }
         .btn-option:hover { background: var(--main-green); transform: translateX(5px); }
@@ -258,25 +318,32 @@
                     <div class="poke-status" id="pokeStatus"></div>
                 </div>
 
+                <!-- 🦭 BEYAZ YAVRU FOK PREMIUM SİSTEMİ -->
                 <div class="glass-card" style="margin-top: 30px; text-align: center;">
                     <h3 style="font-weight: 300; margin-bottom: 10px; letter-spacing: 1px;">Bizim Yavru Fokumuz 🦭❤️</h3>
                     <div style="font-size: 1rem; color: var(--text-muted); margin-bottom: 15px;">
                         🔥 Günlük Serimiz: <span id="petStreak" style="font-weight: 600; color: var(--dark-green);">0</span> Gün | Toplam Besleme: <span id="petFeed">0</span> Balık 🐟
                     </div>
                     
-                    <div style="width: 160px; height: 150px; margin: 0 auto; position: relative;" id="petAvatarContainer" onclick="interactWithPet()">
-                        <div style="position: absolute; width: 100%; height: 100%; border-radius: 50%; border: 3px solid var(--accent-green); box-shadow: 0 10px 20px rgba(0,0,0,0.05); overflow:hidden;">
-                            <img id="petImage" src="https://images.unsplash.com/photo-1590418606746-018840f9cd0f?q=80&w=300&auto=format&fit=crop" style="width: 100%; height: 100%; object-fit: cover;">
+                    <!-- Hizalanmış Katmanlı Görsel Alanı -->
+                    <div id="petAvatarContainer" onclick="interactWithPet()">
+                        <div class="pet-avatar-wrapper">
+                            <img id="petImage" src="https://images.unsplash.com/photo-1590418606746-018840f9cd0f?q=80&w=300&auto=format&fit=crop">
                         </div>
-                        <div id="layerHat" class="pet-layer" style="font-size: 2.2rem; top: -15px; left: 0; text-align: center; line-height: 150px; z-index: 12;"></div>
-                        <div id="layerGlasses" class="pet-layer" style="font-size: 2rem; top: 5px; left: 0; text-align: center; line-height: 150px; z-index: 13;"></div>
-                        <div id="layerAccessory" class="pet-layer" style="font-size: 2.2rem; bottom: -5px; right: -10px; position: absolute; text-align: right; width: 100%; height: 100%; line-height: 220px; z-index: 11;"></div>
+                        <div id="layerHat" class="pet-layer"></div>
+                        <div id="layerGlasses" class="pet-layer"></div>
+                        <div id="layerAccessory" class="pet-layer"></div>
                     </div>
                     
                     <div id="petSpeech" style="margin-top: 15px; min-height: 20px; font-style: italic; font-size: 0.9rem; color: var(--text-muted);">Uykulu uykulu seni bekliyor... 💤</div>
                     
-                    <button class="btn-general" style="margin-top: 15px; background-color: var(--accent-green); color: var(--dark-green); font-weight: 600;" onclick="feedPet()">🦭 Balık Ver (Besle)</button>
+                    <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px; flex-wrap: wrap;">
+                        <button class="btn-general" style="background-color: var(--accent-green); color: var(--dark-green); font-weight: 600;" onclick="feedPet()">🦭 Balık Ver (Besle)</button>
+                        <button class="btn-general" id="aiVoiceBtn" style="background-color: var(--poke-pink); color: white; font-weight: 600;" onclick="startVoiceAssistant()">🎙️ Fofuyla Konuş</button>
+                        <button class="btn-general" style="background-color: var(--purple-accent); color: white; font-weight: 600;" onclick="openArcadeModal()">🎮 Fofu Oyun Salonu</button>
+                    </div>
 
+                    <!-- 🛍️ PREMİUM BOUTIQUE MAĞAZA ALANI -->
                     <div style="margin-top: 30px; text-align: left; border-top: 1px dashed rgba(47, 72, 66, 0.2); padding-top: 20px;">
                         <h4 style="font-weight: 400; text-align: center; font-size: 1rem; letter-spacing: 0.5px;">🦭 Fofu Boutique & Gardırop 🛍️</h4>
                         
@@ -292,11 +359,50 @@
             </div>
         </section>
 
+        <!-- 🎮 FOFU ATARİ SALONU POPUP PANELİ -->
+        <div id="arcadeModal" class="arcade-modal">
+            <div class="arcade-container">
+                <button class="btn-general" style="position: absolute; top: 15px; right: 15px; background: #ff5252; padding: 5px 12px; border-radius: 10px;" onclick="closeArcadeModal()">❌ Kapat</button>
+                
+                <h3 style="font-weight: 300; text-align: center; margin-bottom: 5px; letter-spacing: 1px; color: white;">🎮 Fofu Atari Salonu</h3>
+                <p style="font-size: 0.85rem; text-align: center; color: rgba(255,255,255,0.6); margin-bottom: 20px;">Anlık Güncellenen Ortak Liderlik Odası</p>
+
+                <div class="arcade-leaderboard">
+                    <span style="font-size: 1.3rem;" id="arcadeCrownOwner">👑 Taht Hesaplanıyor...</span>
+                </div>
+
+                <div id="gameCanvasArea"></div>
+
+                <div class="arcade-grid" id="arcadeGridMenu">
+                    <div class="arcade-game-card" onclick="startArcadeGame('feed')">
+                        <span style="font-size: 2.2rem; display: block;">🐟</span>
+                        <strong style="font-size: 0.95rem;">Balık Avı Yarışı</strong>
+                        <span style="font-size: 0.75rem; display: block; margin-top: 5px; color: rgba(255,255,255,0.6);" id="bestFeedLabel">Yükleniyor...</span>
+                    </div>
+                    <div class="arcade-game-card" onclick="startArcadeGame('memory')">
+                        <span style="font-size: 2.2rem; display: block;">🧠</span>
+                        <strong style="font-size: 0.95rem;">Hafıza Eşleştirme</strong>
+                        <span style="font-size: 0.75rem; display: block; margin-top: 5px; color: rgba(255,255,255,0.6);" id="bestMemoryLabel">Yükleniyor...</span>
+                    </div>
+                    <div class="arcade-game-card" onclick="startArcadeGame('flappy')">
+                        <span style="font-size: 2.2rem; display: block;">🚀</span>
+                        <strong style="font-size: 0.95rem;">Flappy Fofu</strong>
+                        <span style="font-size: 0.75rem; display: block; margin-top: 5px; color: rgba(255,255,255,0.6);" id="bestFlappyLabel">Yükleniyor...</span>
+                    </div>
+                    <div class="arcade-game-card" onclick="startArcadeGame('reflex')">
+                        <span style="font-size: 2.2rem; display: block;">💖</span>
+                        <strong style="font-size: 0.95rem;">Aşk Refleks Testi</strong>
+                        <span style="font-size: 0.75rem; display: block; margin-top: 5px; color: rgba(255,255,255,0.6);" id="bestReflexLabel">Yükleniyor...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <section id="quiz-section">
             <h2 class="section-title">Bizi Ne Kadar Tanıyorsun? 🧠✨</h2>
             <div class="glass-card">
                 <div class="quiz-box" id="quizBox">
-                    <div class="quiz-question" id="questionText">Soru yükleniyor...</div>
+                    <div class="quiz-question" id="questionText">Soru yükleniyor... ⚡</div>
                     <div class="quiz-options" id="optionsContainer"></div>
                 </div>
             </div>
@@ -351,7 +457,7 @@
                     <div style="height: 250px; width: 100%; border-radius: 12px; overflow: hidden; margin-bottom: 15px;">
                         <iframe id="dynamicMapFrame" style="width:100%; height:100%; border:none;" src="" loading="lazy"></iframe>
                     </div>
-                    <h4 style="font-weight: 400; font-size: 0.95rem; margin-top: 5px;">📍 Popüler Mekan Türleri & Öneriler:</h4>
+                    <h4 style="font-weight: 400; font-size: 0.95rem; margin-top: 5px;">📍 Groq Canlı Mekan & Rota Önerileri:</h4>
                     <ul class="venue-list" id="dynamicVenueList"></ul>
                 </div>
             </div>
@@ -401,6 +507,10 @@
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzaXhiZXVwaHRjbmZ2d2VzcHF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNTM5NzcsImV4cCI6MjA5MDcyOTk3N30.3t8IWZf7rtBRxKyxBfH7VOUBxU5eEYyaygUXR8DmGKc"; 
         
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // 🔗 5. ADIM: %100 GÜVENLİ SUNUCUSUZ FONKSİYON ADRESİ (SERVERLESS GATEWAY)
+        // Kendi Project Ref kodunu buradaki tırnağın içine yaz Deniz.
+        const SUPABASE_FUNCTION_URL = "https://SENIN_SUPABASE_PROJECT_REF_KODUN.supabase.co/functions/v1/fofu-chat";
 
         // 📱 iPHONE KİLİT EKRANI & KULLANICI MOTORU
         const PIN_NEHIR = "145323"; 
@@ -518,437 +628,19 @@
             };
         }
 
-        // 3. Mini Quiz Motoru
-        const quizData = [
-            { q: "Bizim ilişkimizin resmi başlangıç ayı hangisidir? 🗓️", a: ["Şubat", "Mart", "Nisan", "Mayıs"], c: 1 },
-            { q: "Deniz gitarda en çok hangi grubun şarkılarını çalmayı sever? 🎸", a: ["Iron Maiden", "Megadeth", "Metallica", "AC/DC"], c: 2 },
-            { q: "İlişki sayaç raporumuzda radar grafiğinde %100 olan özellik hangisidir? 📊", a: ["Kahve Rutini", "Uyum & Güven", "Eğlence", "Bira Keyfi"], c: 1 }
-        ];
-        let currentQuizIndex = 0;
-
-        function loadQuizQuestion() {
-            const quizBox = document.getElementById('quizBox');
-            if(currentQuizIndex >= quizData.length) {
-                quizBox.innerHTML = `<h3 style="color: #4caf50; font-size: 1.5rem; margin-bottom: 10px;">🎉 Tebrikler!</h3><p style="font-size:1.1rem;">Bizi mükemmel tanıyorsunuz! Ortak Uyum Skorunuz: %100 ❤️</p>`;
-                confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
-                return;
-            }
-            const currentData = quizData[currentQuizIndex];
-            document.getElementById('questionText').innerText = currentData.q;
+        // 3. BULUT DESTEKLİ DİNAMİK QUIZ MOTORU
+        async function loadDynamicGroqQuiz() {
             const container = document.getElementById('optionsContainer');
-            container.innerHTML = "";
-            currentData.a.forEach((opt, idx) => {
-                const btn = document.createElement('button');
-                btn.className = "btn-option";
-                btn.innerText = `${idx+1}. ${opt}`;
-                btn.onclick = () => {
-                    if(idx === currentData.c) {
-                        currentQuizIndex++;
-                        confetti({ particleCount: 40, spread: 40, origin: { y: 0.7 } });
-                        loadQuizQuestion();
-                    } else {
-                        alert("Küçük bir hata! Tekrar dene sevgilim 🤍");
-                    }
-                };
-                container.appendChild(btn);
-            });
-        }
-        loadQuizQuestion();
-
-        function tilt(e, card) {
-            const cardRect = card.getBoundingClientRect();
-            const angleX = -((e.clientY - cardRect.top) - (cardRect.height / 2)) / 10;
-            const angleY = ((e.clientX - cardRect.left) - (cardRect.width / 2)) / 10;
-            card.style.transform = `rotateX(${angleX}deg) rotateY(${angleY}deg) scale(1.03)`;
-        }
-        function resetTilt(card) { card.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`; }
-
-        // 5. BULUT ALBUMLER MOTORU
-        async function loadNehirPhotos() {
-            const { data, error } = await supabaseClient.from('nehir_photos').select('*').order('id', { ascending: true });
-            const gallery = document.getElementById('photoGallery');
-            if (!gallery) return;
-            const dynamicCards = gallery.querySelectorAll('.dynamic-photo');
-            dynamicCards.forEach(c => c.remove());
-
-            if (data) {
-                data.forEach(p => appendPhotoToGallery(p.src, p.text, true));
-            }
-        }
-        async function handleNehirPhoto(event) {
-            const file = event.target.files[0]; if (!file) return;
-            const userText = prompt("Bu harika anının altına ne yazalım sevgilim? ✨", "Yeni Anımız 🤍");
-            const finalCardText = (userText && userText.trim() !== "") ? userText : "Yeni Anımız 🤍";
+            const qText = document.getElementById('questionText');
             
-            const reader = new FileReader();
-            reader.onload = async function(e) {
-                const base64 = e.target.result;
-                const { error } = await supabaseClient.from('nehir_photos').insert([{ src: base64, text: finalCardText }]);
-                if(!error) loadNehirPhotos();
-            };
-            reader.readAsDataURL(file);
-        }
-        function appendPhotoToGallery(src, text, isDynamic = false) {
-            const gallery = document.getElementById('photoGallery');
-            if (!gallery) return;
-            const card = document.createElement('div'); 
-            card.className = isDynamic ? 'tilt-card dynamic-photo' : 'tilt-card';
-            card.setAttribute('onmousemove', 'tilt(event, this)'); card.setAttribute('onmouseleave', 'resetTilt(this)');
-            card.innerHTML = `<img src="${src}"><div class="card-text">${text}</div>`;
-            gallery.appendChild(card);
-        }
-        loadNehirPhotos();
-
-        // 6. BULUT ZAMAN KAPSÜLÜ NOT MOTORU
-        async function loadTimeCapsuleNotes() {
-            const { data, error } = await supabaseClient.from('nehir_notes').select('*').order('id', { ascending: true });
-            const wall = document.getElementById('notesWall');
-            if (!wall) return;
-            wall.innerHTML = "";
-            
-            if (!data || data.length === 0) {
-                wall.innerHTML = `<div class="post-it">Buraya birbirimiz için gelecekten notlar bırakabiliriz sevgilim! 💫<span class="post-it-date">Nihai Kurulum</span></div>`;
-                return;
-            }
-            data.forEach(n => {
-                const div = document.createElement('div');
-                div.className = "post-it";
-                div.innerHTML = `${n.text}<span class="post-it-date">${n.date}</span>`;
-                wall.appendChild(div);
-            });
-        }
-        async function addTimeCapsuleNote() {
-            const input = document.getElementById('noteInput');
-            if(!input.value.trim()) return;
-            const noteText = input.value;
-            const noteDate = new Date().toLocaleDateString('tr-TR');
-            
-            const { error } = await supabaseClient.from('nehir_notes').insert([{ text: noteText, date: noteDate }]);
-            if(!error) {
-                input.value = "";
-                loadTimeCapsuleNotes();
-            }
-        }
-        loadTimeCapsuleNotes();
-
-        // 7. Harita Arama Motoru
-        function searchLocation() {
-            const query = document.getElementById('mapSearchInput').value; if(!query) return;
-            document.getElementById('dynamicMapFrame').src = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
-            const list = document.getElementById('dynamicVenueList'); if(!list) return;
-            list.innerHTML = "";
-            let recs = ["En Sevilen Üçüncü Nesil Kahveciler ☕", "Tarihi ve Otantik Yürüyüş Yolları 🗺️", "Sakin ve Akustik Dinlenme Noktaları 🎵"];
-            const lq = query.toLowerCase();
-            if(lq.includes("bira") || lq.includes("pub") || lq.includes("kadıköy") || lq.includes("beşiktaş")) recs = ["Butik Bira ve Pub Alanları 🍺", "Canlı Müzik & Rock Sahneleri 🎸", "Açık Hava Teras Mekanları 🌆"];
-            else if(lq.includes("kahve") || lq.includes("moda") || lq.includes("cafe")) recs = ["Nitelikli Espresso ve Tatlı Evleri 🍰", "Kitap & Çalışma Kafeleri 📚", "Deniz Manzaralı Kahve Noktaları 🌊"];
-            else if(lq.includes("adana")) recs = ["Geleneksel Kebap ve Lezzet Durakları 🥩", "Ziyapaşa Bulvarı Cadde Kafeleri ☕", "Menderes Bulvarı Günbatımı Seyri 🌅"];
-            recs.forEach(v => { const li = document.createElement('li'); li.className = 'venue-item'; li.innerText = v; list.appendChild(li); });
-        }
-        searchLocation();
-
-        const movieList = [
-            "Chained Together Canlı Yayını Açıp İzleyelim! 🎮",
-            "Sakin Bir Akustik Rock Belgeseli Açalım 🎸",
-            "Güzel Bir Bilim Kurgu / Christopher Nolan Gecesi 🌌",
-            "Mısırları Patlatıp IMDb Top 250'den Kült Bir Film 🍿",
-            "Birlikte Nostaljik Bir Animasyon Gecesi Yapalım 🧸",
-            "Sadece Battaniyeniyin Altına Girip Sohbet Edelim 🤍"
-        ];
-        function suggestMovie() {
-            const display = document.getElementById('movieDisplay');
-            if (!display) return;
-            display.style.opacity = 0;
-            setTimeout(() => {
-                display.innerText = movieList[Math.floor(Math.random() * movieList.length)];
-                display.style.opacity = 1;
-            }, 300);
-        }
-
-        // 8. BULUT İLİŞKİ SAYAÇ LOGLARI MOTORU
-        let localStats = { coffee: 0, beer: 0, dream: 0 };
-
-        async function syncStatsWithSupabase() {
-            const { data, error } = await supabaseClient.from('nehir_stats').select('*').eq('id', 'main_stats').single();
-            if (data) {
-                localStats.coffee = data.coffee;
-                localStats.beer = data.beer;
-                localStats.dream = data.dream;
-                document.getElementById('coffeeCount').innerText = localStats.coffee;
-                document.getElementById('beerCount').innerText = localStats.beer;
-                document.getElementById('dreamCount').innerText = localStats.dream;
-                updateChart();
-            }
-        }
-        async function incrementStat(type) { 
-            localStats[type]++;
-            document.getElementById(type + 'Count').innerText = localStats[type];
-            await supabaseClient.from('nehir_stats').update({ [type]: localStats[type] }).eq('id', 'main_stats');
-            updateChart();
-        }
-        function updateChart() {
-            loveChart.data.datasets[0].data = [
-                100, 95, 100, 
-                70 + (localStats.coffee * 0.5) > 100 ? 100 : 70 + (localStats.coffee * 0.5), 
-                60 + (localStats.beer * 0.8) > 100 ? 100 : 60 + (localStats.beer * 0.8)
-            ];
-            loveChart.update();
-        }
-        const loveChart = new Chart(document.getElementById('loveChart').getContext('2d'), { type: 'radar', data: { labels: ['Uyum', 'Eğlence', 'Güven', 'Kahve Rutini ☕', 'Bira Keyfi 🍺'], datasets: [{ label: 'Anlık Analiz', data: [100, 95, 100, 70, 60], backgroundColor: 'rgba(161, 207, 194, 0.4)', borderColor: 'rgba(47, 72, 66, 1)', borderWidth: 1.5 }] }, options: { scales: { r: { max: 100, min: 0, ticks: { display: false } } } } });
-        
-        syncStatsWithSupabase();
-
-        // 🦭 9. BEYAZ YAVRU FOK PREMIUM SÜSLEME VE BOUTIQUE MOTORU
-        let petStats = { streak: 0, totalFeed: 0, lastVisit: "", hat: "none", glasses: "none", accessory: "none" };
-        let activeShopTab = "hat";
-
-        const petStages = {
-            baby: "https://images.unsplash.com/photo-1590418606746-018840f9cd0f?q=80&w=300&auto=format&fit=crop", 
-            child: "https://images.unsplash.com/photo-1551244072-5d12893278ab?q=80&w=300&auto=format&fit=crop", 
-            adult: "https://images.unsplash.com/photo-1529963183134-61a90db47eaf?q=80&w=300&auto=format&fit=crop"  
-        };
-
-        // 🏪 ZENGİN GARDROP ÖĞELERİ VERİ SETİ (EMOJİ KATMANLI)
-        const boutiqueInventory = {
-            hat: [
-                { id: 'none', name: 'Çıplak Kafa', icon: '❌', cost: 0 },
-                { id: 'ribbon', name: 'Pembe Fiyonk 🎀', icon: '🎀', cost: 3 },
-                { id: 'crown', name: 'Kraliyet Tacı 👑', icon: '👑', cost: 10 },
-                { id: 'cowboy', name: 'Kovboy Şapkası', icon: '🤠', cost: 25 },
-                { id: 'grad', name: 'Mezuniyet Kepi', icon: '🎓', cost: 50 }
-            ],
-            glasses: [
-                { id: 'none', name: 'Gözlüksüz', icon: '❌', cost: 0 },
-                { id: 'sun', name: 'Güneş Gözlüğü', icon: '🕶️', cost: 5 },
-                { id: 'nerd', name: 'Nerd Gözlüğü', icon: '👓', cost: 15 },
-                { id: 'thug', name: 'Thug Life', icon: '😎', cost: 30 },
-                { id: 'heart', name: 'Aşk Gözlüğü', icon: '😍', cost: 45 }
-            ],
-            accessory: [
-                { id: 'none', name: 'Aaksesuarsız', icon: '❌', cost: 0 },
-                { id: 'guitar', name: 'Elektro Gitar', icon: '🎸', cost: 8 },
-                { id: 'balloon', name: 'Uçan Balon', icon: '🎈', cost: 20 },
-                { id: 'pizza', name: 'Dilim Pizza', icon: '🍕', cost: 35 },
-                { id: 'coffee', name: 'Starbucks', icon: '☕', cost: 60 }
-            ]
-        };
-
-        async function initPetSystem() {
-            const { data, error } = await supabaseClient.from('nehir_pet').select('*').eq('id', 'baby_seal').single();
-            if (data) {
-                petStats.streak = data.streak_count;
-                petStats.totalFeed = data.total_feed_count;
-                petStats.lastVisit = data.last_visit_date;
-                petStats.hat = data.equipped_hat || "none";
-                petStats.glasses = data.equipped_glasses || "none";
-                petStats.accessory = data.equipped_accessory || "none";
-
-                checkStreakLogic();
-                updatePetUI();
-                renderShopItems();
-            }
-        }
-
-        function checkStreakLogic() {
-            // 🌍 Saat dilimi farklarını sıfırlayan kesin UTC YYYY-MM-DD formatı (DÜZELTİLDİ)
-            const todayStr = new Date().toISOString().split('T')[0]; 
-            
-            if (petStats.lastVisit === todayStr) {
-                // Bugün zaten giriş yapılmış, seriyi bozma veya artırma
-                return;
-            }
-
-            // Dünün tarihini bulalım
-            const yesterday = new Date();
-            yesterday.setDate(yesterday.getDate() - 1);
-            const yesterdayStr = yesterday.toISOString().split('T')[0];
-
-            if (petStats.lastVisit === yesterdayStr) {
-                // Dün girilmiş, bugün ilk defa giriliyor! Seri 1 artar.
-                petStats.streak++;
-            } else {
-                // Arada gün kaçırılmış veya tablo yeni kurulmuş. 
-                // Eğer seri şu an 1 ise ve ilk kurulumsa seriyi doğrudan 2'ye çekebiliriz.
-                if (petStats.streak <= 1) {
-                    petStats.streak = 2; // Bugün ikiniz de girdiğiniz için 2'ye zorlayalım
-                } else {
-                    petStats.streak = 1; // İleride gün kaçırırsanız 1'e düşsün
-                }
-            }
-
-            petStats.lastVisit = todayStr;
-            
-            // Veritabanını yeni kesin tarih formatıyla güncelle
-            supabaseClient.from('nehir_pet').update({ 
-                streak_count: petStats.streak, 
-                last_visit_date: todayStr 
-            }).eq('id', 'baby_seal');
-        }
-
-        function updatePetUI() {
-            document.getElementById('petStreak').innerText = petStats.streak;
-            document.getElementById('petFeed').innerText = petStats.totalFeed;
-            
-            const imgEl = document.getElementById('petImage');
-            const speechEl = document.getElementById('petSpeech');
-
-            // Büyüme Evreleri
-            if (petStats.streak >= 16) {
-                imgEl.src = petStages.adult;
-                speechEl.innerText = "Sizin sayenizde kocaman ve çok mutlu bir fok oldum! 🦭❤️";
-            } else if (petStats.streak >= 6) {
-                imgEl.src = petStages.child;
-                speechEl.innerText = "Büyüyorum! Sizi çok seviyorum, iyi ki her gün geliyorsunuz! ✨";
-            } else {
-                imgEl.src = petStages.baby;
-                speechEl.innerText = "Ben henüz çok minik bir beyaz fofuyum... Beni her gün ziyaret edin! 🍼";
-            }
-
-            // Katman Giydirmelerini Güncelleme (Emoji Render Motoru)
-            const currentHat = boutiqueInventory.hat.find(h => h.id === petStats.hat);
-            document.getElementById('layerHat').innerText = (currentHat && currentHat.id !== 'none') ? currentHat.icon : '';
-
-            const currentGlasses = boutiqueInventory.glasses.find(g => g.id === petStats.glasses);
-            document.getElementById('layerGlasses').innerText = (currentGlasses && currentGlasses.id !== 'none') ? currentGlasses.icon : '';
-
-            const currentAccessory = boutiqueInventory.accessory.find(a => a.id === petStats.accessory);
-            document.getElementById('layerAccessory').innerText = (currentAccessory && currentAccessory.id !== 'none') ? currentAccessory.icon : '';
-        }
-
-        async function feedPet() {
-            petStats.totalFeed++;
-            document.getElementById('petFeed').innerText = petStats.totalFeed;
-            document.getElementById('petSpeech').innerText = "Ham ham! Balık çok lezzetliydi sevgilim! 🐟 Çook teşekkürler! 🥰";
-            
-            const defaults = { spread: 360, ticks: 50, gravity: 0, decay: 0.94, startVelocity: 30, colors: ['#f3a3b3', '#ff4d6d', '#ff758f'] };
-            confetti({ ...defaults, particleCount: 40, scalar: 1.2, shapes: ['heart'] });
-            confetti({ ...defaults, particleCount: 20, scalar: 0.75 });
-
             try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
+                const promptMsg = "Deniz ve Nehir çifti için eğlenceli, tatlı ve romantik tek bir test sorusu hazırla. İçinde Adana'dan İstanbul'a taşınma, Moda sahilinde kahve/bira içme, yazılım, veri bilimi, gitar çalma gibi unsurlar barındırabilir. Yanıtı bana sadece geçerli bir JSON objesi olarak ver. Markdown işareti koyma. Format tam olarak şöyle olmalı: {\"question\": \"Soru metni?\", \"options\": [\"Seçenek A\", \"Seçenek B\", \"Seçenek C\", \"Seçenek D\"], \"answerIndex\": 1}. answerIndex 0 ile 3 arasında doğru şıkkın indeksi olsun.";
                 
-                osc.type = 'triangle'; 
-                osc.frequency.setValueAtTime(450, audioCtx.currentTime); 
-                osc.frequency.exponentialRampToValueAtTime(750, audioCtx.currentTime + 0.15); 
-                osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.3); 
-                
-                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-                
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.3);
-            } catch(e) { console.log("Ses pas geçildi:", e); }
-
-            const container = document.getElementById('petAvatarContainer');
-            if (container) {
-                container.style.transform = "scale(1.15) translateY(-10px)";
-                setTimeout(() => { container.style.transform = "scale(1)"; }, 200);
-            }
-
-            await supabaseClient.from('nehir_pet').update({ total_feed_count: petStats.totalFeed }).eq('id', 'baby_seal');
-            renderShopItems(); 
-        }
-
-        function interactWithPet() {
-            const container = document.getElementById('petAvatarContainer');
-            if (!container) return;
-            container.style.transform = "scale(1.1)";
-            setTimeout(() => { container.style.transform = "scale(1)"; }, 150);
-            
-            const randomPhrases = [
-                "Beni gıdıkladın! 🦭✨",
-                "Nehir ve Deniz iyi ki varlar! 🤍",
-                "Bugün de beraberiz, yaşasın! 🎉",
-                "Viyvv! (Mutlu fok sesleri) 🌊"
-            ];
-            document.getElementById('petSpeech').innerText = randomPhrases[Math.floor(Math.random() * randomPhrases.length)];
-        }
-
-        // 🛍️ ETKİLEŞİMLİ MAĞAZA MOTORU FONKSİYONLARI
-        function switchShopTab(tabName, btnElement) {
-            activeShopTab = tabName;
-            document.querySelectorAll('.shop-tab').forEach(t => t.classList.remove('active'));
-            btnElement.classList.add('active');
-            renderShopItems();
-        }
-
-        function renderShopItems() {
-            const grid = document.getElementById('shopItemsGrid');
-            if (!grid) return;
-            grid.innerHTML = "";
-
-            const currentCategoryItems = boutiqueInventory[activeShopTab];
-            const currentEquippedId = petStats[activeShopTab];
-
-            currentCategoryItems.forEach(item => {
-                const isUnlocked = petStats.totalFeed >= item.cost;
-                const isEquipped = currentEquippedId === item.id;
-                
-                const card = document.createElement('div');
-                card.className = `shop-item-card ${isEquipped ? 'equipped' : ''}`;
-                
-                let costLabel = isUnlocked ? `🟢 Açık` : `🔒 ${item.cost} Balık`;
-                if(item.cost === 0) costLabel = "⚪ Boşalt";
-
-                card.innerHTML = `
-                    <span class="shop-item-icon">${item.icon}</span>
-                    <span class="shop-item-name">${item.name}</span>
-                    <span class="shop-item-cost ${isUnlocked ? 'unlocked' : ''}">${costLabel}</span>
-                `;
-
-                card.onclick = () => {
-                    if (!isUnlocked) {
-                        alert(`Bu harika eşyayı açmak için fofuyu biraz daha beslemelisiniz sevgilim! 🔒 (Gerekli: ${item.cost} balık)`);
-                        return;
-                    }
-                    equipItem(activeShopTab, item.id);
-                };
-
-                grid.appendChild(card);
-            });
-        }
-
-        async function equipItem(category, itemId) {
-            petStats[category] = itemId;
-            updatePetUI();
-            renderShopItems();
-
-            const dbColumn = category === 'hat' ? 'equipped_hat' : category === 'glasses' ? 'equipped_glasses' : 'equipped_accessory';
-            await supabaseClient.from('nehir_pet').update({ [dbColumn]: itemId }).eq('id', 'baby_seal');
-        }
-
-        // 🔄 REALTIME CANLI DİNLEYİCİ
-        supabaseClient
-            .channel('schema-db-changes')
-            .on('postgres_changes', { event: '*', filter: 'schema=public' }, () => {
-                loadTimeCapsuleNotes();
-                loadNehirPhotos();
-                syncStatsWithSupabase();
-                // Gardırop veya besleme anlık değiştiğinde yakala
-                supabaseClient.from('nehir_pet').select('*').eq('id', 'baby_seal').single().then(({data}) => {
-                    if(data){
-                        petStats.streak = data.streak_count;
-                        petStats.totalFeed = data.total_feed_count;
-                        petStats.hat = data.equipped_hat || "none";
-                        petStats.glasses = data.equipped_glasses || "none";
-                        petStats.accessory = data.equipped_accessory || "none";
-                        updatePetUI();
-                        renderShopItems();
-                    }
+                const response = await fetch(SUPABASE_FUNCTION_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: promptMsg })
                 });
-            })
-            .subscribe();
-
-        // ⚙️ PWA SERVICE WORKER KONTROLÜ
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').then(() => console.log('PWA Aktif!'));
-        }
-
-        particlesJS("particles-js", { "particles": { "number": { "value": 50 }, "color": { "value": "#a1cfc2" }, "shape": { "type": "circle" }, "opacity": { "value": 0.3, "random": true }, "size": { "value": 3, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#a1cfc2", "opacity": 0.15, "width": 1 }, "move": { "enable": true, "speed": 1 } } });
-    </script>
-</body>
-</html>
+                
+                const data = await response.json();
+                const cleanJson = data.reply.trim().replace(/```json/g, "").replace(/
