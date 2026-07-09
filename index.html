@@ -5,19 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nehir & Deniz</title>
 
+    <!-- 📱 PWA VE APPLE MOBİL UYGULAMA AYARLARI -->
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Nehir & Deniz">
-    <link rel="apple-touch-icon" href="[https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=512&auto=format&fit=crop](https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=512&auto=format&fit=crop)">
+    <link rel="apple-touch-icon" href="https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=512&auto=format&fit=crop">
 
-    <script src="[https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js](https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js)"></script>
-    <script src="[https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js](https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js)"></script>
-    <script src="[https://cdn.jsdelivr.net/npm/chart.js](https://cdn.jsdelivr.net/npm/chart.js)"></script>
-    <script src="[https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js](https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js)"></script>
-    <script src="[https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2](https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2)"></script>
+    <!-- Harici Premium Kütüphaneler -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
      
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22[http://www.w3.org/2000/svg%22](http://www.w3.org/2000/svg%22) viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>❤️</text></svg>">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>❤️</text></svg>">
     <meta name="description" content="26 Mart'tan beri atan tek bir kalp.">
     <meta name="google-site-verification" content="NDh1vXDMuYwS7UB20LG1satVMxsrg-WmluEl6qTHtSM" />
 
@@ -40,12 +42,12 @@
             overflow-x: hidden;
         }
 
-        /* 📱 REALISTIC iPHONE LOCK SCREEN OVERLAY */
+        /* 📱 REALISTIC iPHONE LOCK SCREEN OVERLAY - GÜVENLİ KATMAN GÜNCELLEMESİ */
         #lock-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100vh;
             background: linear-gradient(135deg, #a1cfc2 0%, #2f4842 100%);
-            z-index: 9999;
+            z-index: 99999 !important; /* 👈 Katman en üste çekildi, hiçbir şey önüne geçemez */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -53,6 +55,7 @@
             padding: 60px 20px;
             color: white;
             transition: transform 0.6s cubic-bezier(0.1, 0.76, 0.55, 0.94);
+            pointer-events: auto !important; /* Tıklamaları zorunlu olarak yakalar */
         }
 
         .iphone-time-area { text-align: center; margin-top: 20px; }
@@ -68,7 +71,7 @@
         .dots-container.shake { animation: shake 0.4s ease-in-out; }
         .dots-container.error .dot { border-color: #ff5252; background-color: #ff5252; }
 
-        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px 25px; width: 100%; justify-items: center; }
+        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px 25px; width: 100%; justify-items: center; z-index: 100000; }
         .key {
             width: 70px; height: 70px;
             border-radius: 50%;
@@ -83,6 +86,7 @@
             cursor: pointer;
             user-select: none;
             transition: background 0.1s ease, transform 0.1s ease;
+            pointer-events: auto !important;
         }
         .key:active { background: rgba(255, 255, 255, 0.4); transform: scale(0.92); }
 
@@ -98,7 +102,7 @@
             height: 100%; 
             top: 0; left: 0; 
             z-index: 1; 
-            pointer-events: none;
+            pointer-events: none !important;
         }
         .main-wrapper { position: relative; z-index: 2; width: 100%; display: flex; flex-direction: column; align-items: center; }
          
@@ -273,6 +277,7 @@
 </head>
 <body>
 
+    <!-- 🔒 EN ÜST KATMAN GARANTİLİ REALISTIC iPHONE LOCK SCREEN OVERLAY -->
     <div id="lock-screen">
         <div class="iphone-time-area">
             <div class="iphone-date" id="iphoneDate">7 Temmuz Salı</div>
@@ -300,7 +305,7 @@
                 <div></div>
             </div>
         </div>
-        <div style="font-size: 0.85rem; opacity: 0.6; margin-bottom: 10px; letter-spacing: 0.5px;">Acil Durum</div>
+        <div style="font-size: 0.85rem; opacity: 0.6; margin-bottom: 10px; letter-spacing: 0.5px; text-align:center;">Acil Durum</div>
     </div>
 
     <div id="particles-js"></div>
@@ -323,15 +328,17 @@
                     <div class="poke-status" id="pokeStatus"></div>
                 </div>
 
+                <!-- 🦭 BEYAZ YAVRU FOK PREMIUM SİSTEMİ -->
                 <div class="glass-card" style="margin-top: 30px; text-align: center;">
                     <h3 style="font-weight: 300; margin-bottom: 10px; letter-spacing: 1px;">Bizim Yavru Fokumuz 🦭❤️</h3>
                     <div style="font-size: 1rem; color: var(--text-muted); margin-bottom: 15px;">
                         🔥 Günlük Serimiz: <span id="petStreak" style="font-weight: 600; color: var(--dark-green);">0</span> Gün | Toplam Besleme: <span id="petFeed">0</span> Balık 🐟
                     </div>
                     
+                    <!-- Hizalanmış Katmanlı Görsel Alanı -->
                     <div id="petAvatarContainer" onclick="interactWithPet()">
                         <div class="pet-avatar-wrapper">
-                            <img id="petImage" src="[https://images.unsplash.com/photo-1590418606746-018840f9cd0f?q=80&w=300&auto=format&fit=crop](https://images.unsplash.com/photo-1590418606746-018840f9cd0f?q=80&w=300&auto=format&fit=crop)">
+                            <img id="petImage" src="https://images.unsplash.com/photo-1590418606746-018840f9cd0f?q=80&w=300&auto=format&fit=crop">
                         </div>
                         <div id="layerHat" class="pet-layer"></div>
                         <div id="layerGlasses" class="pet-layer"></div>
@@ -346,6 +353,7 @@
                         <button class="btn-general" style="background-color: var(--purple-accent); color: white; font-weight: 600;" onclick="openArcadeModal()">🎮 Fofu Oyun Salonu</button>
                     </div>
 
+                    <!-- 🛍️ PREMİUM BOUTIQUE MAĞAZA ALANI -->
                     <div style="margin-top: 30px; text-align: left; border-top: 1px dashed rgba(47, 72, 66, 0.2); padding-top: 20px;">
                         <h4 style="font-weight: 400; text-align: center; font-size: 1rem; letter-spacing: 0.5px;">🦭 Fofu Boutique & Gardırop 🛍️</h4>
                         
@@ -361,6 +369,7 @@
             </div>
         </section>
 
+        <!-- 🎮 FOFU ATARİ SALONU POPUP PANELİ -->
         <div id="arcadeModal" class="arcade-modal">
             <div class="arcade-container">
                 <button class="btn-general" style="position: absolute; top: 15px; right: 15px; background: #ff5252; padding: 5px 12px; border-radius: 10px;" onclick="closeArcadeModal()">❌ Kapat</button>
@@ -504,15 +513,15 @@
 
     <script>
         // 🛰️ SUPABASE CONFIG
-        const SUPABASE_URL = "[https://jsixbeuphtcnfvwespqv.supabase.co](https://jsixbeuphtcnfvwespqv.supabase.co)";
+        const SUPABASE_URL = "https://jsixbeuphtcnfvwespqv.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzaXhiZXVwaHRjbmZ2d2VzcHF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNTM5NzcsImV4cCI6MjA5MDcyOTk3N30.3t8IWZf7rtBRxKyxBfH7VOUBxU5eEYyaygUXR8DmGKc"; 
         
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // 🔗 5. ADIM: %100 GÜVENLİ SUNUCUSUZ FONKSİYON ADRESİ (SERVERLESS GATEWAY)
-        const SUPABASE_FUNCTION_URL = "[https://jsixbeuphtcnfvwespqv.supabase.co/functions/v1/fofu-chat](https://jsixbeuphtcnfvwespqv.supabase.co/functions/v1/fofu-chat)";
+        // 🔗 SUNUCUSUZ FONKSİYON ADRESİ (SERVERLESS GATEWAY)
+        const SUPABASE_FUNCTION_URL = "https://jsixbeuphtcnfvwespqv.supabase.co/functions/v1/fofu-chat";
 
-        // 📱 iPHONE KİLİT EKRANI & KULLANICI MOTORU
+        // 📱 iPHONE KİLİT EKRANI MOTORU
         const PIN_NEHIR = "145323"; 
         const PIN_DENIZ = "160507"; 
         let enteredPin = "";
@@ -628,7 +637,7 @@
             };
         }
 
-        // 3. BULUT DESTEKLİ DİNAMİK QUIZ MOTORU
+        // 3. BULUT DESTEKLİ DİNAMİK QUIZ MOTORU (KUSURSUZ KAPATILDI)
         async function loadDynamicGroqQuiz() {
             const container = document.getElementById('optionsContainer');
             const qText = document.getElementById('questionText');
@@ -835,9 +844,9 @@
         let activeShopTab = "hat";
 
         const petStages = {
-            baby: "[https://images.unsplash.com/photo-1590418606746-018840f9cd0f?q=80&w=300&auto=format&fit=crop](https://images.unsplash.com/photo-1590418606746-018840f9cd0f?q=80&w=300&auto=format&fit=crop)", 
-            child: "[https://images.unsplash.com/photo-1551244072-5d12893278ab?q=80&w=300&auto=format&fit=crop](https://images.unsplash.com/photo-1551244072-5d12893278ab?q=80&w=300&auto=format&fit=crop)", 
-            adult: "[https://images.unsplash.com/photo-1529963183134-61a90db47eaf?q=80&w=300&auto=format&fit=crop](https://images.unsplash.com/photo-1529963183134-61a90db47eaf?q=80&w=300&auto=format&fit=crop)"  
+            baby: "https://images.unsplash.com/photo-1590418606746-018840f9cd0f?q=80&w=300&auto=format&fit=crop", 
+            child: "https://images.unsplash.com/photo-1551244072-5d12893278ab?q=80&w=300&auto=format&fit=crop", 
+            adult: "https://images.unsplash.com/photo-1529963183134-61a90db47eaf?q=80&w=300&auto=format&fit=crop"  
         };
 
         const boutiqueInventory = {
