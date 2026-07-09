@@ -42,53 +42,45 @@
             overflow-x: hidden;
         }
 
-        /* 📱 REALISTIC iPHONE LOCK SCREEN OVERLAY - GÜVENLİ KATMAN GÜNCELLEMESİ */
+        /* 📱 DEVICE KEYBOARD SUPPORTED LOCK SCREEN OVERLAY */
         #lock-screen {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100vh;
             background: linear-gradient(135deg, #a1cfc2 0%, #2f4842 100%);
-            z-index: 99999 !important; /* 👈 Katman en üste çekildi, hiçbir şey önüne geçemez */
+            z-index: 99999;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between;
-            padding: 60px 20px;
+            justify-content: center;
+            padding: 40px 20px;
             color: white;
             transition: transform 0.6s cubic-bezier(0.1, 0.76, 0.55, 0.94);
-            pointer-events: auto !important; /* Tıklamaları zorunlu olarak yakalar */
+            cursor: pointer; /* Tıklanabilir hissi versin */
         }
 
-        .iphone-time-area { text-align: center; margin-top: 20px; }
+        .iphone-time-area { text-align: center; margin-bottom: 60px; }
         .iphone-date { font-size: 1.2rem; font-weight: 400; letter-spacing: 0.5px; margin-bottom: 5px; opacity: 0.9; }
         .iphone-time { font-size: 4.5rem; font-weight: 200; line-height: 1; }
 
-        .passcode-container { display: flex; flex-direction: column; align-items: center; margin-bottom: 40px; width: 100%; max-width: 280px; }
-        .passcode-label { font-size: 1rem; font-weight: 400; margin-bottom: 20px; letter-spacing: 0.5px; opacity: 0.9; }
+        .passcode-container { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 280px; }
+        .passcode-label { font-size: 1.1rem; font-weight: 400; margin-bottom: 25px; letter-spacing: 0.5px; opacity: 0.9; }
          
-        .dots-container { display: flex; gap: 15px; margin-bottom: 40px; }
-        .dot { width: 12px; height: 12px; border: 1.5px solid white; border-radius: 50%; transition: background-color 0.15s ease; }
+        .dots-container { display: flex; gap: 15px; margin-bottom: 20px; }
+        .dot { width: 14px; height: 14px; border: 2px solid white; border-radius: 50%; transition: background-color 0.15s ease; }
         .dot.active { background-color: white; }
         .dots-container.shake { animation: shake 0.4s ease-in-out; }
         .dots-container.error .dot { border-color: #ff5252; background-color: #ff5252; }
 
-        .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px 25px; width: 100%; justify-items: center; z-index: 100000; }
-        .key {
-            width: 70px; height: 70px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            font-weight: 400;
-            cursor: pointer;
-            user-select: none;
-            transition: background 0.1s ease, transform 0.1s ease;
-            pointer-events: auto !important;
+        /* Görünmez Gizli Input (Klavyeyi Tetikleyen Motor) */
+        #hiddenPasscodeInput {
+            position: absolute;
+            top: -100px; left: -100px;
+            width: 1px; height: 1px;
+            opacity: 0; border: none;
+            outline: none;
         }
-        .key:active { background: rgba(255, 255, 255, 0.4); transform: scale(0.92); }
+
+        .keyboard-hint { font-size: 0.85rem; opacity: 0.6; margin-top: 15px; letter-spacing: 0.5px; text-align: center; }
 
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
@@ -96,14 +88,7 @@
             40%, 80% { transform: translateX(10px); }
         }
 
-        #particles-js { 
-            position: fixed; 
-            width: 100%; 
-            height: 100%; 
-            top: 0; left: 0; 
-            z-index: 1; 
-            pointer-events: none !important;
-        }
+        #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 1; pointer-events: none; }
         .main-wrapper { position: relative; z-index: 2; width: 100%; display: flex; flex-direction: column; align-items: center; }
          
         section { min-height: 100vh; width: 100%; display: flex; justify-content: center; align-items: center; padding: 60px 20px; flex-direction: column; position: relative; }
@@ -277,8 +262,8 @@
 </head>
 <body>
 
-    <!-- 🔒 EN ÜST KATMAN GARANTİLİ REALISTIC iPHONE LOCK SCREEN OVERLAY -->
-    <div id="lock-screen">
+    <!-- 🔒 DEVICE-KEYBOARD GÜVENLİ KİLİT EKRANI -->
+    <div id="lock-screen" onclick="focusPasscodeField()">
         <div class="iphone-time-area">
             <div class="iphone-date" id="iphoneDate">7 Temmuz Salı</div>
             <div class="iphone-time" id="iphoneTime">09:41</div>
@@ -286,26 +271,17 @@
 
         <div class="passcode-container">
             <div class="passcode-label">Şifreyi Girin</div>
+            
+            <!-- 6 Yuvarlak Nokta -->
             <div class="dots-container" id="dotsContainer">
                 <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
             </div>
 
-            <div class="keypad">
-                <div class="key" onclick="pressKey(1)">1</div>
-                <div class="key" onclick="pressKey(2)">2</div>
-                <div class="key" onclick="pressKey(3)">3</div>
-                <div class="key" onclick="pressKey(4)">4</div>
-                <div class="key" onclick="pressKey(5)">5</div>
-                <div class="key" onclick="pressKey(6)">6</div>
-                <div class="key" onclick="pressKey(7)">7</div>
-                <div class="key" onclick="pressKey(8)">8</div>
-                <div class="key" onclick="pressKey(9)">9</div>
-                <div></div>
-                <div class="key" onclick="pressKey(0)">0</div>
-                <div></div>
-            </div>
+            <!-- ⌨️ Telefonun Kendi Sayısal Klavyesini Açan Gizli Input -->
+            <input type="text" id="hiddenPasscodeInput" pattern="[0-9]*" inputmode="numeric" maxlength="6" oninput="handlePasscodeTyping(this)" autocomplete="off">
+            
+            <div class="keyboard-hint">⌨️ Klavyeyi açmak için ekrana dokunun</div>
         </div>
-        <div style="font-size: 0.85rem; opacity: 0.6; margin-bottom: 10px; letter-spacing: 0.5px; text-align:center;">Acil Durum</div>
     </div>
 
     <div id="particles-js"></div>
@@ -521,10 +497,9 @@
         // 🔗 SUNUCUSUZ FONKSİYON ADRESİ (SERVERLESS GATEWAY)
         const SUPABASE_FUNCTION_URL = "https://jsixbeuphtcnfvwespqv.supabase.co/functions/v1/fofu-chat";
 
-        // 📱 iPHONE KİLİT EKRANI MOTORU
+        // 📱 iPHONE KİLİT EKRANI ALTYAPISI (CIHAZ KLAVYELİ VERSİYON)
         const PIN_NEHIR = "145323"; 
         const PIN_DENIZ = "160507"; 
-        let enteredPin = "";
         let currentUser = ""; 
 
         function updateLockScreenTime() {
@@ -536,40 +511,48 @@
         setInterval(updateLockScreenTime, 1000);
         updateLockScreenTime();
 
-        function pressKey(num) {
-            if (enteredPin.length >= 6) return;
-            enteredPin += num;
-            updateDots();
-            if (enteredPin.length === 6) {
-                setTimeout(checkPin, 200);
-            }
+        // Sayfa açıldığında gizli input alanına odaklan ve klavyeyi fırlat
+        function focusPasscodeField() {
+            const input = document.getElementById('hiddenPasscodeInput');
+            if(input) input.focus();
         }
+        setTimeout(focusPasscodeField, 500);
+        window.addEventListener('click', focusPasscodeField);
 
-        function updateDots() {
+        // Klavyeden yazı yazıldıkça tetiklenen ana kontrolör
+        function handlePasscodeTyping(inputElement) {
+            let val = inputElement.value;
+            
+            // Sadece sayısal karakterleri kabul et
+            val = val.replace(/[^0-9]/g, '');
+            inputElement.value = val;
+
+            // Yuvarlak Noktaları Doldur
             const dots = document.querySelectorAll('.dot');
             dots.forEach((dot, idx) => {
-                if (idx < enteredPin.length) dot.classList.add('active');
+                if (idx < val.length) dot.classList.add('active');
                 else dot.classList.remove('active');
             });
-        }
 
-        function checkPin() {
-            const container = document.getElementById('dotsContainer');
-            if (enteredPin === PIN_DENIZ) {
-                currentUser = "deniz";
-                setupUserInterface();
-                unlockInterface();
-            } else if (enteredPin === PIN_NEHIR) {
-                currentUser = "nehir";
-                setupUserInterface();
-                unlockInterface();
-            } else {
-                container.classList.add('shake', 'error');
-                setTimeout(() => {
-                    container.classList.remove('shake', 'error');
-                    enteredPin = "";
-                    updateDots();
-                }, 400);
+            // 6 Hane tamamlandıysa şifreyi doğrula
+            if (val.length === 6) {
+                if (val === PIN_DENIZ || val === PIN_NEHIR) {
+                    currentUser = (val === PIN_DENIZ) ? "deniz" : "nehir";
+                    inputElement.blur(); // Klavyeyi gizle
+                    setupUserInterface();
+                    unlockInterface();
+                } else {
+                    // Hatalı şifre animasyonu
+                    const container = document.getElementById('dotsContainer');
+                    container.classList.add('shake', 'error');
+                    setTimeout(() => {
+                        container.classList.remove('shake', 'error');
+                        inputElement.value = "";
+                        // Noktaları sıfırla
+                        dots.forEach(dot => dot.classList.remove('active'));
+                        inputElement.focus();
+                    }, 500);
+                }
             }
         }
 
@@ -637,7 +620,7 @@
             };
         }
 
-        // 3. BULUT DESTEKLİ DİNAMİK QUIZ MOTORU (KUSURSUZ KAPATILDI)
+        // 3. BULUT DESTEKLİ DİNAMİK QUIZ MOTORU
         async function loadDynamicGroqQuiz() {
             const container = document.getElementById('optionsContainer');
             const qText = document.getElementById('questionText');
