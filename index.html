@@ -516,8 +516,22 @@
             const input = document.getElementById('hiddenPasscodeInput');
             if(input) input.focus();
         }
-        setTimeout(focusPasscodeField, 500);
-        window.addEventListener('click', focusPasscodeField);
+      function focusPasscodeField() {
+    const input = document.getElementById("hiddenPasscodeInput");
+    if (!input) return;
+
+    requestAnimationFrame(() => {
+        input.focus({ preventScroll: true });
+        input.click();
+    });
+}
+
+window.addEventListener("load", () => {
+    setTimeout(focusPasscodeField, 300);
+});
+
+document.getElementById("lock-screen").addEventListener("pointerdown", focusPasscodeField);
+document.getElementById("lock-screen").addEventListener("touchstart", focusPasscodeField, { passive: true });
 
         // Klavyeden yazı yazıldıkça tetiklenen ana kontrolör
         function handlePasscodeTyping(inputElement) {
