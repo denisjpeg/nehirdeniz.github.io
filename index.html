@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nehir & Deniz</title>
+
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Nehir & Deniz">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>❤️</text></svg>">
+    <meta name="description" content="26 Mart'tan beri atan tek bir kalp.">
+
+    <style>
+        /* ============ OBSIDIAN DARK & TEAL TOKENS ============ */
+        :root {
+            --bg: #0b0f0e;
+            --bg-alt: #101614;
+            --surface: #151d1b;
+            --surface-2: #1b2622;
+            --border: rgba(94, 234, 212, 0.10);
+            --teal: #2dd4bf;
+            --teal-dim: #1f8f82;
+            --teal-glow: rgba(45, 212, 191, 0.18);
+            --rose: #f3a3b3;
+            --violet: #b39ddb;
+            --text: #e7f3f0;
+            --text-muted: #7f9791;
+            --text-faint: #4d615c;
+            --radius: 18px;
+            --font-display: 'Fraunces', 'Georgia', serif;
+            --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500&family=Inter:wght@400;500;600;700&display=swap');
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            background-image: radial-gradient(circle at 20% 0%, rgba(45,212,191,0.06), transparent 45%),
+                               radial-gradient(circle at 80% 100%, rgba(179,157,219,0.05), transparent 40%);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        #particles-js { position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.5; }
+        .main-wrapper { position: relative; z-index: 2; width: 100%; display: flex; flex-direction: column; align-items: center; }
+
+        section { width: 100%; max-width: 1000px; display: flex; justify-content: center; align-items: center; padding: 36px 20px; flex-direction: column; position: relative; }
+
+        .glass-card {
+            background: linear-gradient(180deg, var(--surface), var(--surface-2));
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+            margin-bottom: 0;
+        }
+
+        .section-title { font-family: var(--font-display); font-size: 1.7rem; font-weight: 300; margin-bottom: 22px; letter-spacing: 0.5px; text-align: center; color: var(--text); }
+        h1 { font-family: var(--font-display); font-size: 2.6rem; font-weight: 300; letter-spacing: 1px; margin-bottom: 8px; text-align: center; }
+        .subtitle { font-size: 1rem; color: var(--text-muted); margin-bottom: 24px; text-align: center; }
+        .eyebrow { font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--teal); text-align: center; margin-bottom: 6px; font-weight: 600; }
+
+        /* Buttons — unified system, replaces all "basic HTML" buttons */
+        .btn {
+            font-family: var(--font-body);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 22px;
+            font-size: 0.92rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+            display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn:active { transform: scale(0.97); }
+        .btn-primary { background: linear-gradient(135deg, var(--teal), var(--teal-dim)); color: #06110f; box-shadow: 0 8px 20px var(--teal-glow); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 26px var(--teal-glow); }
+        .btn-rose { background: var(--rose); color: #2a0f14; box-shadow: 0 8px 20px rgba(243,163,179,0.22); }
+        .btn-rose:hover { transform: translateY(-2px); }
+        .btn-violet { background: var(--violet); color: #1c1430; box-shadow: 0 8px 20px rgba(179,157,219,0.22); }
+        .btn-violet:hover { transform: translateY(-2px); }
+        .btn-ghost { background: var(--surface-2); color: var(--text); border: 1px solid var(--border); }
+        .btn-ghost:hover { background: rgba(45,212,191,0.08); }
+        .btn-danger { background: #3a1418; color: #ff8a95; border: 1px solid rgba(255,90,110,0.25); }
+        .input {
+            padding: 12px 14px; border-radius: 10px; border: 1px solid var(--border);
+            background: var(--bg-alt); color: var(--text); outline: none; font-family: var(--font-body);
+        }
+        .input:focus { border-color: var(--teal-dim); }
+        .input::placeholder { color: var(--text-faint); }
+
+        /* ============ KİLİT EKRANI (AUTH GATE) ============ */
+        #authGate {
+            position: fixed; inset: 0; z-index: 20000;
+            background: var(--bg);
+            display: flex; align-items: center; justify-content: center; padding: 20px;
+        }
+        .auth-box {
+            width: 100%; max-width: 380px; text-align: center;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 24px; padding: 40px 30px; box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        }
+        .auth-heart { font-size: 2.4rem; margin-bottom: 12px; }
+        .auth-box h2 { font-family: var(--font-display); font-weight: 300; font-size: 1.5rem; margin-bottom: 6px; }
+        .auth-box p { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 22px; line-height: 1.5; }
+        .auth-box .input { width: 100%; margin-bottom: 14px; text-align: center; }
+        .auth-box .btn { width: 100%; justify-content: center; }
+        #authStatus { min-height: 18px; font-size: 0.82rem; margin-top: 12px; color: var(--text-muted); }
+        #app-content { display: none; }
+
+        .who-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 6px; }
+        .who-btn {
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+            padding: 22px 10px; border-radius: 16px; border: 1px solid var(--border);
+            background: var(--surface-2); color: var(--text); cursor: pointer;
+            font-family: var(--font-body); font-size: 0.95rem; font-weight: 600;
+            transition: all 0.18s ease;
+        }
+        .who-btn .who-emoji { font-size: 1.8rem; }
+        .who-btn:hover { border-color: var(--teal-dim); transform: translateY(-2px); box-shadow: 0 10px 20px var(--teal-glow); }
+
+
+        /* Pet */
+        #petAvatarContainer { position: relative; width: 140px; height: 140px; margin: 0 auto; cursor: pointer; }
+        .pet-avatar-wrapper { width: 100%; height: 100%; border-radius: 50%; border: 2px solid var(--teal-dim); box-shadow: 0 10px 30px var(--teal-glow); overflow: hidden; position: absolute; top: 0; left: 0; z-index: 1; }
+        #petImage { width: 100%; height: 100%; object-fit: cover; }
+
+
+        /* Arcade modal */
+        .arcade-modal { position: fixed; inset: 0; background: rgba(6,10,9,0.92); backdrop-filter: blur(18px); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 16px; }
+        .arcade-container { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; width: 100%; max-width: 580px; padding: 26px; position: relative; max-height: 90vh; overflow-y: auto; }
+        .arcade-leaderboard { background: var(--bg-alt); border-radius: 14px; padding: 14px; margin-bottom: 20px; text-align: center; border-left: 3px solid var(--rose); }
+        .arcade-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        @media(max-width: 480px) { .arcade-grid { grid-template-columns: 1fr; } }
+        .arcade-game-card { background: var(--surface-2); border: 1px solid var(--border); padding: 18px; border-radius: 16px; text-align: center; cursor: pointer; transition: all 0.2s; }
+        .arcade-game-card:hover { border-color: var(--teal-dim); transform: translateY(-2px); }
+        #gameCanvasArea { width: 100%; height: 280px; background: var(--bg-alt); border-radius: 16px; margin-top: 14px; position: relative; overflow: hidden; display: none; }
+
+        .cards-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; width: 100%; perspective: 1000px; margin-top: 16px; }
+        .tilt-card { width: 200px; height: 290px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 16px; padding: 10px; box-shadow: 0 15px 30px rgba(0,0,0,0.3); transform-style: preserve-3d; transition: transform 0.1s ease; cursor: pointer; }
+        .tilt-card img { width: 100%; height: 80%; object-fit: cover; border-radius: 12px; transform: translateZ(20px); }
+        .tilt-card .card-text { text-align: center; margin-top: 12px; font-size: 0.9rem; font-weight: 500; color: var(--text); transform: translateZ(15px); }
+
+        .notes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; margin-top: 16px; width: 100%; }
+        .post-it { background: var(--surface-2); padding: 14px; border-radius: 12px; border-left: 3px solid var(--teal-dim); font-size: 0.88rem; line-height: 1.4; color: var(--text); position: relative; word-wrap: break-word; }
+        .post-it-date { font-size: 0.72rem; color: var(--text-faint); margin-top: 8px; display: block; text-align: right; }
+
+        .quiz-box { text-align: center; padding: 6px 0; }
+        .quiz-question { font-size: 1.1rem; margin-bottom: 18px; font-weight: 400; padding: 0 6px; }
+        .quiz-options { display: flex; flex-direction: column; gap: 8px; max-width: 400px; margin: 0 auto; }
+        .btn-option { background: var(--surface-2); border: 1px solid var(--border); padding: 11px 16px; border-radius: 10px; cursor: pointer; transition: all 0.2s ease; color: var(--text); font-size: 0.92rem; text-align: left; }
+        .btn-option:hover { background: rgba(45,212,191,0.08); border-color: var(--teal-dim); transform: translateX(3px); }
+
+        .movie-display { font-family: var(--font-display); font-size: 1.3rem; font-weight: 400; margin: 20px 0; min-height: 36px; color: var(--text); transition: all 0.3s ease; }
+
+        .search-container { display: flex; gap: 8px; margin-bottom: 14px; }
+        .search-input { flex: 1; }
+        .venue-list { list-style: none; text-align: left; margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+        .venue-item { background: var(--surface-2); padding: 11px; border-radius: 10px; border-left: 3px solid var(--teal-dim); font-size: 0.9rem; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-top: 16px; }
+        .stat-box { background: var(--surface-2); padding: 20px; border-radius: 16px; text-align: center; border: 1px solid var(--border); }
+        .stat-num { font-family: var(--font-display); font-size: 2.2rem; font-weight: 500; color: var(--teal); margin-bottom: 6px; }
+        .counter-label { font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .counter-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 22px 0; }
+        .counter-item { background: var(--surface-2); padding: 16px 8px; border-radius: 14px; text-align: center; border: 1px solid var(--border); }
+        .counter-value { font-family: var(--font-display); font-size: 1.6rem; font-weight: 500; color: var(--teal); }
+
+        .dice-display { font-family: var(--font-display); font-size: 1.25rem; margin: 18px 0; min-height: 32px; color: var(--text); }
+
+        .top-userbar { position: fixed; top: 14px; right: 14px; z-index: 500; display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); padding: 8px 12px; border-radius: 30px; font-size: 0.82rem; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+
+    <!-- ============ AUTH GATE (Supabase Magic Link) ============ -->
+    <div id="authGate">
+        <div class="auth-box">
+            <div class="auth-heart">❤️</div>
+            <h2>Nehir & Deniz</h2>
+            <p>Kim giriyor?</p>
+
+            <div class="who-grid" id="whoGrid">
+                <button class="who-btn" onclick="chooseUser('deniz')"><span class="who-emoji">🌊</span>Deniz</button>
+                <button class="who-btn" onclick="chooseUser('nehir')"><span class="who-emoji">🌿</span>Nehir</button>
+            </div>
+
+            <div id="authStatus"></div>
+        </div>
+    </div>
+
+    <div id="app-content">
+    <div id="particles-js"></div>
+    <div class="top-userbar" id="topUserbar" style="display:none;">
+        <span id="currentUserLabel">—</span>
+        <button class="btn btn-ghost" style="padding:4px 10px; font-size:0.75rem;" onclick="signOutUser()">Çıkış</button>
+    </div>
+
+    <div class="main-wrapper">
+
+        <section id="hero">
+            <div class="eyebrow">26 Mart 2026'dan beri</div>
+            <h1>Nehir & Deniz</h1>
+            <p class="subtitle">Tek bir kalp, iki isim.</p>
+            <div class="counter-container">
+                <div class="counter-item"><div class="counter-value" id="days">00</div><div class="counter-label">Gün</div></div>
+                <div class="counter-item"><div class="counter-value" id="hours">00</div><div class="counter-label">Saat</div></div>
+                <div class="counter-item"><div class="counter-value" id="minutes">00</div><div class="counter-label">Dakika</div></div>
+                <div class="counter-item"><div class="counter-value" id="seconds">00</div><div class="counter-label">Saniye</div></div>
+            </div>
+            <div class="poke-container">
+                <button class="btn btn-rose" onclick="handlePokeSystem()">💌 Onu Dürt</button>
+                <div class="poke-status" id="pokeStatus"></div>
+            </div>
+        </section>
+
+        <!-- 🦭 EVCİL FOK -->
+        <section id="pet-section">
+            <div class="glass-card" style="text-align: center;">
+                <h3 style="font-family: var(--font-display); font-weight: 300; margin-bottom: 8px; font-size: 1.3rem;">Bizim Yavru Fokumuz 🦭</h3>
+                <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 14px;">
+                    🔥 Ortak Serimiz: <span id="petStreak" style="font-weight:700; color: var(--teal);">0</span> Gün · Toplam Besleme: <span id="petFeed" style="color: var(--text);">0</span> Balık 🐟
+                </div>
+
+                <div id="petAvatarContainer" onclick="interactWithPet()">
+                    <div class="pet-avatar-wrapper"><img id="petImage"></div>
+                </div>
+
+                <div id="petSpeech" style="margin-top: 14px; min-height: 18px; font-style: italic; font-size: 0.88rem; color: var(--text-muted);">Yükleniyor... 💤</div>
+
+                <div id="petStageLabel" style="margin-top: 10px; font-size: 0.8rem; color: var(--teal); font-weight: 600;"></div>
+                <div style="width: 100%; max-width: 280px; margin: 8px auto 0 auto; height: 6px; border-radius: 6px; background: var(--surface-2); overflow: hidden;">
+                    <div id="petGrowthBar" style="height: 100%; width: 0%; background: linear-gradient(90deg, var(--teal-dim), var(--teal)); transition: width 0.4s ease;"></div>
+                </div>
+
+                <div style="display: flex; gap: 8px; justify-content: center; margin-top: 18px; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="feedPet()">🦭 Balık Ver</button>
+                    <button class="btn btn-rose" id="aiVoiceBtn" onclick="startVoiceAssistant()">🎙️ Fofuyla Konuş</button>
+                    <button class="btn btn-violet" onclick="openArcadeModal()">🎮 Oyun Salonu</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 🎮 ARCADE MODAL -->
+        <div id="arcadeModal" class="arcade-modal">
+            <div class="arcade-container">
+                <button class="btn btn-danger" style="position: absolute; top: 14px; right: 14px; padding: 5px 12px;" onclick="closeArcadeModal()">✕ Kapat</button>
+                <h3 style="font-family: var(--font-display); font-weight: 300; text-align: center; margin-bottom: 4px; font-size: 1.3rem;">🎮 Fofu Atari Salonu</h3>
+                <p style="font-size: 0.82rem; text-align: center; color: var(--text-muted); margin-bottom: 18px;">Anlık Güncellenen Ortak Liderlik Odası</p>
+                <div class="arcade-leaderboard"><span id="arcadeCrownOwner">👑 Taht Hesaplanıyor...</span></div>
+                <div id="gameCanvasArea"></div>
+                <div class="arcade-grid" id="arcadeGridMenu">
+                    <div class="arcade-game-card" onclick="startArcadeGame('feed')"><span style="font-size:2rem; display:block;">🐟</span><strong style="font-size:0.9rem;">Balık Avı Yarışı</strong><span style="font-size:0.72rem; display:block; margin-top:4px; color:var(--text-muted);" id="bestFeedLabel">Yükleniyor...</span></div>
+                    <div class="arcade-game-card" onclick="startArcadeGame('memory')"><span style="font-size:2rem; display:block;">🧠</span><strong style="font-size:0.9rem;">Hafıza Eşleştirme</strong><span style="font-size:0.72rem; display:block; margin-top:4px; color:var(--text-muted);" id="bestMemoryLabel">Yükleniyor...</span></div>
+                    <div class="arcade-game-card" onclick="startArcadeGame('flappy')"><span style="font-size:2rem; display:block;">🚀</span><strong style="font-size:0.9rem;">Flappy Fofu</strong><span style="font-size:0.72rem; display:block; margin-top:4px; color:var(--text-muted);" id="bestFlappyLabel">Yükleniyor...</span></div>
+                    <div class="arcade-game-card" onclick="startArcadeGame('reflex')"><span style="font-size:2rem; display:block;">💖</span><strong style="font-size:0.9rem;">Aşk Refleks Testi</strong><span style="font-size:0.72rem; display:block; margin-top:4px; color:var(--text-muted);" id="bestReflexLabel">Yükleniyor...</span></div>
+                </div>
+            </div>
+        </div>
+
+        <section id="quiz-section">
+            <h2 class="section-title">Bizi Ne Kadar Tanıyorsun? 🧠</h2>
+            <div class="glass-card">
+                <div class="quiz-box" id="quizBox">
+                    <div class="quiz-question" id="questionText">Soru yükleniyor... ⚡</div>
+                    <div class="quiz-options" id="optionsContainer"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="three-dimension">
+            <h2 class="section-title">Anı Albümümüz 📸</h2>
+            <div class="glass-card">
+                <div class="cards-container" id="photoGallery"></div>
+                <div style="margin-top: 24px; text-align: center;">
+                    <input type="file" id="nehirUpload" accept="image/*" style="display: none;" onchange="handleNehirPhoto(event)">
+                    <button class="btn btn-ghost" onclick="document.getElementById('nehirUpload').click()">📸 Yeni Bir Anı Ekle</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="time-capsule">
+            <h2 class="section-title">Zaman Kapsülü Notları 💌</h2>
+            <div class="glass-card">
+                <div style="display: flex; gap: 8px; margin-bottom: 20px; justify-content: center; flex-wrap: wrap;">
+                    <input type="text" id="noteInput" class="input" placeholder="Küçük bir aşk notu bırak..." style="width: 65%; max-width: 420px;">
+                    <button class="btn btn-primary" onclick="addTimeCapsuleNote()">Bırak 📮</button>
+                </div>
+                <div class="notes-grid" id="notesWall"></div>
+            </div>
+        </section>
+
+        <!-- 🎲 BUGÜN NE YAPALIM? -->
+        <section id="dice-section">
+            <h2 class="section-title">Bugün Ne Yapalım? 🎲</h2>
+            <div class="glass-card" style="max-width: 600px; text-align: center;">
+                <p style="color: var(--text-muted); font-size: 0.92rem;">Karar veremediğinizde zarı çevirin, size özel bir aktivite gelsin.</p>
+                <div class="dice-display" id="diceDisplay">🎲 Seçim Yapılmayı Bekliyor...</div>
+                <button class="btn btn-violet" onclick="rollActivityDice()">Zarı At 🎲</button>
+            </div>
+        </section>
+
+        <section id="media-section">
+            <h2 class="section-title">Bugün Buradayız 📍</h2>
+            <div class="glass-card">
+                <div class="search-container">
+                    <input type="text" class="input search-input" id="mapSearchInput" placeholder="Gitmek istediğiniz yer..." value="Kadıköy Moda">
+                    <button class="btn btn-primary" onclick="searchLocation()">Ara</button>
+                </div>
+                <div style="height: 230px; width: 100%; border-radius: 12px; overflow: hidden; margin-bottom: 14px; border: 1px solid var(--border);">
+                    <iframe id="dynamicMapFrame" style="width:100%; height:100%; border:none;" src="" loading="lazy"></iframe>
+                </div>
+                <h4 style="font-weight: 400; font-size: 0.9rem; margin-bottom: 8px; color: var(--text-muted);">📍 Çevredeki Öneriler:</h4>
+                <ul class="venue-list" id="dynamicVenueList"></ul>
+            </div>
+        </section>
+
+        <section id="cinema-section">
+            <h2 class="section-title">Gece Sinema Modu 🎬</h2>
+            <div class="glass-card" style="max-width: 560px; text-align: center;">
+                <p style="color: var(--text-muted); font-size: 0.92rem;">Ne izleyeceğinize karar veremediyseniz çarkı çevirin.</p>
+                <div class="movie-display" id="movieDisplay">🍿 Seçim Yapılmayı Bekliyor...</div>
+                <button class="btn btn-violet" onclick="suggestMovie()">Rastgele Seç 🎲</button>
+            </div>
+        </section>
+
+        <section id="analytics">
+            <h2 class="section-title">İlişki Logları 📊</h2>
+            <div class="glass-card">
+                <div class="stats-grid">
+                    <div class="stat-box"><div class="stat-num" id="coffeeCount">0</div><div class="counter-label">Kahveler ☕</div><button class="btn btn-ghost" style="margin-top:10px; padding:6px 14px; font-size:0.8rem;" onclick="incrementStat('coffee')">+1</button></div>
+                    <div class="stat-box"><div class="stat-num" id="beerCount">0</div><div class="counter-label">Biralar 🍺</div><button class="btn btn-ghost" style="margin-top:10px; padding:6px 14px; font-size:0.8rem;" onclick="incrementStat('beer')">+1</button></div>
+                    <div class="stat-box"><div class="stat-num" id="dreamCount">0</div><div class="counter-label">Hayaller 🍃</div><button class="btn btn-ghost" style="margin-top:10px; padding:6px 14px; font-size:0.8rem;" onclick="incrementStat('dream')">+1</button></div>
+                </div>
+                <div style="max-width: 400px; margin: 30px auto 0 auto;"><canvas id="loveChart"></canvas></div>
+            </div>
+        </section>
+    </div>
+    </div><!-- /#app-content -->
+
+    <script>
+        // ============================================================
+        // ⚙️ CONFIG — bu değerler build sırasında .env'den enjekte edilmeli
+        // (örn. Vite: import.meta.env.VITE_SUPABASE_URL). Statik hosting
+        // kullanıyorsan en azından bu bloğu tek bir config.js dosyasında
+        // tutup index.html'e ayrı script olarak dahil et; repo'ya committen.
+        // ============================================================
+        const CONFIG = {
+            SUPABASE_URL: window.__ENV__?.SUPABASE_URL || "https://jsixbeuphtcnfvwespqv.supabase.co",
+            SUPABASE_ANON_KEY: window.__ENV__?.SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzaXhiZXVwaHRjbmZ2d2VzcHF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNTM5NzcsImV4cCI6MjA5MDcyOTk3N30.3t8IWZf7rtBRxKyxBfH7VOUBxU5eEYyaygUXR8DmGKc",
+            // Edge Function adresleri — server-side sırlar (Telegram token, Groq key)
+            // ASLA client'ta durmaz, bu fonksiyonların içinde Supabase secrets olarak saklanır.
+            FN_CHAT: "https://jsixbeuphtcnfvwespqv.supabase.co/functions/v1/fofu-chat",
+            FN_POKE: "https://jsixbeuphtcnfvwespqv.supabase.co/functions/v1/send-poke"
+        };
+
+        const supabaseClient = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+
+        // Edge Function çağrılarında Supabase gateway'inin istediği ortak header'lar
+        const FN_HEADERS = {
+            'Content-Type': 'application/json',
+            'apikey': CONFIG.SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
+        };
+        let currentUser = null;   // "deniz" | "nehir"
+
+        // ============================================================
+        // 🔒 AUTH GATE — İsim seçimi (+ isteğe bağlı hafif PIN)
+        // ============================================================
+        function chooseUser(name) {
+            unlockApp(name);
+        }
+
+        function signOutUser() {
+            localStorage.removeItem('nehirdeniz_user');
+            window.location.reload();
+        }
+
+        function unlockApp(name) {
+            currentUser = name;
+            localStorage.setItem('nehirdeniz_user', name);
+
+            document.getElementById('authGate').style.display = 'none';
+            document.getElementById('app-content').style.display = 'block';
+            document.getElementById('topUserbar').style.display = 'flex';
+            document.getElementById('currentUserLabel').textContent =
+                currentUser === 'deniz' ? '🌊 Deniz olarak giriş yapıldı' : '🌿 Nehir olarak giriş yapıldı';
+
+            initAppAfterAuth();
+        }
+
+        // Tarayıcıda daha önce seçim yapılmışsa otomatik gir (bu cihazda hatırlanır).
+        // Not: bu bir güvenlik katmanı değil, sadece rahatlık içindir.
+        (function restoreSession() {
+            const saved = localStorage.getItem('nehirdeniz_user');
+            if (saved === 'deniz' || saved === 'nehir') unlockApp(saved);
+        })();
+
+        // ============================================================
+        // ⏱️ CANLI SAYAÇ
+        // ============================================================
+        const startDate = new Date(2026, 2, 26, 0, 0);
+        function updateCounter() {
+            const diff = new Date() - startDate;
+            document.getElementById('days').innerText = String(Math.floor(diff / 86400000)).padStart(2, '0');
+            document.getElementById('hours').innerText = String(Math.floor((diff % 86400000) / 3600000)).padStart(2, '0');
+            document.getElementById('minutes').innerText = String(Math.floor((diff % 3600000) / 60000)).padStart(2, '0');
+            document.getElementById('seconds').innerText = String(Math.floor((diff % 60000) / 1000)).padStart(2, '0');
+        }
+        setInterval(updateCounter, 1000);
+        updateCounter();
+
+        // ============================================================
+        // 💌 GÜVENLİ DÜRTME SİSTEMİ (artık token client'ta değil — Edge Function çağrılıyor)
+        // ============================================================
+        async function handlePokeSystem() {
+            const statusDiv = document.getElementById('pokeStatus');
+            statusDiv.innerText = "Dürtülüyor... ⚡";
+            statusDiv.style.color = "var(--text-muted)";
+            try {
+                const res = await fetch(CONFIG.FN_POKE, {
+                    method: 'POST',
+                    headers: FN_HEADERS,
+                    body: JSON.stringify({ from: currentUser })
+                });
+                if (!res.ok) throw new Error("poke failed");
+                statusDiv.innerText = "Karşı taraf dürtüldü! Telefonu şu an titriyor 🥰";
+                statusDiv.style.color = "var(--teal)";
+            } catch (e) {
+                statusDiv.innerText = "Dürtme gönderilemedi, tekrar dener misin? 🤍";
+                statusDiv.style.color = "var(--rose)";
+            }
+        }
+
+        // ============================================================
+        // 🧠 GROQ QUIZ MOTORU
+        // ============================================================
+        async function loadDynamicGroqQuiz() {
+            const container = document.getElementById('optionsContainer');
+            const qText = document.getElementById('questionText');
+            try {
+                const promptMsg = "Deniz ve Nehir çifti için eğlenceli, tatlı ve romantik tek bir test sorusu hazırla. İçinde Adana'dan İstanbul'a taşınma, Moda sahilinde kahve/bira içme, yazılım, veri bilimi, gitar çalma gibi unsurlar barındırabilir. Yanıtı bana sadece geçerli bir JSON objesi olarak ver. Markdown işareti koyma. Format tam olarak şöyle olmalı: {\"question\": \"Soru metni?\", \"options\": [\"Seçenek A\", \"Seçenek B\", \"Seçenek C\", \"Seçenek D\"], \"answerIndex\": 1}.";
+                const response = await fetch(CONFIG.FN_CHAT, {
+                    method: 'POST',
+                    headers: FN_HEADERS,
+                    body: JSON.stringify({ prompt: promptMsg })
+                });
+                const data = await response.json();
+                const cleanJson = data.reply.trim().replace(/```json/g, "").replace(/```/g, "");
+                const quiz = JSON.parse(cleanJson);
+
+                qText.innerText = quiz.question;
+                container.innerHTML = "";
+                quiz.options.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = "btn-option";
+                    btn.innerText = `${idx + 1}. ${opt}`;
+                    btn.onclick = () => {
+                        if (idx === quiz.answerIndex) {
+                            confetti({ particleCount: 60, spread: 50, origin: { y: 0.7 } });
+                            qText.innerHTML = `<span style="color:var(--teal);">🎉 Doğru Cevap!</span>`;
+                            container.innerHTML = `<p style="margin-top:10px; font-size:0.95rem; color: var(--text-muted);">Uyumunuz harika! Yenisi için sayfayı yenileyebilirsin. ❤️</p>`;
+                        } else {
+                            btn.style.borderColor = 'var(--rose)';
+                            btn.style.opacity = '0.6';
+                        }
+                    };
+                    container.appendChild(btn);
+                });
+            } catch (e) {
+                qText.innerText = "Quiz yüklenirken küçük bir hata oluştu. 🧠";
+                console.error(e);
+            }
+        }
+
+        function tilt(e, card) {
+            const r = card.getBoundingClientRect();
+            const angleX = -((e.clientY - r.top) - (r.height / 2)) / 10;
+            const angleY = ((e.clientX - r.left) - (r.width / 2)) / 10;
+            card.style.transform = `rotateX(${angleX}deg) rotateY(${angleY}deg) scale(1.03)`;
+        }
+        function resetTilt(card) { card.style.transform = `rotateX(0deg) rotateY(0deg) scale(1)`; }
+
+        // ============================================================
+        // 📸 FOTOĞRAF ALBÜMÜ
+        // ============================================================
+        async function loadNehirPhotos() {
+            const { data, error } = await supabaseClient.from('nehir_photos').select('*').order('id', { ascending: true });
+            const gallery = document.getElementById('photoGallery');
+            if (!gallery) return;
+            gallery.innerHTML = "";
+            if (error) { console.error(error); return; }
+            (data || []).forEach(p => appendPhotoToGallery(p.src, p.text));
+        }
+        async function handleNehirPhoto(event) {
+            const file = event.target.files[0]; if (!file) return;
+            const userText = prompt("Bu anının altına ne yazalım? ✨", "Yeni Anımız 🤍");
+            const finalCardText = (userText && userText.trim() !== "") ? userText : "Yeni Anımız 🤍";
+            const reader = new FileReader();
+            reader.onload = async function (e) {
+                const { error } = await supabaseClient.from('nehir_photos').insert([{ src: e.target.result, text: finalCardText }]);
+                if (!error) loadNehirPhotos(); else console.error(error);
+            };
+            reader.readAsDataURL(file);
+        }
+        function appendPhotoToGallery(src, text) {
+            const gallery = document.getElementById('photoGallery');
+            if (!gallery) return;
+            const card = document.createElement('div');
+            card.className = 'tilt-card';
+            card.setAttribute('onmousemove', 'tilt(event, this)');
+            card.setAttribute('onmouseleave', 'resetTilt(this)');
+            card.innerHTML = `<img src="${src}"><div class="card-text">${text}</div>`;
+            gallery.appendChild(card);
+        }
+
+        // ============================================================
+        // 💌 ZAMAN KAPSÜLÜ NOTLARI
+        // ============================================================
+        async function loadTimeCapsuleNotes() {
+            const { data, error } = await supabaseClient.from('nehir_notes').select('*').order('id', { ascending: true });
+            const wall = document.getElementById('notesWall');
+            if (!wall) return;
+            wall.innerHTML = "";
+            if (!data || data.length === 0) {
+                wall.innerHTML = `<div class="post-it">Buraya birbirimiz için gelecekten notlar bırakabiliriz! 💫<span class="post-it-date">Nihai Kurulum</span></div>`;
+                return;
+            }
+            data.forEach(n => {
+                const div = document.createElement('div');
+                div.className = "post-it";
+                div.innerHTML = `${n.text}<span class="post-it-date">${n.date}</span>`;
+                wall.appendChild(div);
+            });
+        }
+        async function addTimeCapsuleNote() {
+            const input = document.getElementById('noteInput');
+            if (!input.value.trim()) return;
+            const { error } = await supabaseClient.from('nehir_notes').insert([{ text: input.value, date: new Date().toLocaleDateString('tr-TR') }]);
+            if (!error) { input.value = ""; loadTimeCapsuleNotes(); } else console.error(error);
+        }
+
+        // ============================================================
+        // 🎲 BUGÜN NE YAPALIM ZARI (yerel liste + Groq destekli kişiselleştirme)
+        // ============================================================
+        const activityFallbackList = [
+            "Moda sahilinde gün batımında yürüyüş 🌅",
+            "Kadıköy'de yeni bir kahveci keşfedin ☕",
+            "Evde temalı bir yemek gecesi yapın 🍝",
+            "Yakındaki bir sergiyi gezin 🖼️",
+            "Bisiklet kiralayıp sahil boyunca sürün 🚲",
+            "Beraber yeni bir tarif deneyin 👩‍🍳",
+            "Kısa bir vapur turuna çıkın ⛴️",
+            "Board game gecesi yapın 🎲"
+        ];
+        async function rollActivityDice() {
+            const display = document.getElementById('diceDisplay');
+            display.style.opacity = 0;
+            try {
+                const promptMsg = "Deniz ve Nehir çifti için bugün yapabilecekleri, İstanbul'da (özellikle Kadıköy/Moda çevresinde) tek bir tatlı aktivite önerisi yaz. Emoji ile başlasın, maksimum 12 kelime, tek satır, ekstra açıklama yok.";
+                const response = await fetch(CONFIG.FN_CHAT, {
+                    method: 'POST',
+                    headers: FN_HEADERS,
+                    body: JSON.stringify({ prompt: promptMsg })
+                });
+                const data = await response.json();
+                setTimeout(() => { display.innerText = data.reply.trim(); display.style.opacity = 1; }, 250);
+            } catch (e) {
+                setTimeout(() => {
+                    display.innerText = activityFallbackList[Math.floor(Math.random() * activityFallbackList.length)];
+                    display.style.opacity = 1;
+                }, 250);
+            }
+        }
+
+        // ============================================================
+        // 📍 KONUM BAZLI ÖNERİLER
+        // ============================================================
+        async function searchLocation() {
+            const query = document.getElementById('mapSearchInput').value; if (!query) return;
+            document.getElementById('dynamicMapFrame').src = `https://maps.google.com/maps?q=${encodeURIComponent(query)}&t=&z=14&ie=UTF8&iwloc=&output=embed`;
+
+            const list = document.getElementById('dynamicVenueList'); if (!list) return;
+            list.innerHTML = "<li class='venue-item'>Bölge taranıyor... 🔍</li>";
+            try {
+                const promptMsg = `"${query}" bölgesi için sevgililerin birlikte yapabileceği tatlı, özgün 3 aktivite/mekan önerisi yaz. Her öneri emoji ile başlasın, kısa (maksimum 10 kelime) olsun. Sadece satır satır ver, numara koyma.`;
+                const response = await fetch(CONFIG.FN_CHAT, {
+                    method: 'POST',
+                    headers: FN_HEADERS,
+                    body: JSON.stringify({ prompt: promptMsg })
+                });
+                const data = await response.json();
+                const recs = data.reply.trim().split('\n').filter(r => r.trim() !== "");
+                list.innerHTML = "";
+                recs.forEach(v => {
+                    const li = document.createElement('li');
+                    li.className = 'venue-item';
+                    li.innerText = v;
+                    list.appendChild(li);
+                });
+            } catch (e) {
+                list.innerHTML = "<li class='venue-item'>Öneriler şu an yüklenemedi. ☕</li>";
+            }
+        }
+
+        const movieList = [
+            "Chained Together Canlı Yayını Açıp İzleyelim! 🎮",
+            "Sakin Bir Akustik Rock Belgeseli Açalım 🎸",
+            "Güzel Bir Bilim Kurgu / Christopher Nolan Gecesi 🌌",
+            "IMDb Top 250'den Kült Bir Film 🍿",
+            "Nostaljik Bir Animasyon Gecesi 🧸",
+            "Sadece Battaniyenin Altına Girip Sohbet Edelim 🤍"
+        ];
+        function suggestMovie() {
+            const display = document.getElementById('movieDisplay');
+            if (!display) return;
+            display.style.opacity = 0;
+            setTimeout(() => {
+                display.innerText = movieList[Math.floor(Math.random() * movieList.length)];
+                display.style.opacity = 1;
+            }, 250);
+        }
+
+        // ============================================================
+        // 📊 İLİŞKİ İSTATİSTİKLERİ
+        // ============================================================
+        let localStats = { coffee: 0, beer: 0, dream: 0 };
+        let loveChart = null;
+
+        async function syncStatsWithSupabase() {
+            const { data, error } = await supabaseClient.from('nehir_stats').select('*').eq('id', 'main_stats').maybeSingle();
+            if (data) {
+                localStats.coffee = data.coffee; localStats.beer = data.beer; localStats.dream = data.dream;
+                document.getElementById('coffeeCount').innerText = localStats.coffee;
+                document.getElementById('beerCount').innerText = localStats.beer;
+                document.getElementById('dreamCount').innerText = localStats.dream;
+                updateChart();
+            } else if (!data && !error) {
+                await supabaseClient.from('nehir_stats').insert([{ id: 'main_stats', coffee: 0, beer: 0, dream: 0 }]);
+            }
+        }
+        async function incrementStat(type) {
+            localStats[type]++;
+            document.getElementById(type + 'Count').innerText = localStats[type];
+            await supabaseClient.from('nehir_stats').update({ [type]: localStats[type] }).eq('id', 'main_stats');
+            updateChart();
+        }
+        function updateChart() {
+            if (!loveChart) return;
+            loveChart.data.datasets[0].data = [
+                100, 95, 100,
+                Math.min(70 + localStats.coffee * 0.5, 100),
+                Math.min(60 + localStats.beer * 0.8, 100)
+            ];
+            loveChart.update();
+        }
+        function initChart() {
+            loveChart = new Chart(document.getElementById('loveChart').getContext('2d'), {
+                type: 'radar',
+                data: {
+                    labels: ['Uyum', 'Eğlence', 'Güven', 'Kahve Rutini ☕', 'Bira Keyfi 🍺'],
+                    datasets: [{ label: 'Anlık Analiz', data: [100, 95, 100, 70, 60], backgroundColor: 'rgba(45,212,191,0.15)', borderColor: '#2dd4bf', borderWidth: 1.5, pointBackgroundColor: '#2dd4bf' }]
+                },
+                options: {
+                    scales: { r: { max: 100, min: 0, ticks: { display: false }, grid: { color: 'rgba(255,255,255,0.06)' }, angleLines: { color: 'rgba(255,255,255,0.06)' }, pointLabels: { color: '#7f9791', font: { size: 10 } } } },
+                    plugins: { legend: { labels: { color: '#7f9791' } } }
+                }
+            });
+        }
+
+        // ============================================================
+        // 🦭 EVCİL FOK — DÜZELTİLMİŞ SERİ (STREAK) MANTIĞI
+        // ============================================================
+        let petStats = { streak: 0, totalFeed: 0, lastVisit: "" };
+
+        const petStages = {
+            baby: "https://images.unsplash.com/photo-1590418606746-018840f9cd0f?q=80&w=300&auto=format&fit=crop",
+            child: "https://images.unsplash.com/photo-1551244072-5d12893278ab?q=80&w=300&auto=format&fit=crop",
+            adult: "https://images.unsplash.com/photo-1529963183134-61a90db47eaf?q=80&w=300&auto=format&fit=crop"
+        };
+
+        async function initPetSystem() {
+            const { data, error } = await supabaseClient.from('nehir_pet').select('*').eq('id', 'baby_seal').maybeSingle();
+            if (data) {
+                petStats.streak = data.streak_count || 0;
+                petStats.totalFeed = data.total_feed_count || 0;
+                petStats.lastVisit = data.last_visit_date || "";
+            } else if (!error) {
+                await supabaseClient.from('nehir_pet').insert([{ id: 'baby_seal', streak_count: 0, total_feed_count: 0, last_visit_date: null }]);
+            }
+            await checkStreakLogic();
+            updatePetUI();
+            loadDynamicGroqQuiz();
+            syncArcadeScores();
+        }
+
+        // Mantık: seri, "iki kişiden en az biri o gün ziyaret etti" ilkesiyle ilerler.
+        // Aradan tam 1 gün boşluk geçtiyse (bugün - son ziyaret == 1) seri devam eder.
+        // 1'den fazla gün atlandıysa seri sıfırlanıp bugünden itibaren yeniden 1'den başlar.
+        // Aynı gün içinde tekrar giriş yapmak seriyi bir daha artırmaz.
+        async function checkStreakLogic() {
+            const todayStr = new Date().toISOString().split('T')[0];
+            if (petStats.lastVisit === todayStr) return; // bugün zaten sayıldı
+
+            if (petStats.lastVisit === "") {
+                petStats.streak = 1; // ilk ziyaret
+            } else {
+                const last = new Date(petStats.lastVisit);
+                const today = new Date(todayStr);
+                const dayGap = Math.round((today - last) / 86400000);
+                petStats.streak = (dayGap === 1) ? petStats.streak + 1 : 1;
+            }
+
+            petStats.lastVisit = todayStr;
+            await supabaseClient.from('nehir_pet').update({
+                streak_count: petStats.streak,
+                last_visit_date: todayStr
+            }).eq('id', 'baby_seal');
+        }
+
+        // Büyüme evreleri sadece seri gününe göre belirlenir: yavru fok → genç fok → yetişkin fok.
+        const GROWTH_STAGES = [
+            { min: 0, max: 5, key: 'baby', label: 'Yavru Fofu 🍼', speech: "Ben henüz çok minik bir beyaz fofuyum... Beni her gün ziyaret edin! 🍼" },
+            { min: 6, max: 15, key: 'child', label: 'Büyüyen Fofu ✨', speech: "Büyüyorum! Her gün gelmenize bayılıyorum! ✨" },
+            { min: 16, max: Infinity, key: 'adult', label: 'Yetişkin Fofu 🦭❤️', speech: "Sizin sayenizde kocaman ve mutlu bir fok oldum! 🦭❤️" }
+        ];
+
+        function updatePetUI() {
+            document.getElementById('petStreak').innerText = petStats.streak;
+            document.getElementById('petFeed').innerText = petStats.totalFeed;
+            const imgEl = document.getElementById('petImage');
+            const speechEl = document.getElementById('petSpeech');
+            const stageLabelEl = document.getElementById('petStageLabel');
+            const growthBarEl = document.getElementById('petGrowthBar');
+
+            const stage = GROWTH_STAGES.find(s => petStats.streak >= s.min && petStats.streak <= s.max) || GROWTH_STAGES[0];
+            imgEl.src = petStages[stage.key];
+            speechEl.innerText = stage.speech;
+            stageLabelEl.innerText = stage.label;
+
+            let progressPct;
+            if (stage.max === Infinity) {
+                progressPct = 100;
+            } else {
+                progressPct = ((petStats.streak - stage.min) / (stage.max - stage.min + 1)) * 100;
+            }
+            growthBarEl.style.width = Math.min(Math.max(progressPct, 4), 100) + "%";
+        }
+
+        async function feedPet() {
+            petStats.totalFeed++;
+            document.getElementById('petFeed').innerText = petStats.totalFeed;
+            document.getElementById('petSpeech').innerText = "Ham ham! Balık çok lezzetliydi! 🐟 Teşekkürler! 🥰";
+            confetti({ particleCount: 40, spread: 360, ticks: 50, gravity: 0, decay: 0.94, startVelocity: 30, colors: ['#2dd4bf', '#f3a3b3'], scalar: 1.2 });
+            const container = document.getElementById('petAvatarContainer');
+            if (container) { container.style.transform = "scale(1.12)"; setTimeout(() => { container.style.transform = "scale(1)"; }, 200); }
+            await supabaseClient.from('nehir_pet').update({ total_feed_count: petStats.totalFeed }).eq('id', 'baby_seal');
+        }
+
+        function interactWithPet() {
+            const container = document.getElementById('petAvatarContainer');
+            if (!container) return;
+            container.style.transform = "scale(1.08)";
+            setTimeout(() => { container.style.transform = "scale(1)"; }, 150);
+            const phrases = ["Beni gıdıkladın! 🦭✨", "Nehir ve Deniz iyi ki varlar! 🤍", "Bugün de beraberiz, yaşasın! 🎉", "Viyvv! 🌊"];
+            document.getElementById('petSpeech').innerText = phrases[Math.floor(Math.random() * phrases.length)];
+        }
+
+        // ============================================================
+        // 🎙️ SESLİ ASİSTAN
+        // ============================================================
+        function startVoiceAssistant() {
+            const btn = document.getElementById('aiVoiceBtn');
+            const speechEl = document.getElementById('petSpeech');
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) { alert("Tarayıcınız ses tanımayı desteklemiyor. Safari veya Chrome kullanın 🤍"); return; }
+
+            const recognition = new SpeechRecognition();
+            recognition.lang = "tr-TR";
+            recognition.interimResults = false;
+            btn.innerText = "Seni Dinliyorum... 🎧";
+            speechEl.innerText = "Fofu seni dinliyor... 🦭";
+            recognition.start();
+
+            recognition.onresult = async function (event) {
+                const userSpeechText = event.results[0][0].transcript;
+                btn.innerText = "Fofu Düşünüyor... 🧠";
+                speechEl.innerText = `"${userSpeechText}" dedin, düşünüyorum... ✨`;
+                try {
+                    const systemInstruction = "Sen Deniz'in sevgilisi Nehir için kurduğu sitedeki akıllı fofu asistanısın. Konuşan kişiyi samimi, sevgi dolu bir dille yanıtla ve her cümleyi tatlı bir iltifatla bitir. Düz metin üret, format kullanma.";
+                    const response = await fetch(CONFIG.FN_CHAT, {
+                        method: 'POST',
+                        headers: FN_HEADERS,
+                        body: JSON.stringify({ prompt: `${systemInstruction}\n\n${currentUser === 'nehir' ? 'Nehir' : 'Deniz'} şunu söyledi: ${userSpeechText}` })
+                    });
+                    const data = await response.json();
+                    speechEl.innerText = data.reply;
+                    btn.innerText = "🎙️ Fofuyla Konuş";
+                    confetti({ particleCount: 15, spread: 20, origin: { y: 0.8 } });
+                } catch (error) {
+                    console.error(error);
+                    btn.innerText = "🎙️ Fofuyla Konuş";
+                    speechEl.innerText = "Sunucudan yanıt alınamadı, tekrar dener miyiz? 🤍";
+                }
+            };
+            recognition.onerror = function () {
+                btn.innerText = "🎙️ Fofuyla Konuş";
+                speechEl.innerText = "Sesini tam duyamadım, tekrar konuşur musun? 🤍";
+            };
+        }
+
+        // ============================================================
+        // 🎮 ATARİ SALONU (mevcut oyunlar korunur — reskin + küçük düzeltmeler)
+        // ============================================================
+        let arcadeGlobalScores = {};
+        let activeGameLoop = null;
+
+        function openArcadeModal() { document.getElementById('arcadeModal').style.display = "flex"; syncArcadeScores(); }
+        function closeArcadeModal() { document.getElementById('arcadeModal').style.display = "none"; stopCurrentGame(); }
+
+        async function syncArcadeScores() {
+            const { data, error } = await supabaseClient.from('nehir_games').select('*').eq('id', 'arcade_scores').maybeSingle();
+            if (!data) {
+                if (!error) await supabaseClient.from('nehir_games').insert([{ id: 'arcade_scores', deniz_feed: 0, nehir_feed: 0, deniz_memory: 999.9, nehir_memory: 999.9, deniz_flappy: 0, nehir_flappy: 0, deniz_reflex: 0, nehir_reflex: 0 }]);
+                return;
+            }
+            arcadeGlobalScores = data;
+            document.getElementById('bestFeedLabel').innerText = `Deniz: ${data.deniz_feed} | Nehir: ${data.nehir_feed}`;
+            document.getElementById('bestMemoryLabel').innerText = `Deniz: ${data.deniz_memory}s | Nehir: ${data.nehir_memory}s`;
+            document.getElementById('bestFlappyLabel').innerText = `Deniz: ${data.deniz_flappy} | Nehir: ${data.nehir_flappy}`;
+            document.getElementById('bestReflexLabel').innerText = `Deniz: ${data.deniz_reflex} | Nehir: ${data.nehir_reflex}`;
+
+            let denizWins = 0, nehirWins = 0;
+            if (data.deniz_feed > data.nehir_feed) denizWins++; else if (data.nehir_feed > data.deniz_feed) nehirWins++;
+            if (data.deniz_memory < data.nehir_memory) denizWins++; else if (data.nehir_memory < data.deniz_memory) nehirWins++;
+            if (data.deniz_flappy > data.nehir_flappy) denizWins++; else if (data.nehir_flappy > data.deniz_flappy) nehirWins++;
+            if (data.deniz_reflex > data.nehir_reflex) denizWins++; else if (data.nehir_reflex > data.deniz_reflex) nehirWins++;
+
+            const crownOwnerEl = document.getElementById('arcadeCrownOwner');
+            if (denizWins > nehirWins) crownOwnerEl.innerText = "👑 Taht Şu An Deniz'de!";
+            else if (nehirWins > denizWins) crownOwnerEl.innerText = "👑 Taht Şu An Nehir'de!";
+            else crownOwnerEl.innerText = "🤝 Durum Tamamen Berabere!";
+        }
+
+        function stopCurrentGame() {
+            if (activeGameLoop) clearInterval(activeGameLoop);
+            const area = document.getElementById('gameCanvasArea');
+            area.innerHTML = ""; area.style.display = "none";
+            document.getElementById('arcadeGridMenu').style.display = "grid";
+        }
+
+        function startArcadeGame(gameType) {
+            document.getElementById('arcadeGridMenu').style.display = "none";
+            const area = document.getElementById('gameCanvasArea');
+            area.style.display = "block";
+            area.innerHTML = "";
+            if (gameType === 'feed') runFeedGame(area);
+            else if (gameType === 'memory') runMemoryGame(area);
+            else if (gameType === 'flappy') runFlappyGame(area);
+            else if (gameType === 'reflex') runReflexGame(area);
+        }
+
+        function runFeedGame(area) {
+            let score = 0, timeLeft = 30;
+            area.innerHTML = `<div style="position:absolute; width:100%; padding:10px; display:flex; justify-content:space-between; color:var(--text); font-weight:600;"><div>Skor: <span id="fScore">0</span></div><div>Süre: <span id="fTime">30</span>s</div></div>
+            <div id="fPlayer" style="position:absolute; bottom:10px; left:40%; font-size:2.4rem; transition:left 0.1s; user-select:none;">🦭</div>`;
+
+            const move = (clientX) => {
+                const rect = area.getBoundingClientRect();
+                let x = clientX - rect.left - 20;
+                if (x >= 0 && x <= rect.width - 40) document.getElementById('fPlayer').style.left = x + "px";
+            };
+            area.onmousemove = (e) => move(e.clientX);
+            area.ontouchmove = (e) => move(e.touches[0].clientX);
+
+            activeGameLoop = setInterval(() => {
+                timeLeft--;
+                document.getElementById('fTime').innerText = timeLeft;
+                if (timeLeft <= 0) { clearInterval(activeGameLoop); saveArcadeHighscore('feed', score); return; }
+                const isBomb = Math.random() > 0.7;
+                const item = document.createElement('div');
+                item.style.cssText = `position:absolute; top:0px; left:${Math.random() * 85}%; font-size:1.7rem; transition:top 2s linear;`;
+                item.innerText = isBomb ? "💣" : "🐟";
+                area.appendChild(item);
+                setTimeout(() => { item.style.top = "240px"; }, 50);
+                let checkCollide = setInterval(() => {
+                    const pPlayer = document.getElementById('fPlayer');
+                    if (!pPlayer) { clearInterval(checkCollide); return; }
+                    const pLeft = parseFloat(pPlayer.style.left) || 0;
+                    const iLeft = (parseFloat(item.style.left) / 100) * area.clientWidth;
+                    const iTop = parseFloat(item.style.top);
+                    if (iTop >= 210 && iTop <= 240 && Math.abs(iLeft - pLeft) < 40) {
+                        clearInterval(checkCollide);
+                        score += isBomb ? -10 : 5;
+                        document.getElementById('fScore').innerText = score;
+                        item.remove();
+                    }
+                }, 100);
+                setTimeout(() => { clearInterval(checkCollide); item.remove(); }, 2050);
+            }, 1000);
+        }
+
+        function runMemoryGame(area) {
+            let startTime = Date.now(), matchedPairs = 0;
+            let emojis = ["🎸", "🎸", "🍺", "🍺", "☕", "☕", "🥩", "🥩", "❤️", "❤️", "🦭", "🦭"];
+            emojis.sort(() => Math.random() - 0.5);
+            area.innerHTML = `<div style="position:absolute; width:100%; text-align:center; color:var(--text); padding:5px; font-weight:600;">Süre: <span id="mTimer">0.0</span>s</div>
+            <div id="mGrid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding:35px 15px 15px 15px; height:100%;"></div>`;
+            const grid = document.getElementById('mGrid');
+            let firstCard = null, secondCard = null, lockBoard = false;
+
+            activeGameLoop = setInterval(() => {
+                const t = document.getElementById('mTimer');
+                if (t) t.innerText = ((Date.now() - startTime) / 1000).toFixed(1);
+            }, 100);
+
+            emojis.forEach((emoji) => {
+                const card = document.createElement('div');
+                card.style.cssText = "background:var(--surface-2); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.4rem; cursor:pointer; user-select:none; color:transparent;";
+                card.innerText = emoji;
+                card.onclick = () => {
+                    if (lockBoard || card === firstCard) return;
+                    card.style.color = "var(--text)"; card.style.background = "var(--teal-dim)";
+                    if (!firstCard) { firstCard = card; return; }
+                    secondCard = card; lockBoard = true;
+                    if (firstCard.innerText === secondCard.innerText) {
+                        matchedPairs++; firstCard = null; secondCard = null; lockBoard = false;
+                        if (matchedPairs === 6) {
+                            clearInterval(activeGameLoop);
+                            saveArcadeHighscore('memory', parseFloat(((Date.now() - startTime) / 1000).toFixed(1)));
+                        }
+                    } else {
+                        setTimeout(() => {
+                            if (firstCard && secondCard) {
+                                firstCard.style.color = "transparent"; firstCard.style.background = "var(--surface-2)";
+                                secondCard.style.color = "transparent"; secondCard.style.background = "var(--surface-2)";
+                            }
+                            firstCard = null; secondCard = null; lockBoard = false;
+                        }, 800);
+                    }
+                };
+                grid.appendChild(card);
+            });
+        }
+
+        function runFlappyGame(area) {
+            let score = 0, fofuY = 120, velocity = 0;
+            area.innerHTML = `<div style="position:absolute; left:10px; top:10px; color:var(--text); font-weight:600; z-index:10;">Skor: <span id="flScore">0</span></div>
+            <div id="flBird" style="position:absolute; left:40px; top:120px; font-size:1.9rem; user-select:none; z-index:5;">🦭</div>
+            <div id="flPipe" style="position:absolute; right:-50px; width:50px; background:var(--teal-dim); height:100px; top:0;"></div>
+            <div id="flPipeBot" style="position:absolute; right:-50px; width:50px; background:var(--teal-dim); height:100px; bottom:0;"></div>`;
+            const bird = document.getElementById('flBird');
+            const pipeTop = document.getElementById('flPipe');
+            const pipeBot = document.getElementById('flPipeBot');
+            let pipeX = area.clientWidth;
+            let gapY = Math.random() * 100 + 50;
+            area.onclick = () => { velocity = -5; };
+
+            activeGameLoop = setInterval(() => {
+                velocity += 0.4; fofuY += velocity;
+                if (bird) bird.style.top = fofuY + "px";
+                if (fofuY < 0 || fofuY > 250) { clearInterval(activeGameLoop); saveArcadeHighscore('flappy', score); return; }
+                pipeX -= 3.5;
+                if (pipeX < -50) {
+                    pipeX = area.clientWidth; gapY = Math.random() * 120 + 40; score++;
+                    const s = document.getElementById('flScore'); if (s) s.innerText = score;
+                }
+                if (pipeTop && pipeBot) {
+                    pipeTop.style.right = (area.clientWidth - pipeX) + "px"; pipeTop.style.height = gapY + "px";
+                    pipeBot.style.right = (area.clientWidth - pipeX) + "px"; pipeBot.style.height = (area.clientHeight - gapY - 95) + "px";
+                }
+                if (pipeX > 20 && pipeX < 80 && (fofuY < gapY || fofuY > gapY + 65)) { clearInterval(activeGameLoop); saveArcadeHighscore('flappy', score); }
+            }, 30);
+        }
+
+        function runReflexGame(area) {
+            let score = 0, timeLeft = 15;
+            area.innerHTML = `<div style="position:absolute; width:100%; padding:10px; display:flex; justify-content:space-between; color:var(--text); font-weight:600; z-index:10;"><div>Kalpler: <span id="rScore">0</span></div><div>Zaman: <span id="rTime">15</span>s</div></div>
+            <div id="rTarget" style="position:absolute; font-size:2.3rem; cursor:pointer; user-select:none; display:none;">❤️</div>`;
+            const target = document.getElementById('rTarget');
+            function moveHeart() {
+                const maxX = area.clientWidth - 50, maxY = area.clientHeight - 50;
+                if (target) { target.style.left = Math.random() * maxX + "px"; target.style.top = Math.random() * maxY + 30 + "px"; target.style.display = "block"; }
+            }
+            if (target) target.onclick = (e) => { e.stopPropagation(); score++; document.getElementById('rScore').innerText = score; target.style.display = "none"; moveHeart(); };
+            moveHeart();
+            activeGameLoop = setInterval(() => {
+                timeLeft--;
+                document.getElementById('rTime').innerText = timeLeft;
+                if (timeLeft <= 0) { clearInterval(activeGameLoop); saveArcadeHighscore('reflex', score); return; }
+                if (Math.random() > 0.4) moveHeart();
+            }, 1000);
+        }
+
+        async function saveArcadeHighscore(gameType, finalScore) {
+            stopCurrentGame();
+            const dbColumn = `${currentUser}_${gameType}`;
+            const currentRecord = arcadeGlobalScores[dbColumn];
+            let isNewRecord = gameType === 'memory' ? (finalScore < currentRecord || currentRecord === 999.9) : (finalScore > currentRecord);
+            if (isNewRecord) {
+                confetti({ particleCount: 100, spread: 60 });
+                await supabaseClient.from('nehir_games').update({ [dbColumn]: finalScore }).eq('id', 'arcade_scores');
+                alert("🎉 Ortak panoda yeni bir rekor kırdın! 👑");
+            } else {
+                alert(`Oyun bitti! Skorun: ${finalScore}`);
+            }
+            syncArcadeScores();
+        }
+
+        // ============================================================
+        // 🚀 AUTH SONRASI BAŞLATMA + REALTIME DİNLEYİCİ
+        // ============================================================
+        function initAppAfterAuth() {
+            particlesJS("particles-js", { particles: { number: { value: 40 }, color: { value: "#2dd4bf" }, shape: { type: "circle" }, opacity: { value: 0.25, random: true }, size: { value: 3, random: true }, line_linked: { enable: true, distance: 150, color: "#2dd4bf", opacity: 0.1, width: 1 }, move: { enable: true, speed: 1 } } });
+
+            initChart();
+            loadNehirPhotos();
+            loadTimeCapsuleNotes();
+            syncStatsWithSupabase();
+            searchLocation();
+            initPetSystem();
+
+            supabaseClient
+                .channel('schema-db-changes')
+                .on('postgres_changes', { event: '*', schema: 'public' }, () => {
+                    loadTimeCapsuleNotes();
+                    loadNehirPhotos();
+                    syncStatsWithSupabase();
+                    syncArcadeScores();
+                    supabaseClient.from('nehir_pet').select('*').eq('id', 'baby_seal').maybeSingle().then(({ data }) => {
+                        if (data) {
+                            petStats.streak = data.streak_count;
+                            petStats.totalFeed = data.total_feed_count;
+                            updatePetUI();
+                        }
+                    });
+                })
+                .subscribe();
+
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js').catch(() => {});
+            }
+        }
+    </script>
+</body>
+</html>
