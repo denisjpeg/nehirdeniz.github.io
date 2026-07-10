@@ -359,18 +359,14 @@
         // kullanıyorsan en azından bu bloğu tek bir config.js dosyasında
         // tutup index.html'e ayrı script olarak dahil et; repo'ya committen.
         // ============================================================
-        const CONFIG = {
-            SUPABASE_URL: window.__ENV__?.SUPABASE_URL || "https://jsixbeuphtcnfvwespqv.supabase.co",
-            SUPABASE_ANON_KEY: window.__ENV__?.SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzaXhiZXVwaHRjbmZ2d2VzcHF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNTM5NzcsImV4cCI6MjA5MDcyOTk3N30.3t8IWZf7rtBRxKyxBfH7VOUBxU5eEYyaygUXR8DmGKc",
-            // Edge Function adresleri — server-side sırlar (Telegram token, Groq key)
-            // ASLA client'ta durmaz, bu fonksiyonların içinde Supabase secrets olarak saklanır.
-           const CONFIG = {
-    // ... diğer ayarlar
-    // HATA BURADAYDI: fofu-chat yerine clever-responder yazmalısın
-    FN_CHAT: "https://jsixbeuphtcnfvwespqv.supabase.co/functions/v1/clever-responder", 
+       const CONFIG = {
+    SUPABASE_URL: window.__ENV__?.SUPABASE_URL || "https://jsixbeuphtcnfvwespqv.supabase.co",
+    SUPABASE_ANON_KEY: window.__ENV__?.SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzaXhiZXVwaHRjbmZ2d2VzcHF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNTM5NzcsImV4cCI6MjA5MDcyOTk3N30.3t8IWZf7rtBRxKyxBfH7VOUBxU5eEYyaygUXR8DmGKc",
+    
+    // Edge Function adresleri
+    FN_CHAT: "https://jsixbeuphtcnfvwespqv.supabase.co/functions/v1/fofu-chat", 
     FN_POKE: "https://jsixbeuphtcnfvwespqv.supabase.co/functions/v1/send-poke"
-}
-
+};
         const supabaseClient = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
 
         // Edge Function çağrılarında Supabase gateway'inin istediği ortak header'lar
