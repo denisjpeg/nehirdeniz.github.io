@@ -693,7 +693,7 @@
                 petStats.totalFeed = data.total_feed_count || 0;
                 petStats.lastVisit = data.last_visit_date || "";
             } else if (!error) {
-                await supabaseClient.from('nehir_pet').insert([{ id: 'baby_seal', streak_count: 0, total_feed_count: 0, last_visit_date: "" }]);
+                await supabaseClient.from('nehir_pet').insert([{ id: 'baby_seal', streak_count: 0, total_feed_count: 0, last_visit_date: null }]);
             }
             await checkStreakLogic();
             updatePetUI();
