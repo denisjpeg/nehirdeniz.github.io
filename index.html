@@ -364,9 +364,12 @@
             SUPABASE_ANON_KEY: window.__ENV__?.SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzaXhiZXVwaHRjbmZ2d2VzcHF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNTM5NzcsImV4cCI6MjA5MDcyOTk3N30.3t8IWZf7rtBRxKyxBfH7VOUBxU5eEYyaygUXR8DmGKc",
             // Edge Function adresleri — server-side sırlar (Telegram token, Groq key)
             // ASLA client'ta durmaz, bu fonksiyonların içinde Supabase secrets olarak saklanır.
-            FN_CHAT: "https://jsixbeuphtcnfvwespqv.supabase.co/functions/v1/fofu-chat",
-            FN_POKE: "https://jsixbeuphtcnfvwespqv.supabase.co/functions/v1/send-poke"
-        };
+           const CONFIG = {
+    // ... diğer ayarlar
+    // HATA BURADAYDI: fofu-chat yerine clever-responder yazmalısın
+    FN_CHAT: "https://jsixbeuphtcnfvwespqv.supabase.co/functions/v1/clever-responder", 
+    FN_POKE: "https://jsixbeuphtcnfvwespqv.supabase.co/functions/v1/send-poke"
+};
 
         const supabaseClient = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
 
