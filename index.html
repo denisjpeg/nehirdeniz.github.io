@@ -217,48 +217,7 @@
 </head>
 <body>
 
-    <!-- 🔒 DEVICE-KEYBOARD GÜVENLİ KİLİT EKRANI -->
-    <div id="lock-screen" onclick="focusPasscodeField()">
-        <div class="iphone-time-area">
-            <div class="iphone-date" id="iphoneDate">7 Temmuz Salı</div>
-            <div class="iphone-time" id="iphoneTime">09:41</div>
-        </div>
-
-        <div class="passcode-container">
-            <div class="passcode-label">Şifreyi Girin</div>
-            
-            <!-- 6 Yuvarlak Nokta -->
-            <div class="dots-container" id="dotsContainer">
-                <div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div>
-            </div>
-
-            <!-- ⌨️ Telefonun Kendi Sayısal Klavyesini Açan Gizli Input -->
-            <input type="text" id="hiddenPasscodeInput" pattern="[0-9]*" inputmode="numeric" maxlength="6" oninput="handlePasscodeTyping(this)" autocomplete="off">
-            
-            <div class="keyboard-hint">⌨️ Klavyeyi açmak için ekrana dokunun</div>
-        </div>
-    </div>
-
-    <div id="particles-js"></div>
-
-    <div class="main-wrapper">
-        <section id="hero">
-            <div class="glass-card hero-card">
-                <h1>nehir & deniz</h1>
-                <div class="subtitle">26 Mart'tan beri atan tek bir kalp.</div>
-                 
-                <div class="counter-container">
-                    <div class="counter-item"><div class="counter-value" id="days">00</div><div class="counter-label">Gün</div></div>
-                    <div class="counter-item"><div class="counter-value" id="hours">00</div><div class="counter-label">Saat</div></div>
-                    <div class="counter-item"><div class="counter-value" id="minutes">00</div><div class="counter-label">Dk</div></div>
-                    <div class="counter-item"><div class="counter-value" id="seconds">00</div><div class="counter-label">Sn</div></div>
-                </div>
-
-                <div class="poke-container">
-                    <button class="btn-poke" id="pokeBtn" onclick="handlePokeSystem()">Yükleniyor... ⚡</button>
-                    <div class="poke-status" id="pokeStatus"></div>
-                </div>
-
+   
                 <!-- 🦭 BEYAZ YAVRU FOK PREMIUM SİSTEMİ -->
                 <div class="glass-card" style="margin-top: 30px; text-align: center;">
                     <h3 style="font-weight: 300; margin-bottom: 10px; letter-spacing: 1px;">Bizim Yavru Fokumuz 🦭❤️</h3>
@@ -438,97 +397,6 @@
         // 🔗 SUNUCUSUZ FONKSİYON ADRESİ (SERVERLESS GATEWAY)
         const SUPABASE_FUNCTION_URL = "https://jsixbeuphtcnfvwespqv.supabase.co/functions/v1/fofu-chat";
 
-        // 📱 iPHONE KİLİT EKRANI ALTYAPISI (CIHAZ KLAVYELİ VERSİYON)
-        const PIN_NEHIR = "145323"; 
-        const PIN_DENIZ = "160507"; 
-        let currentUser = ""; 
-
-        function updateLockScreenTime() {
-            const now = new Date();
-            const options = { weekday: 'long', month: 'long', day: 'numeric' };
-            document.getElementById('iphoneDate').innerText = now.toLocaleDateString('tr-TR', options);
-            document.getElementById('iphoneTime').innerText = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', hour12: false });
-        }
-        setInterval(updateLockScreenTime, 1000);
-        updateLockScreenTime();
-
-        // Sayfa açıldığında gizli input alanına odaklan ve klavyeyi fırlat
-        function focusPasscodeField() {
-            const input = document.getElementById('hiddenPasscodeInput');
-            if(input) input.focus();
-        }
-      function focusPasscodeField() {
-    const input = document.getElementById("hiddenPasscodeInput");
-    if (!input) return;
-
-    requestAnimationFrame(() => {
-        input.focus({ preventScroll: true });
-        input.click();
-    });
-}
-
-window.addEventListener("load", () => {
-    setTimeout(focusPasscodeField, 300);
-});
-
-document.getElementById("lock-screen").addEventListener("pointerdown", focusPasscodeField);
-document.getElementById("lock-screen").addEventListener("touchstart", focusPasscodeField, { passive: true });
-
-        // Klavyeden yazı yazıldıkça tetiklenen ana kontrolör
-        function handlePasscodeTyping(inputElement) {
-            let val = inputElement.value;
-            
-            // Sadece sayısal karakterleri kabul et
-            val = val.replace(/[^0-9]/g, '');
-            inputElement.value = val;
-
-            // Yuvarlak Noktaları Doldur
-            const dots = document.querySelectorAll('.dot');
-            dots.forEach((dot, idx) => {
-                if (idx < val.length) dot.classList.add('active');
-                else dot.classList.remove('active');
-            });
-
-            // 6 Hane tamamlandıysa şifreyi doğrula
-            if (val.length === 6) {
-                if (val === PIN_DENIZ || val === PIN_NEHIR) {
-                    currentUser = (val === PIN_DENIZ) ? "deniz" : "nehir";
-                    inputElement.blur(); // Klavyeyi gizle
-                    setupUserInterface();
-                    unlockInterface();
-                } else {
-                    // Hatalı şifre animasyonu
-                    const container = document.getElementById('dotsContainer');
-                    container.classList.add('shake', 'error');
-                    setTimeout(() => {
-                        container.classList.remove('shake', 'error');
-                        inputElement.value = "";
-                        // Noktaları sıfırla
-                        dots.forEach(dot => dot.classList.remove('active'));
-                        inputElement.focus();
-                    }, 500);
-                }
-            }
-        }
-
-        function unlockInterface() {
-            document.getElementById('lock-screen').style.transform = "translateY(-100vh)";
-            setTimeout(() => {
-                document.getElementById('lock-screen').style.display = "none";
-                initPetSystem(); 
-            }, 600);
-        }
-
-        function setupUserInterface() {
-            const btn = document.getElementById('pokeBtn');
-            if (btn) {
-                if (currentUser === "deniz") {
-                    btn.innerText = "Nehir'i Dürt ⚡";
-                } else if (currentUser === "nehir") {
-                    btn.innerText = "Deniz'i Dürt ⚡";
-                }
-            }
-        }
 
         // 1. Canlı Sayaç Ayarı
         const startDate = new Date(2026, 2, 26, 0, 0); 
