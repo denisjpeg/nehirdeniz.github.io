@@ -359,16 +359,23 @@
         // kullanıyorsan en azından bu bloğu tek bir config.js dosyasında
         // tutup index.html'e ayrı script olarak dahil et; repo'ya committen.
         // ============================================================
-        const CONFIG = {
-            SUPABASE_URL: window.__ENV__?.SUPABASE_URL || "https://jsixbeuphtcnfvwespqv.supabase.co",
-            SUPABASE_ANON_KEY: window.__ENV__?.SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzaXhiZXVwaHRjbmZ2d2VzcHF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNTM5NzcsImV4cCI6MjA5MDcyOTk3N30.3t8IWZf7rtBRxKyxBfH7VOUBxU5eEYyaygUXR8DmGKc",
-            // Edge Function adresleri — server-side sırlar (Telegram token, Groq key)
-            // ASLA client'ta durmaz, bu fonksiyonların içinde Supabase secrets olarak saklanır.
-            FN_CHAT: "https://jsixbeuphtcnfvwespqv.supabase.co/functions/v1/fofu-chat",
-            FN_POKE: "https://jsixbeuphtcnfvwespqv.supabase.co/functions/v1/send-poke"
-        };
-
+       const CONFIG = {
+    SUPABASE_URL: window.__ENV__?.SUPABASE_URL || "https://jsixbeuphtcnfvwespqv.supabase.co",
+    SUPABASE_ANON_KEY: window.__ENV__?.SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpzaXhiZXVwaHRjbmZ2d2VzcHF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNTM5NzcsImV4cCI6MjA5MDcyOTk3N30.3t8IWZf7rtBRxKyxBfH7VOUBxU5eEYyaygUXR8DmGKc",
+    
+    // Edge Function adresleri
+    FN_CHAT: "https://jsixbeuphtcnfvwespqv.supabase.co/functions/v1/fofu-chat", 
+    FN_POKE: "https://jsixbeuphtcnfvwespqv.supabase.co/functions/v1/send-poke"
+};
         const supabaseClient = supabase.createClient(CONFIG.SUPABASE_URL, CONFIG.SUPABASE_ANON_KEY);
+
+        // Edge Function çağrılarında Supabase gateway'inin istediği ortak header'lar
+        const FN_HEADERS = {
+            'Content-Type': 'application/json',
+            'apikey': CONFIG.SUPABASE_ANON_KEY,
+            'Authorization': `Bearer ${CONFIG.SUPABASE_ANON_KEY}`
+        };
+        let loveChart = null; // restoreSession() bu değişkene erişmeden önce tanımlı olmalı
         let currentUser = null;   // "deniz" | "nehir"
 
         // ============================================================
@@ -427,7 +434,7 @@
             try {
                 const res = await fetch(CONFIG.FN_POKE, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: FN_HEADERS,
                     body: JSON.stringify({ from: currentUser })
                 });
                 if (!res.ok) throw new Error("poke failed");
@@ -449,7 +456,7 @@
                 const promptMsg = "Deniz ve Nehir çifti için eğlenceli, tatlı ve romantik tek bir test sorusu hazırla. İçinde Adana'dan İstanbul'a taşınma, Moda sahilinde kahve/bira içme, yazılım, veri bilimi, gitar çalma gibi unsurlar barındırabilir. Yanıtı bana sadece geçerli bir JSON objesi olarak ver. Markdown işareti koyma. Format tam olarak şöyle olmalı: {\"question\": \"Soru metni?\", \"options\": [\"Seçenek A\", \"Seçenek B\", \"Seçenek C\", \"Seçenek D\"], \"answerIndex\": 1}.";
                 const response = await fetch(CONFIG.FN_CHAT, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: FN_HEADERS,
                     body: JSON.stringify({ prompt: promptMsg })
                 });
                 const data = await response.json();
@@ -567,7 +574,7 @@
                 const promptMsg = "Deniz ve Nehir çifti için bugün yapabilecekleri, İstanbul'da (özellikle Kadıköy/Moda çevresinde) tek bir tatlı aktivite önerisi yaz. Emoji ile başlasın, maksimum 12 kelime, tek satır, ekstra açıklama yok.";
                 const response = await fetch(CONFIG.FN_CHAT, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: FN_HEADERS,
                     body: JSON.stringify({ prompt: promptMsg })
                 });
                 const data = await response.json();
@@ -593,7 +600,7 @@
                 const promptMsg = `"${query}" bölgesi için sevgililerin birlikte yapabileceği tatlı, özgün 3 aktivite/mekan önerisi yaz. Her öneri emoji ile başlasın, kısa (maksimum 10 kelime) olsun. Sadece satır satır ver, numara koyma.`;
                 const response = await fetch(CONFIG.FN_CHAT, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: FN_HEADERS,
                     body: JSON.stringify({ prompt: promptMsg })
                 });
                 const data = await response.json();
@@ -632,7 +639,6 @@
         // 📊 İLİŞKİ İSTATİSTİKLERİ
         // ============================================================
         let localStats = { coffee: 0, beer: 0, dream: 0 };
-        let loveChart = null;
 
         async function syncStatsWithSupabase() {
             const { data, error } = await supabaseClient.from('nehir_stats').select('*').eq('id', 'main_stats').maybeSingle();
@@ -652,6 +658,8 @@
             await supabaseClient.from('nehir_stats').update({ [type]: localStats[type] }).eq('id', 'main_stats');
             updateChart();
         }
+        // NOT: 'let loveChart' bildirimi artık dosyanın başında (FN_HEADERS'ın hemen altında),
+        // restoreSession() çalışmadan önce erişilebilir olsun diye taşındı.
         function updateChart() {
             if (!loveChart) return;
             loveChart.data.datasets[0].data = [
@@ -797,7 +805,7 @@
                     const systemInstruction = "Sen Deniz'in sevgilisi Nehir için kurduğu sitedeki akıllı fofu asistanısın. Konuşan kişiyi samimi, sevgi dolu bir dille yanıtla ve her cümleyi tatlı bir iltifatla bitir. Düz metin üret, format kullanma.";
                     const response = await fetch(CONFIG.FN_CHAT, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: FN_HEADERS,
                         body: JSON.stringify({ prompt: `${systemInstruction}\n\n${currentUser === 'nehir' ? 'Nehir' : 'Deniz'} şunu söyledi: ${userSpeechText}` })
                     });
                     const data = await response.json();
