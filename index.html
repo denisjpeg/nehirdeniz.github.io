@@ -138,6 +138,28 @@
         .pet-avatar-wrapper { width: 100%; height: 100%; border-radius: 50%; border: 2px solid var(--teal-dim); box-shadow: 0 10px 30px var(--teal-glow); overflow: hidden; position: absolute; top: 0; left: 0; z-index: 1; }
         #petImage { width: 100%; height: 100%; object-fit: cover; }
 
+        /* Fofu dokunma efekti: genişleyen halka + yükselen kabarcıklar */
+        .pet-ripple {
+            position: absolute; top: 50%; left: 50%; width: 100%; height: 100%;
+            border-radius: 50%; border: 2px solid var(--teal);
+            transform: translate(-50%, -50%) scale(1); opacity: 0.8;
+            pointer-events: none; z-index: 2;
+            animation: petRippleAnim 0.7s ease-out forwards;
+        }
+        @keyframes petRippleAnim {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+            100% { transform: translate(-50%, -50%) scale(1.9); opacity: 0; }
+        }
+        .pet-bubble {
+            position: absolute; bottom: 10%; z-index: 3; pointer-events: none;
+            font-size: 1.1rem; opacity: 0.95;
+            animation: petBubbleAnim 1s ease-out forwards;
+        }
+        @keyframes petBubbleAnim {
+            0% { transform: translateY(0) scale(0.6); opacity: 0.95; }
+            100% { transform: translateY(-90px) scale(1.15); opacity: 0; }
+        }
+
 
         /* Arcade modal */
         .arcade-modal { position: fixed; inset: 0; background: rgba(6,10,9,0.92); backdrop-filter: blur(18px); z-index: 10000; display: none; align-items: center; justify-content: center; padding: 16px; }
@@ -288,11 +310,14 @@
         </div>
 
         <section id="quiz-section">
-            <h2 class="section-title">Bizi Ne Kadar Tanıyorsun? 🧠</h2>
+            <h2 class="section-title">Genel Kültür Testi 🧠</h2>
             <div class="glass-card">
                 <div class="quiz-box" id="quizBox">
                     <div class="quiz-question" id="questionText">Soru yükleniyor... ⚡</div>
                     <div class="quiz-options" id="optionsContainer"></div>
+                </div>
+                <div style="text-align:center; margin-top:18px;">
+                    <button class="btn btn-ghost" onclick="loadDynamicGroqQuiz()">🔀 Farklı Bir Soru</button>
                 </div>
             </div>
         </section>
@@ -468,13 +493,27 @@ async function handlePokeSystem() {
 }
 
         // ============================================================
-        // 🧠 GROQ QUIZ MOTORU
+        // 🧠 GROQ QUIZ MOTORU — Genel Kültür / Rastgele Konular
         // ============================================================
+        const QUIZ_CATEGORIES = [
+            "genel kültür", "bilim ve doğa", "tarih", "coğrafya", "sinema ve diziler",
+            "müzik", "spor", "teknoloji ve bilgisayar", "hayvanlar", "uzay ve astronomi",
+            "yemek ve mutfak kültürü", "sanat", "mitoloji", "matematik ve mantık bulmacaları",
+            "kelime ve dil bilgisi", "ünlü kişiler ve tarihi figürler", "edebiyat", "video oyunları"
+        ];
+
+        function pickRandomQuizCategory() {
+            return QUIZ_CATEGORIES[Math.floor(Math.random() * QUIZ_CATEGORIES.length)];
+        }
+
         async function loadDynamicGroqQuiz() {
             const container = document.getElementById('optionsContainer');
             const qText = document.getElementById('questionText');
+            qText.innerText = "Soru yükleniyor... ⚡";
+            container.innerHTML = "";
             try {
-                const promptMsg = "Deniz ve Nehir çifti için eğlenceli, tatlı ve romantik tek bir test sorusu hazırla. İçinde Adana'dan İstanbul'a taşınma, Moda sahilinde kahve/bira içme, yazılım, veri bilimi, gitar çalma gibi unsurlar barındırabilir. Yanıtı bana sadece geçerli bir JSON objesi olarak ver. Markdown işareti koyma. Format tam olarak şöyle olmalı: {\"question\": \"Soru metni?\", \"options\": [\"Seçenek A\", \"Seçenek B\", \"Seçenek C\", \"Seçenek D\"], \"answerIndex\": 1}.";
+                const category = pickRandomQuizCategory();
+                const promptMsg = `"${category}" konusunda eğlenceli, öğretici ve orta zorlukta tek bir çoktan seçmeli genel kültür test sorusu hazırla. Soru, konudan bağımsız olarak herhangi bir bilgiyle ilgili olabilir; belirli kişilere özel olmasın, herkesin cevaplayabileceği türden olsun. Yanıtı bana sadece geçerli bir JSON objesi olarak ver. Markdown işareti koyma, başka hiçbir açıklama ekleme. Format tam olarak şöyle olmalı: {"question": "Soru metni?", "options": ["Seçenek A", "Seçenek B", "Seçenek C", "Seçenek D"], "answerIndex": 1}.`;
                 const response = await fetch(CONFIG.FN_CHAT, {
                     method: 'POST',
                     headers: FN_HEADERS,
@@ -494,7 +533,8 @@ async function handlePokeSystem() {
                         if (idx === quiz.answerIndex) {
                             confetti({ particleCount: 60, spread: 50, origin: { y: 0.7 } });
                             qText.innerHTML = `<span style="color:var(--teal);">🎉 Doğru Cevap!</span>`;
-                            container.innerHTML = `<p style="margin-top:10px; font-size:0.95rem; color: var(--text-muted);">Uyumunuz harika! Yenisi için sayfayı yenileyebilirsin. ❤️</p>`;
+                            container.innerHTML = `<p style="margin-bottom:14px; font-size:0.95rem; color: var(--text-muted);">Harika bilgi! Yeni bir soru ister misin? 🧠</p>
+                            <button class="btn btn-primary" onclick="loadDynamicGroqQuiz()">🔄 Yeni Soru</button>`;
                         } else {
                             btn.style.borderColor = 'var(--rose)';
                             btn.style.opacity = '0.6';
@@ -504,6 +544,7 @@ async function handlePokeSystem() {
                 });
             } catch (e) {
                 qText.innerText = "Quiz yüklenirken küçük bir hata oluştu. 🧠";
+                container.innerHTML = `<button class="btn btn-ghost" onclick="loadDynamicGroqQuiz()">🔄 Tekrar Dene</button>`;
                 console.error(e);
             }
         }
@@ -790,7 +831,71 @@ async function handlePokeSystem() {
             confetti({ particleCount: 40, spread: 360, ticks: 50, gravity: 0, decay: 0.94, startVelocity: 30, colors: ['#2dd4bf', '#f3a3b3'], scalar: 1.2 });
             const container = document.getElementById('petAvatarContainer');
             if (container) { container.style.transform = "scale(1.12)"; setTimeout(() => { container.style.transform = "scale(1)"; }, 200); }
+            triggerPetTouchEffect();
+            playSealSound();
             await supabaseClient.from('nehir_pet').update({ total_feed_count: petStats.totalFeed }).eq('id', 'baby_seal');
+        }
+
+        // ============================================================
+        // 🔊 FOK SESİ (Web Audio API ile sentezlenir, dosya gerektirmez)
+        // ============================================================
+        let sharedAudioCtx = null;
+        function playSealSound() {
+            try {
+                if (!sharedAudioCtx) sharedAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (sharedAudioCtx.state === 'suspended') sharedAudioCtx.resume();
+                const ctx = sharedAudioCtx;
+                const now = ctx.currentTime;
+
+                // "Ark! Ark!" tarzı iki kısa fok havlaması
+                [0, 0.22].forEach((offset) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+
+                    const t0 = now + offset;
+                    osc.frequency.setValueAtTime(320, t0);
+                    osc.frequency.exponentialRampToValueAtTime(140, t0 + 0.16);
+
+                    gain.gain.setValueAtTime(0.0001, t0);
+                    gain.gain.exponentialRampToValueAtTime(0.22, t0 + 0.02);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.18);
+
+                    osc.start(t0);
+                    osc.stop(t0 + 0.2);
+                });
+            } catch (e) {
+                console.warn("Ses çalınamadı:", e);
+            }
+        }
+
+        // ============================================================
+        // ✨ FOFU DOKUNMA EFEKTİ (halka + kabarcıklar)
+        // ============================================================
+        function triggerPetTouchEffect() {
+            const container = document.getElementById('petAvatarContainer');
+            if (!container) return;
+
+            const ripple = document.createElement('div');
+            ripple.className = 'pet-ripple';
+            container.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 700);
+
+            const bubbleEmojis = ['🫧', '💧', '✨', '🐟'];
+            const bubbleCount = 6;
+            for (let i = 0; i < bubbleCount; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'pet-bubble';
+                bubble.innerText = bubbleEmojis[Math.floor(Math.random() * bubbleEmojis.length)];
+                bubble.style.left = (10 + Math.random() * 80) + '%';
+                bubble.style.animationDelay = (Math.random() * 0.25) + 's';
+                container.appendChild(bubble);
+                setTimeout(() => bubble.remove(), 1300);
+            }
+
+            confetti({ particleCount: 18, spread: 70, startVelocity: 18, gravity: 0.5, ticks: 60, origin: { y: 0.55 }, colors: ['#2dd4bf', '#e7f3f0', '#7fd8cf'] });
         }
 
         function interactWithPet() {
@@ -798,6 +903,10 @@ async function handlePokeSystem() {
             if (!container) return;
             container.style.transform = "scale(1.08)";
             setTimeout(() => { container.style.transform = "scale(1)"; }, 150);
+
+            triggerPetTouchEffect();
+            playSealSound();
+
             const phrases = ["Beni gıdıkladın! 🦭✨", "Nehir ve Deniz iyi ki varlar! 🤍", "Bugün de beraberiz, yaşasın! 🎉", "Viyvv! 🌊"];
             document.getElementById('petSpeech').innerText = phrases[Math.floor(Math.random() * phrases.length)];
         }
