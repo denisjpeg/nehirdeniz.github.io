@@ -426,24 +426,31 @@
         // ============================================================
         // 💌 GÜVENLİ DÜRTME SİSTEMİ (artık token client'ta değil — Edge Function çağrılıyor)
         // ============================================================
-        async function handlePokeSystem() {
-            const statusDiv = document.getElementById('pokeStatus');
-            statusDiv.innerText = "Dürtülüyor... ⚡";
-            statusDiv.style.color = "var(--text-muted)";
-            try {
-                const res = await fetch(CONFIG.FN_POKE, {
-                    method: 'POST',
-                    headers: FN_HEADERS,
-                    body: JSON.stringify({ from: currentUser })
-                });
-                if (!res.ok) throw new Error("poke failed");
-                statusDiv.innerText = "Karşı taraf dürtüldü! Telefonu şu an titriyor 🥰";
-                statusDiv.style.color = "var(--teal)";
-            } catch (e) {
-                statusDiv.innerText = "Dürtme gönderilemedi, tekrar dener misin? 🤍";
-                statusDiv.style.color = "var(--rose)";
-            }
-        }
+async function handlePokeSystem() {
+    // 1. Önce log al (hata ayıklamak için)
+    console.log("Dürtme tetiklendi, gönderen kişi:", currentUser);
+
+    const statusDiv = document.getElementById('pokeStatus');
+    statusDiv.innerText = "Dürtülüyor... ⚡";
+    statusDiv.style.color = "var(--text-muted)";
+
+    try {
+        const res = await fetch(CONFIG.FN_POKE, {
+            method: 'POST',
+            headers: FN_HEADERS,
+            body: JSON.stringify({ from: currentUser })
+        });
+
+        if (!res.ok) throw new Error("poke failed");
+
+        statusDiv.innerText = "Karşı taraf dürtüldü! Telefonu şu an titriyor 🥰";
+        statusDiv.style.color = "var(--teal)";
+    } catch (e) {
+        console.error("Dürtme hatası:", e); // Hatanın nedenini konsolda görürsün
+        statusDiv.innerText = "Dürtme gönderilemedi, tekrar dener misin? 🤍";
+        statusDiv.style.color = "var(--rose)";
+    }
+}
 
         // ============================================================
         // 🧠 GROQ QUIZ MOTORU
