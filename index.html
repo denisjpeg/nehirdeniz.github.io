@@ -183,6 +183,21 @@
         .dice-display { font-family: var(--font-display); font-size: 1.25rem; margin: 18px 0; min-height: 32px; color: var(--text); }
 
         .top-userbar { position: fixed; top: 14px; right: 14px; z-index: 500; display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); padding: 8px 12px; border-radius: 30px; font-size: 0.82rem; color: var(--text-muted); }
+   .poke-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Buton ile yazı arasındaki boşluk */
+    min-height: 80px; /* Buton ve yazıya yetecek sabit bir yükseklik */
+}
+
+.poke-status {
+    min-height: 1.2em; /* Yazı boşken bile yer kaplamasını sağlar */
+    font-size: 0.9rem;
+    text-align: center;
+    transition: all 0.2s ease;
+}
     </style>
 </head>
 <body>
