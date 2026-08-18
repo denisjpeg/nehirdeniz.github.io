@@ -581,7 +581,7 @@ async function handlePokeSystem() {
                 });
                 const data = await response.json();
                 if (!response.ok || !data || typeof data.reply !== "string") {
-                    throw new Error(data && data.error ? data.error : "Sunucudan geçerli bir yanıt gelmedi");
+                    throw new Error(`${(data && data.error) || "Sunucudan geçerli bir yanıt gelmedi"}${data && data.detail ? " | detay: " + data.detail : ""}`);
                 }
                 const cleanJson = data.reply.trim().replace(/```json/g, "").replace(/```/g, "");
                 const quiz = JSON.parse(cleanJson);
@@ -704,7 +704,7 @@ async function handlePokeSystem() {
                 });
                 const data = await response.json();
                 if (!response.ok || !data || typeof data.reply !== "string") {
-                    throw new Error(data && data.error ? data.error : "Sunucudan geçerli bir yanıt gelmedi");
+                    throw new Error(`${(data && data.error) || "Sunucudan geçerli bir yanıt gelmedi"}${data && data.detail ? " | detay: " + data.detail : ""}`);
                 }
                 const suggestion = data.reply.trim();
                 setTimeout(() => { display.innerText = suggestion; display.style.opacity = 1; }, 250);
@@ -735,7 +735,7 @@ async function handlePokeSystem() {
                 });
                 const data = await response.json();
                 if (!response.ok || !data || typeof data.reply !== "string") {
-                    throw new Error(data && data.error ? data.error : "Sunucudan geçerli bir yanıt gelmedi");
+                    throw new Error(`${(data && data.error) || "Sunucudan geçerli bir yanıt gelmedi"}${data && data.detail ? " | detay: " + data.detail : ""}`);
                 }
                 const recs = data.reply.trim().split('\n').filter(r => r.trim() !== "");
                 list.innerHTML = "";
@@ -1006,7 +1006,7 @@ async function handlePokeSystem() {
                     });
                     const data = await response.json();
                     if (!response.ok || !data || typeof data.reply !== "string") {
-                        throw new Error(data && data.error ? data.error : "Sunucudan geçerli bir yanıt gelmedi");
+                        throw new Error(`${(data && data.error) || "Sunucudan geçerli bir yanıt gelmedi"}${data && data.detail ? " | detay: " + data.detail : ""}`);
                     }
                     speechEl.innerText = data.reply;
                     btn.innerText = "🎙️ Fofuyla Konuş";
