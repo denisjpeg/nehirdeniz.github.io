@@ -134,9 +134,47 @@
 
 
         /* Pet */
-        #petAvatarContainer { position: relative; width: 140px; height: 140px; margin: 0 auto; cursor: pointer; transition: width 0.6s ease, height 0.6s ease; }
-        .pet-avatar-wrapper { width: 100%; height: 100%; border-radius: 50%; border: 2px solid var(--teal-dim); box-shadow: 0 10px 30px var(--teal-glow); overflow: hidden; position: absolute; top: 0; left: 0; z-index: 1; }
-        #petImage { width: 100%; height: 100%; object-fit: cover; transition: filter 0.8s ease; }
+        #petAvatarContainer { position: relative; width: 150px; height: 150px; margin: 0 auto; cursor: pointer; }
+        .pet-avatar-wrapper { width: 100%; height: 100%; border-radius: 50%; border: 2px solid var(--teal-dim); box-shadow: 0 10px 30px var(--teal-glow); overflow: hidden; position: absolute; top: 0; left: 0; z-index: 1; background: radial-gradient(circle at 50% 30%, rgba(45,212,191,0.10), transparent 70%); }
+
+        /* 🦭 Canlı Fofu (SVG animasyonlu yavru fok) */
+        .seal-svg { width: 100%; height: 100%; overflow: visible; display: block; }
+        .seal-shadow { fill: rgba(0,0,0,0.18); }
+        .seal-bob { transform-box: fill-box; transform-origin: 50% 85%; animation: sealBob 3.4s ease-in-out infinite; }
+        @keyframes sealBob {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(-1.5deg); }
+        }
+        .seal-bob.seal-happy { animation: sealHappyBounce 0.65s ease; }
+        @keyframes sealHappyBounce {
+            0% { transform: scale(1) translateY(0); }
+            28% { transform: scale(1.1, 0.9) translateY(5px); }
+            58% { transform: scale(0.94, 1.09) translateY(-11px) rotate(-3deg); }
+            80% { transform: scale(1.04, 0.98) translateY(2px) rotate(2deg); }
+            100% { transform: scale(1) translateY(0) rotate(0deg); }
+        }
+        .seal-body, .seal-head-shape { fill: #f5f9f8; stroke: #d7e4e0; stroke-width: 1.4; }
+        .seal-belly { fill: #eaf3f0; }
+        .seal-cheek { fill: var(--rose); opacity: 0.5; }
+        .seal-eye { transform-box: fill-box; transform-origin: 50% 50%; animation: sealBlink 4.8s ease-in-out infinite; }
+        .seal-eye ellipse { fill: #22312d; }
+        .seal-eye-r { animation-delay: 0.2s; }
+        @keyframes sealBlink {
+            0%, 90%, 100% { transform: scaleY(1); }
+            95% { transform: scaleY(0.12); }
+        }
+        .seal-eye-shine { fill: #ffffff; }
+        .seal-nose { fill: #2b3a36; }
+        .seal-mouth { fill: none; stroke: #2b3a36; stroke-width: 1.6; stroke-linecap: round; }
+        .seal-whiskers-l line, .seal-whiskers-r line { stroke: #c3d4cf; stroke-width: 1; }
+        .seal-flipper { fill: #e6efec; stroke: #d2ddd9; stroke-width: 1.2; transform-box: fill-box; }
+        .seal-flipper-l { transform-origin: 90% 20%; animation: flipperWaveL 2.8s ease-in-out infinite; }
+        .seal-flipper-r { transform-origin: 10% 20%; animation: flipperWaveR 2.8s ease-in-out infinite 0.35s; }
+        @keyframes flipperWaveL { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(-14deg); } }
+        @keyframes flipperWaveR { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(14deg); } }
+        .seal-happy .seal-flipper-l { animation: flipperWaveL 0.3s ease-in-out 2; }
+        .seal-happy .seal-flipper-r { animation: flipperWaveR 0.3s ease-in-out 2; }
+        .seal-tail { fill: #edf3f1; stroke: #d7e4e0; stroke-width: 1; }
 
         /* Fofu dokunma efekti: genişleyen halka + yükselen kabarcıklar */
         .pet-ripple {
@@ -275,15 +313,36 @@
                 </div>
 
                 <div id="petAvatarContainer" onclick="interactWithPet()">
-                    <div class="pet-avatar-wrapper"><img id="petImage"></div>
+                    <div class="pet-avatar-wrapper">
+                        <svg class="seal-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                            <ellipse class="seal-shadow" cx="100" cy="180" rx="52" ry="9"/>
+                            <g class="seal-bob">
+                                <path class="seal-tail" d="M62,152 Q42,166 56,182 Q76,172 79,151 Z"/>
+                                <path class="seal-flipper seal-flipper-l" d="M55,112 Q18,116 24,146 Q50,152 66,127 Z"/>
+                                <path class="seal-flipper seal-flipper-r" d="M145,112 Q182,116 176,146 Q150,152 134,127 Z"/>
+                                <ellipse class="seal-body" cx="100" cy="116" rx="58" ry="54"/>
+                                <ellipse class="seal-belly" cx="100" cy="132" rx="33" ry="30"/>
+                                <ellipse class="seal-head-shape" cx="100" cy="70" rx="41" ry="37"/>
+                                <ellipse class="seal-cheek" cx="71" cy="80" rx="8" ry="6"/>
+                                <ellipse class="seal-cheek" cx="129" cy="80" rx="8" ry="6"/>
+                                <g class="seal-eye seal-eye-l" transform="translate(82,64)">
+                                    <ellipse cx="0" cy="0" rx="6" ry="7"/>
+                                    <circle class="seal-eye-shine" cx="-2" cy="-2" r="1.8"/>
+                                </g>
+                                <g class="seal-eye seal-eye-r" transform="translate(118,64)">
+                                    <ellipse cx="0" cy="0" rx="6" ry="7"/>
+                                    <circle class="seal-eye-shine" cx="-2" cy="-2" r="1.8"/>
+                                </g>
+                                <ellipse class="seal-nose" cx="100" cy="81" rx="5" ry="4"/>
+                                <path class="seal-mouth" d="M100,85 Q100,91 94,91 M100,85 Q100,91 106,91"/>
+                                <g class="seal-whiskers-l"><line x1="64" y1="79" x2="34" y2="74"/><line x1="64" y1="85" x2="33" y2="85"/><line x1="64" y1="91" x2="34" y2="96"/></g>
+                                <g class="seal-whiskers-r"><line x1="136" y1="79" x2="166" y2="74"/><line x1="136" y1="85" x2="167" y2="85"/><line x1="136" y1="91" x2="166" y2="96"/></g>
+                            </g>
+                        </svg>
+                    </div>
                 </div>
 
                 <div id="petSpeech" style="margin-top: 14px; min-height: 18px; font-style: italic; font-size: 0.88rem; color: var(--text-muted);">Yükleniyor... 💤</div>
-
-                <div id="petStageLabel" style="margin-top: 10px; font-size: 0.8rem; color: var(--teal); font-weight: 600;"></div>
-                <div style="width: 100%; max-width: 280px; margin: 8px auto 0 auto; height: 6px; border-radius: 6px; background: var(--surface-2); overflow: hidden;">
-                    <div id="petGrowthBar" style="height: 100%; width: 0%; background: linear-gradient(90deg, var(--teal-dim), var(--teal)); transition: width 0.4s ease;"></div>
-                </div>
 
                 <div style="display: flex; gap: 8px; justify-content: center; margin-top: 18px; flex-wrap: wrap;">
                     <button class="btn btn-primary" onclick="feedPet()">🦭 Balık Ver</button>
@@ -751,12 +810,6 @@ async function handlePokeSystem() {
         // ============================================================
         let petStats = { streak: 0, totalFeed: 0, lastVisit: "" };
 
-        const petStages = {
-            baby: "https://images.unsplash.com/photo-1590418606746-018840f9cd0f?q=80&w=300&auto=format&fit=crop",
-            child: "https://images.unsplash.com/photo-1551244072-5d12893278ab?q=80&w=300&auto=format&fit=crop",
-            adult: "https://images.unsplash.com/photo-1529963183134-61a90db47eaf?q=80&w=300&auto=format&fit=crop"
-        };
-
         async function initPetSystem() {
             const { data, error } = await supabaseClient.from('nehir_pet').select('*').eq('id', 'baby_seal').maybeSingle();
             if (data) {
@@ -796,49 +849,31 @@ async function handlePokeSystem() {
             }).eq('id', 'baby_seal');
         }
 
-        // Büyüme evreleri sadece seri gününe göre belirlenir: yavru fok → genç fok → yetişkin fok.
+        // Fofu artık sabit bir fotoğrafla "büyümüyor" — canlı bir SVG fok olarak sürekli
+        // hareket ediyor ve dokunulduğunda/beslenince tepki veriyor. Seri (streak) sayısı
+        // sadece sevimli bir konuşma metnini değiştiriyor, görünümü değil.
         const GROWTH_STAGES = [
-            { min: 0, max: 5, key: 'baby', label: 'Yavru Fofu 🍼', speech: "Ben henüz çok minik bir beyaz fofuyum... Beni her gün ziyaret edin! 🍼" },
-            { min: 6, max: 15, key: 'child', label: 'Büyüyen Fofu ✨', speech: "Büyüyorum! Her gün gelmenize bayılıyorum! ✨" },
-            { min: 16, max: Infinity, key: 'adult', label: 'Yetişkin Fofu 🦭❤️', speech: "Sizin sayenizde kocaman ve mutlu bir fok oldum! 🦭❤️" }
+            { min: 0, max: 5, speech: "Ben minicik bir beyaz fofuyum... Beni her gün ziyaret edin! 🍼" },
+            { min: 6, max: 15, speech: "Sizinle her gün buluşmaya bayılıyorum! ✨" },
+            { min: 16, max: Infinity, speech: "Sizin sayenizde kocaman ve mutlu bir fok oldum! 🦭❤️" }
         ];
 
         function updatePetUI() {
             document.getElementById('petStreak').innerText = petStats.streak;
             document.getElementById('petFeed').innerText = petStats.totalFeed;
-            const imgEl = document.getElementById('petImage');
             const speechEl = document.getElementById('petSpeech');
-            const stageLabelEl = document.getElementById('petStageLabel');
-            const growthBarEl = document.getElementById('petGrowthBar');
-            const containerEl = document.getElementById('petAvatarContainer');
-
             const stage = GROWTH_STAGES.find(s => petStats.streak >= s.min && petStats.streak <= s.max) || GROWTH_STAGES[0];
-            imgEl.src = petStages[stage.key];
             speechEl.innerText = stage.speech;
-            stageLabelEl.innerText = stage.label;
+        }
 
-            // Fotoğraf değişimi tek başına göze çarpmayabiliyor (3 stok fotoğraf arka planı
-            // farklı olsa da fok benzer görünebiliyor). Bu yüzden seri gününe bağlı, günden
-            // güne kademeli ve GARANTİLİ görünür bir "beyazlaşma + büyüme" efekti ekliyoruz.
-            // 0. gün: küçük ve normal renkli. 16. gün ve sonrası: tam boy ve belirgin şekilde
-            // aydınlanmış/beyazlaşmış — fotoğraf ne olursa olsun bu efekt her zaman görünür.
-            const growthT = Math.min(petStats.streak / 16, 1); // 0 -> 1 arası, 16 günde tamamlanır
-            const grayscale = Math.round(growthT * 60);   // %0 -> %60
-            const brightness = 100 + Math.round(growthT * 40); // %100 -> %140 (beyaza yaklaşma hissi)
-            const saturate = 100 - Math.round(growthT * 35);   // renk soluklaşıp beyaza yaklaşsın
-            imgEl.style.filter = `grayscale(${grayscale}%) brightness(${brightness}%) saturate(${saturate}%)`;
-
-            const sizeStart = 104, sizeEnd = 168; // px — kademeli büyüme
-            const size = Math.round(sizeStart + (sizeEnd - sizeStart) * growthT);
-            if (containerEl) { containerEl.style.width = size + "px"; containerEl.style.height = size + "px"; }
-
-            let progressPct;
-            if (stage.max === Infinity) {
-                progressPct = 100;
-            } else {
-                progressPct = ((petStats.streak - stage.min) / (stage.max - stage.min + 1)) * 100;
-            }
-            growthBarEl.style.width = Math.min(Math.max(progressPct, 4), 100) + "%";
+        // Fofuya kısa süreliğine "mutlu zıplama" animasyonu uygular (besleme/dokunma tepkisi)
+        function triggerSealHappy() {
+            const bob = document.querySelector('#petAvatarContainer .seal-bob');
+            if (!bob) return;
+            bob.classList.remove('seal-happy');
+            void bob.getBBox(); // animasyonu baştan başlatmak için reflow tetikle
+            bob.classList.add('seal-happy');
+            setTimeout(() => bob.classList.remove('seal-happy'), 650);
         }
 
         async function feedPet() {
@@ -849,6 +884,7 @@ async function handlePokeSystem() {
             const container = document.getElementById('petAvatarContainer');
             if (container) { container.style.transform = "scale(1.12)"; setTimeout(() => { container.style.transform = "scale(1)"; }, 200); }
             triggerPetTouchEffect();
+            triggerSealHappy();
             playSealSound();
             await supabaseClient.from('nehir_pet').update({ total_feed_count: petStats.totalFeed }).eq('id', 'baby_seal');
         }
@@ -922,6 +958,7 @@ async function handlePokeSystem() {
             setTimeout(() => { container.style.transform = "scale(1)"; }, 150);
 
             triggerPetTouchEffect();
+            triggerSealHappy();
             playSealSound();
 
             const phrases = ["Beni gıdıkladın! 🦭✨", "Nehir ve Deniz iyi ki varlar! 🤍", "Bugün de beraberiz, yaşasın! 🎉", "Viyvv! 🌊"];
