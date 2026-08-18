@@ -580,6 +580,9 @@ async function handlePokeSystem() {
                     body: JSON.stringify({ prompt: promptMsg })
                 });
                 const data = await response.json();
+                if (!response.ok || !data || typeof data.reply !== "string") {
+                    throw new Error(data && data.error ? data.error : "Sunucudan geçerli bir yanıt gelmedi");
+                }
                 const cleanJson = data.reply.trim().replace(/```json/g, "").replace(/```/g, "");
                 const quiz = JSON.parse(cleanJson);
 
@@ -700,8 +703,13 @@ async function handlePokeSystem() {
                     body: JSON.stringify({ prompt: promptMsg })
                 });
                 const data = await response.json();
-                setTimeout(() => { display.innerText = data.reply.trim(); display.style.opacity = 1; }, 250);
+                if (!response.ok || !data || typeof data.reply !== "string") {
+                    throw new Error(data && data.error ? data.error : "Sunucudan geçerli bir yanıt gelmedi");
+                }
+                const suggestion = data.reply.trim();
+                setTimeout(() => { display.innerText = suggestion; display.style.opacity = 1; }, 250);
             } catch (e) {
+                console.error("Aktivite önerisi alınamadı:", e);
                 setTimeout(() => {
                     display.innerText = activityFallbackList[Math.floor(Math.random() * activityFallbackList.length)];
                     display.style.opacity = 1;
@@ -726,6 +734,9 @@ async function handlePokeSystem() {
                     body: JSON.stringify({ prompt: promptMsg })
                 });
                 const data = await response.json();
+                if (!response.ok || !data || typeof data.reply !== "string") {
+                    throw new Error(data && data.error ? data.error : "Sunucudan geçerli bir yanıt gelmedi");
+                }
                 const recs = data.reply.trim().split('\n').filter(r => r.trim() !== "");
                 list.innerHTML = "";
                 recs.forEach(v => {
@@ -735,6 +746,7 @@ async function handlePokeSystem() {
                     list.appendChild(li);
                 });
             } catch (e) {
+                console.error("Mekan önerisi alınamadı:", e);
                 list.innerHTML = "<li class='venue-item'>Öneriler şu an yüklenemedi. ☕</li>";
             }
         }
@@ -993,6 +1005,9 @@ async function handlePokeSystem() {
                         body: JSON.stringify({ prompt: `${systemInstruction}\n\n${currentUser === 'nehir' ? 'Nehir' : 'Deniz'} şunu söyledi: ${userSpeechText}` })
                     });
                     const data = await response.json();
+                    if (!response.ok || !data || typeof data.reply !== "string") {
+                        throw new Error(data && data.error ? data.error : "Sunucudan geçerli bir yanıt gelmedi");
+                    }
                     speechEl.innerText = data.reply;
                     btn.innerText = "🎙️ Fofuyla Konuş";
                     confetti({ particleCount: 15, spread: 20, origin: { y: 0.8 } });
